@@ -6,6 +6,7 @@ const Header = lazy(() => import("./components/section/Header"))
 const Login = lazy(() => import("./pages/login/Login"))
 const Register = lazy(() => import("./pages/register/Register"))
 const Footer = lazy(() => import("./components/section/Footer"))
+const BoardList = lazy(() => import("./pages/board/BoardList"))
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/board/list" element={<BoardList />} />
       </Routes>
       <Footer/>
     </BrowserRouter>
