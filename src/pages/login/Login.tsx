@@ -17,7 +17,7 @@ const Login = () => {
 
   // =========================================UI=========================================//
   return (
-    <div className="bg-white d-flex min-vh-100 justify-content-center align-items-center">
+    <div className="bg-light d-flex min-vh-100 justify-content-center align-items-center">
       <div>
         <div className="text-center mb-4">
           <img
@@ -56,7 +56,7 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-success w-100 custom-btn py-2">
+          <button type="submit" className="btn btn-success w-100 custom-btn py-2 ">
             로그인
           </button>
 

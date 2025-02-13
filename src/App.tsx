@@ -12,7 +12,7 @@ const Chart = lazy(() => import("./pages/chart/Chart"));
 const Find = lazy(() => import("./pages/find/Find"));
 const Practice = lazy(() => import("./pages/practice/Practice"));
 const Pract = lazy(() => import("./pages/practice/Pract"));
-
+const Prac = lazy(() => import("./pages/practice/Prac"));
 function App() {
   return (
     <BrowserRouter>
@@ -26,6 +26,7 @@ function App() {
         <Route path="/login/find" element={<Find />} />
         <Route path="/practice" element={<Practice />}/>
         <Route path="/pract" element={<Pract />}/>
+        <Route path="/prac" element={<Prac />}/>
       </Routes>
       <Footer/>
     </BrowserRouter>

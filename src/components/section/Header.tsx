@@ -38,6 +38,7 @@ const menuData = [
     links: [
       { to: '/pract', label: '연습' },
       { to: '/practice', label: '연습2' },
+      { to: '/prac', label: '연습3' },
     ],
   },
 ];
