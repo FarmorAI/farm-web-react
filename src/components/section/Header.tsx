@@ -1,45 +1,8 @@
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 import { Menu, X, Lock, User } from "lucide-react";
-
-const menuData = [
-  {
-    name: "소개",
-    links: [
-      { to: "/introduce/project", label: "프로젝트 소개" },
-      { to: "/introduce/team", label: "팀소개" },
-    ],
-  },
-  {
-    name: "AI",
-    links: [
-      { to: "/upload/form", label: "이미지 업로드" },
-      { to: "/upload/list", label: "분석결과 현황" },
-    ],
-  },
-  {
-    name: "알림소식",
-    links: [
-      { to: "/board/notice", label: "공지사항" },
-      { to: "/board/list", label: "게시판" },
-    ],
-  },
-  {
-    name: "고객지원",
-    links: [
-      { to: "/pract", label: "연습" },
-      { to: "/practice", label: "연습2" },
-      { to: "/prac", label: "연습3" },
-      { to: "/supportmenu", label: "사이드바" },
-    ],
-  },
-  {
-    name: "결제",
-    links: [
-      { to: "/", label: "" },
-    ],
-  },
-];
+import { menuData } from "../pagelayout/MenuData";
+import Breadcrumbs from "../pagelayout/Breadcrumbs";
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -126,35 +89,6 @@ const Header: React.FC = () => {
       </nav>
       <Breadcrumbs />
     </>
-  );
-};
-
-const Breadcrumbs: React.FC = () => {
-  const location = useLocation();
-  const currentPath = location.pathname;
-
-  const matchedMenu = menuData.flatMap(menu =>
-    menu.links.map(link => ({ ...link, parent: menu.name }))
-  ).find(item => item.to === currentPath);
-
-  return (
-    <nav className="bg-gray-20 bg-gray-200">
-      <div className="max-w-8xl mx-auto px-4">
-        <div className="flex items-center space-x-4 py-3 text-sm text-gray-600 ml-20">
-          <Link to="/" className="hover:text-custom hover:underline">HOME</Link>
-          {matchedMenu && (
-            <>
-              <span className="text-gray-400">&gt;</span>
-              <Link to={matchedMenu.to} className="hover:text-custom hover:underline">
-                {matchedMenu.parent}
-              </Link>
-              <span className="text-gray-400">&gt;</span>
-              <span className="text-custom font-medium">{matchedMenu.label}</span>
-            </>
-          )}
-        </div>
-      </div>
-    </nav>
   );
 };
 

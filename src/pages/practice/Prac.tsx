@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Sidebar from "../../components/sidebar/Sidebar";
+import Sidebar from "../../components/pagelayout/Sidebar";
 
 const menuData = [
   {
@@ -57,7 +57,7 @@ const Header: React.FC = () => {
 
   return (
     <nav className="bg-white shadow relative">
-      <Sidebar  />
+      <Sidebar />
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between h-[100%] items-center font-bold text-lg w-[91.5%]">
           {menuData.map(({ name }) => (
