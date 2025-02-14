@@ -10,8 +10,8 @@ const Sidebar: FC = () => {
   const currentMenu = menuData.find((menu) => location.pathname.startsWith(menu.path));
 
   return (
-    <aside className="w-64 bg-white shadow-md rounded-lg overflow-hidden ml-20 my-3">
-      {/* 헤더 (아이콘 + 텍스트) */}
+  <aside className="w-64 bg-white border border-gray-500 rounded-lg overflow-hidden ml-20 my-3">
+    {/* 헤더 (아이콘 + 텍스트) */}
       <div className="bg-gradient-to-r from-blue-500 to-blue-700 p-4 flex items-center text-white">
         <FaFileAlt className="text-2xl mr-2" />
         <span className="text-lg font-semibold">{currentMenu?.name || "메뉴"}</span>

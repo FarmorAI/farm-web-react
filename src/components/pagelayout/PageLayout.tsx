@@ -6,11 +6,11 @@ interface PageLayoutProps {
   children: React.ReactNode;
 }
 
-const PageLayout: React.FC<PageLayoutProps> = ({ title, children }) => {
+const PageLayout: React.FC<PageLayoutProps> = ({ title,  children }) => {
   return (
     <div className="flex min-h-screen font-sans">
       {/* ✅ 공통 사이드바 */}
-      <Sidebar />
+      <Sidebar   />
 
       {/* ✅ 메인 콘텐츠 영역 */}
       <main className="flex-1  p-10 bg-white">

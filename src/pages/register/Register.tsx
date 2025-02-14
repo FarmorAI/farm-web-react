@@ -255,7 +255,7 @@ const Register: React.FC = () => {
   return (
     <div className="bg-gray min-h-screen">
       <div className="max-w-8xl mx-auto px-4 py-12">
-        <div className="max-w-md mx-auto bg-white rounded-lg shadow-xl">
+        <div className="max-w-md mx-auto rounded-lg shadow-xl">
           <div className="p-8">
             <h1 className="text-2xl font-bold text-center mb-8">회원가입</h1>
             <form onSubmit={handleSubmit}>

@@ -17,7 +17,7 @@ const Login = () => {
 
   // =========================================UI=========================================//
   return (
-    <div className="bg-light d-flex min-vh-100 justify-content-center align-items-center">
+    <div className="d-flex min-vh-100 justify-content-center align-items-center">
       <div>
         <div className="text-center mb-4">
           <img

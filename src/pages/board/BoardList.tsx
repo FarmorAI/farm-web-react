@@ -56,7 +56,7 @@ const BoardList = () => {
   return (
     <PageLayout title="자료실" activeItem="자료실">
       {/* 검색 바 */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6 flex justify-between">
+      <div className=" p-4 rounded-lg  mb-6 flex justify-between">
         <span className="text-sm text-gray-600">
           총 <strong className="text-blue-600">{notices.length}</strong>건의 검색결과입니다.
         </span>
