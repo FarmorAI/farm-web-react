@@ -3,7 +3,8 @@ import styled, { css } from "styled-components";
 import useDropdown from "../../hook/useDropdown";
 
 const DropdownMenu: React.FC = () => {
-  const { hoveredMenu, activeSection, handleMouseEnter, handleMouseLeave } = useDropdown();
+  const { hoveredMenu, activeSection, handleMouseEnter, handleMouseLeave } =
+    useDropdown();
 
   return (
     <Wrapper onMouseLeave={handleMouseLeave}>
@@ -19,9 +20,9 @@ const DropdownMenu: React.FC = () => {
       {hoveredMenu && (
         <Dropdown>
           {menuData.map(({ name, links }) => (
-            <DropdownSection 
-              key={name} 
-              isActive={activeSection === name} 
+            <DropdownSection
+              key={name}
+              isActive={activeSection === name}
               onMouseEnter={() => handleMouseEnter(name)}
             >
               <Ul>
