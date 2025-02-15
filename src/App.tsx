@@ -12,6 +12,7 @@ const Chart = lazy(() => import("./pages/chart/Chart"));
 const LoginFind = lazy(() => import("./pages/login/LoginFind"));
 const Practice = lazy(() => import("./pages/practice/Practice"));
 const Pract = lazy(() => import("./pages/practice/Pract"));
+const UpLoad = lazy(() => import("./pages/ai/AIUploadPage"));
 const Prac = lazy(() => import("./pages/practice/Prac"));
 const Team = lazy(() => import("./pages/introduce/Team"));
 const Project = lazy(() => import("./pages/introduce/Project"));
@@ -35,6 +36,7 @@ function App() {
         <Route path="/upload/list" element={<UploadList />} />
         <Route path="/practice" element={<Practice />}/>
         <Route path="/pract" element={<Pract />}/>
+        <Route path="/upload" element={<UpLoad />}/>
         <Route path="/prac" element={<Prac />}/>
       </Routes>
       <Footer/>
