@@ -3,5 +3,14 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "swiper/css": ["node_modules/swiper/swiper.min.css"],
+      "swiper/css/autoplay": ["node_modules/swiper/components/autoplay/autoplay.min.css"]
+    },
+    "types": ["vite/client"],
+    
+  }
 }

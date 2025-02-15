@@ -1,6 +1,6 @@
 import  { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '/src/assets/css/login/Login.css';
+import '/public/assets/css/login/Login.css';
 
 
 const Login = () => {
@@ -56,7 +56,7 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-success w-100 custom-btn py-2">
+          <button type="submit" className="btn btn-success w-100 custom-btn py-2 ">
             로그인
           </button>
 
