@@ -17,6 +17,8 @@ interface ResetPwdForm {
   repassword: string;
 }
 
+
+
 // API 응답 타입
 interface ApiResponse<T> {
   result: T[];

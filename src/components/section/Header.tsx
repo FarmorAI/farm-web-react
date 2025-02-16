@@ -94,10 +94,10 @@ const Header: React.FC = () => {
 
 const AuthLinks: React.FC = () => (
   <div className="flex items-center space-x-6">
-    <Link to="/login" className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500">
+    <Link to="/auth/login" className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500">
       <Lock className="w-5 h-5 mr-1" /> 로그인
     </Link>
-    <Link to="/register" className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500">
+    <Link to="/auth/register" className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500">
       <User className="w-5 h-5 mr-1" /> 회원가입
     </Link>
   </div>
