@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNoticeById } from "../../../api/noticeApi";
 import { Notice } from "../../../model/contents";
+import useMove from "../../../hook/useMove.ts";
 
 interface NoticeDetailProps {
   noticeId?: number; // ✅ props로 noticeId를 받을 수 있도록 추가
 }
 
 const NoticeDetail: React.FC<NoticeDetailProps> = ({ noticeId }) => {
-  const navigate = useNavigate();
   const [notice, setNotice] = useState<Notice | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const { moveToList } = useMove();
 
   useEffect(() => {
     const fetchNotice = async () => {
@@ -42,7 +44,7 @@ const NoticeDetail: React.FC<NoticeDetailProps> = ({ noticeId }) => {
       <div className="mt-6 p-4 bg-gray-50 border rounded-md">
         <p>{notice.content}</p>
       </div>
-      <button className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => navigate(-1)}>
+      <button className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => moveToList()}>
         목록으로
       </button>
     </div>
