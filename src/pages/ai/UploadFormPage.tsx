@@ -1,6 +1,6 @@
 import PageLayout from "../../components/pagelayout/PageLayout";
 
-const UploadForm = () => {
+const UploadFormPage = () => {
   return (
     <PageLayout title="이미지 업로드" activeItem="이미지 업로드">
       <div>
@@ -11,4 +11,4 @@ const UploadForm = () => {
   );
 };
 
-export default UploadForm;
+export default UploadFormPage;

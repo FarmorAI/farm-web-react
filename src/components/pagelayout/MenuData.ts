@@ -9,10 +9,11 @@ export const menuData = [
   },
   {
     name: "데이터 분석",
-    path: "/upload",
+    path: "/ai",
     links: [
-      { to: "ai/uploadform", label: "이미지 업로드" },
-      { to: "ai/uploadlist", label: "분석결과 현황" },
+      { to: "/ai/uploadform", label: "이미지 업로드" },
+      { to: "/ai/uploadlist", label: "분석결과 현황" },
+      { to: "/ai/aiupload", label: "AI업로드" },
     ],
   },
   {

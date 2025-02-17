@@ -1,6 +1,6 @@
 import PageLayout from "../../components/pagelayout/PageLayout";
 
-const UploadList = () => {
+const UploadResultPage = () => {
   return (
     <PageLayout title="분석결과 현황" activeItem="분석결과 현황">
       <div>
@@ -11,4 +11,4 @@ const UploadList = () => {
   );
 };
 
-export default UploadList;
+export default UploadResultPage;
