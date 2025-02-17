@@ -34,9 +34,9 @@ export const menuData = [
   },
   {
     name: "구독 및 결제",
-    path: "/support",
+    path: "/payment",
     links: [
-      { to: "/pract", label: "연습" },
+      { to: "/payment", label: "구독상품" }
     ],
   },
 ];
