@@ -61,7 +61,7 @@ const Login = () => {
           </button>
 
           <div className="text-center mt-3 mb-3">
-            <Link to="/login/find" className="text-decoration-none text-secondary">
+            <Link to="/auth/login/find" className="text-decoration-none text-secondary">
               아이디/비밀번호 찾기
             </Link>
           </div>
@@ -85,7 +85,7 @@ const Login = () => {
 
         <div className="text-center mt-4">
           <p className="text-secondary">아직 회원이 아니신가요?</p>
-          <Link to="/register" className="text-decoration-none text-success fw-bold">
+          <Link to="/auth/register" className="text-decoration-none text-success fw-bold">
             회원가입하기
           </Link>
         </div>

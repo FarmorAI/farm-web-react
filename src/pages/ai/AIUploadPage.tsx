@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import axios from "axios";
+import PageLayout from "../../components/pagelayout/PageLayout";
 
 const AIUploadPage: React.FC = () => {
     const [files, setFiles] = useState<File[]>([]);
@@ -44,6 +45,7 @@ const AIUploadPage: React.FC = () => {
     };
 
     return (
+        <PageLayout title="AI 이미지 업로드" activeItem="AI 이미지 업로드">
         <div className="flex flex-col items-center">
             <input ref={uploadRef} type="file" multiple onChange={handleFileChange} />
             <button onClick={handleClickAdd}>파일 업로드 및 객체 인식</button>
@@ -51,6 +53,7 @@ const AIUploadPage: React.FC = () => {
             {/* ✅ 즉시 받은 객체 인식 이미지 표시 */}
             {processedImage && <img src={processedImage} alt="객체 인식 결과" width="500" />}
         </div>
+        </PageLayout>
     );
 };
 
