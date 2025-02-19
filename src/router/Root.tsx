@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Layout from "../layout/Layout";
 import { authRoutes } from "./AuthRouter";
 import { aiRoutes } from "./AiRouter";
-import { boardRoutes } from "./BoardRouter";
+import { boardRoutes } from "./ContentsRouter";
 import { supportRoutes } from "./SupportRouter";
 import { introduceRoutes } from "./IntroduceRouter";
 

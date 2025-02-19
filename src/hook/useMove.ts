@@ -41,8 +41,12 @@ const useMove = () => {
     const moveToRead = (num: number) => {
         navigate(`/contents/${basePath}/${num}?${queryDefault}`);
     };
+        // ✅ 글쓰기 이동 함수 추가
+        const moveToWrite = () => {
+            navigate(`/contents/${basePath}/write?${queryDefault}`);
+        };
 
-    return { moveToList, moveToModify, moveToRead, page, size, refresh };
+    return { moveToList, moveToModify, moveToRead, moveToWrite,page, size, refresh };
 };
 
 export default useMove;

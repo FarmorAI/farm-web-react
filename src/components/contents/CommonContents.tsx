@@ -1,11 +1,7 @@
 import PageLayout from "../../components/pagelayout/PageLayout";
 
-import PageComponent from "./PageComponent.tsx";
-import SearchBar from "./SearchBar";
-import {useEffect, useState} from "react";
-import {getNoticeList} from "../../api/noticeApi.ts";
-import { NoticeListResponse} from "../../model/contents.ts";
 import NoticeList from "./notice/NoticeList.tsx";
+import BoardList from "./board/BoardList.tsx";
 
 interface CommonListPageProps {
   title: string;
@@ -27,9 +23,7 @@ const CommonContents = ({ title, activeItem }: CommonListPageProps) => {
     else if (title === "게시판") {
         return (
             <PageLayout title={title} activeItem={activeItem}>
-                <div>
-                    게시판 페이지 입니다.
-                </div>
+                <BoardList/>
             </PageLayout>
         )
     }
