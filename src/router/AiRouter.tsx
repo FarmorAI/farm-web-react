@@ -4,7 +4,7 @@ import { RouteObject } from "react-router-dom";
 // Lazy 로딩된 컴포넌트
 const UploadFormPage = lazy(() => import("../pages/ai/UploadFormPage"));
 const UploadResultPage = lazy(() => import("../pages/ai/UploadResultPage"));
-const AIUploadPage = lazy(() => import("../pages/ai/AIUploadPage"));
+const UploadListPage = lazy(() => import("../pages/ai/UploadListPage"));
 
 // ✅ aiRoutes 배열을 export
 export const aiRoutes: RouteObject[] = [
@@ -17,7 +17,7 @@ export const aiRoutes: RouteObject[] = [
     ),
   },
   {
-    path: "ai/uploadlist",
+    path: "ai/uploadresult",
     element: (
       <Suspense fallback={<div>Loading...</div>}>
         <UploadResultPage />
@@ -25,10 +25,10 @@ export const aiRoutes: RouteObject[] = [
     ),
   },
   {
-    path: "ai/aiupload",
+    path: "ai/aiuploadlist",
     element: (
       <Suspense fallback={<div>Loading...</div>}>
-        <AIUploadPage />
+        <UploadListPage />
       </Suspense>
     ),
   },
