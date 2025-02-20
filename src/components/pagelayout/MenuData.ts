@@ -12,8 +12,8 @@ export const menuData = [
     path: "/ai",
     links: [
       { to: "/ai/uploadform", label: "이미지 업로드" },
-      { to: "/ai/uploadlist", label: "분석결과 현황" },
-      { to: "/ai/aiupload", label: "AI업로드" },
+      { to: "/ai/uploadresult", label: "분석결과 현황" },
+      { to: "/ai/aiuploadlist", label: "분석결과 목록" },
     ],
   },
   {
