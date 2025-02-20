@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { PaymentResult } from '../../model/subscription'
 import { useSearchParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { handlePaymentCancel } from '../../api/paymentApi'
 
 const PaymentResultPage: React.FC = () => {
    const [searchParams] = useSearchParams()
@@ -70,11 +71,9 @@ const PaymentResultPage: React.FC = () => {
                      홈으로
                   </button>
                </Link>
-               <Link to={`/api/users/payment/cancel?paymentId=${paymentResult.paymentId}&subsPrice=${paymentResult.subsPrice}&server=react`}>
-                  <button className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
-                     결제취소
-                  </button>
-               </Link>
+               <button className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors" 
+                  onClick={() => handlePaymentCancel(paymentResult)}>결제취소
+               </button>
             </div>
          </div>
       </>

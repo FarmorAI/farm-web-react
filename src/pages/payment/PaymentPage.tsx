@@ -3,6 +3,7 @@ import { SubscriptionPlan } from '../../model/subscription';
 import { useSearchParams } from 'react-router-dom';
 import SubsCard from './SubsCard'
 import PaymentForm from './PaymentForm';
+import axios from 'axios';
 
 const PaymentPage = () => {
    const [searchParams] = useSearchParams();
@@ -15,12 +16,12 @@ const PaymentPage = () => {
    const subsList: SubscriptionPlan[] = [
       {
          title: '베이직',
-         price: 10,
+         price: 1000,
          features: ['기본 리포트 제공', '스마트팜 관련 정보 제공', '이벤트 참여 가능']
       },
       {
          title: '프리미엄',
-         price: 20,
+         price: 2000,
          features: ['상세 리포트 제공', '스마트팜 관련 정보 및 AI서비스 제공', '이벤트 참여 가능']
       }
    ];
@@ -50,7 +51,13 @@ const PaymentPage = () => {
       }
 
       try {
-         // NaverPay 결제 요청 로직
+         const response = await axios.post('/api/payment/naverpay', {
+            subsPlan: selectedPlan,
+            subsPrice: selectedPrice
+         })
+         const result = await response.data
+         console.log(result)
+         window.location.href = `https://test-m.pay.naver.com/payments/${result.body.reserveId}`
       } catch (error) {
          console.error("결제요청 오류: ", error);
       }
