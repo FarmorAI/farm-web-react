@@ -36,7 +36,8 @@ export const menuData = [
     name: "구독 및 결제",
     path: "/payment",
     links: [
-      { to: "/payment", label: "구독상품" }
+      { to: "/payment", label: "구독상품" },
+      { to: "/payment/result", label: "결제확인" },
     ],
   },
 ];

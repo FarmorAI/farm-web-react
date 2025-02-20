@@ -19,3 +19,10 @@ export interface SubscriptionCardProps {
    isSelected: boolean;
    onSelect: (title: string, price: number) => void;
 }
+
+export interface PaymentResult {
+   subsPlan: string | null
+   subsPrice: string | null
+   resultCode: string | null
+   paymentId: string | null
+}
