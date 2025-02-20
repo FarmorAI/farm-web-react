@@ -33,7 +33,3 @@ export const insertNotice = async (notice: Notice): Promise<Notice | null> => {
     return null;
   }
 }
-
-
-
-
