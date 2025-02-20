@@ -2,11 +2,14 @@ export interface Notice {
   noticeId: number;
   title: string;
   content?: string; // 선택적 필드
-  writer: string;
   views: number;
   createdAt: string;
   updatedAt: string;
 }
+
+export type InsertNotice = Pick<Notice, "noticeId" | "title">;
+
+
 
 export interface PageRequestDto {
   page: number;

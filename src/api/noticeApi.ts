@@ -1,7 +1,8 @@
 import axios from "axios";
-import { Notice, NoticeListResponse} from "../model/contents";
+import { InsertNotice, Notice, NoticeListResponse} from "../model/contents";
 
 const API_BASE_URL = "http://localhost:6060/api";
+
 
   export const getNoticeList = async (pageParam : { page: number; size: number }): Promise<NoticeListResponse[]> => {
     const { page, size } = pageParam;
@@ -24,9 +25,10 @@ export const getNoticeById = async (id: number): Promise<Notice | null> => {
   }
 };
 
-export const insertNotice = async (notice: Notice): Promise<Notice | null> => {
+export const insertNotice = async (noticeinsert: {title: string; content:string }): Promise<InsertNotice | null> => {
+  const { title, content } = noticeinsert;
   try {
-    const response = await axios.post<Notice>(`${API_BASE_URL}/notice`, notice);
+    const response = await axios.post<InsertNotice>(`${API_BASE_URL}/notice`, {noticeinsert: {title, content}});
     return response.data;
   } catch (error) {
     console.error("Error inserting notice:", error);
