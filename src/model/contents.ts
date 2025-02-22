@@ -5,6 +5,7 @@ export interface Notice {
   views: number;
   createdAt: string;
   updatedAt: string;
+  writer: string;
 }
 
 export type InsertNotice = Pick<Notice, "noticeId" | "title">;

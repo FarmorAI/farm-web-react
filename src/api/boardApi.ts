@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Board, BoardListResponse } from "../model/contents";
 
-const API_BASE_URL = "http://localhost:6060/api";
+const API_BASE_URL = "/api";
 
 
 export const getBoardList = async (pageParam: {page: number; size:number }): Promise<BoardListResponse[] | null> =>{
