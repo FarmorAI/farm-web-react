@@ -1,7 +1,6 @@
 import axios from "axios";
 import { InsertNotice, Notice, NoticeListResponse} from "../model/contents";
-
-const API_BASE_URL = "/api";
+import { API_BASE_URL } from "./memberApi";
 
 
   export const getNoticeList = async (pageParam : { page: number; size: number }): Promise<NoticeListResponse[]> => {

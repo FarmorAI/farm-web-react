@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { checkEmail, checkNickname, registerUser } from "../../api/registerApi";
+import { checkEmail, checkNickname, registerUser } from "../../api/memberApi";
 import { useValid } from "../../hook/register/useValid";
 import { InputField } from "./InputField";
 import { AddressFields } from "./AddressFields";
 import { TermsAgreement } from "./TermsAgreement";
+import { useNavigate } from "react-router-dom";
 
 export const initState = {
   email: "",
@@ -22,12 +23,17 @@ export const initState = {
 export type FormType = typeof initState;
 
 const Register: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(initState);
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean | null>(null);
-  const [isEmailAvailable, setIsEmailAvailable] = useState<boolean | null>(null);
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState<
+    boolean | null
+  >(null);
+  const [isEmailAvailable, setIsEmailAvailable] = useState<boolean | null>(
+    null
+  );
   const [agreeAll, setAgreeAll] = useState(false);
   const [checkedTerms, setCheckedTerms] = useState({
     age: false,
@@ -36,59 +42,56 @@ const Register: React.FC = () => {
     marketing: false,
   });
 
-    // 수정된 훅 호출 (추가된 인자 2개 포함)
-    const { validMessage, isValid } = useValid(
-      formData,
-      isEmailChecked,
-      isNicknameChecked,
-      isEmailAvailable,
-      isNicknameAvailable
-    );
+  // 수정된 훅 호출 (추가된 인자 2개 포함)
+  const { validMessage, isValid } = useValid(
+    formData,
+    isEmailChecked,
+    isNicknameChecked,
+    isEmailAvailable,
+    isNicknameAvailable
+  );
 
+  const handleEmailCheck = async () => {
+    if (!isValid.email) {
+      alert("유효한 이메일 형식을 입력해주세요.");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const isDuplicate = await checkEmail(formData.email); // API에서 가져온 값 (true: 중복, false: 사용 가능)
+      console.log("API 응답 (중복 여부):", isDuplicate);
 
-    const handleEmailCheck = async () => {
-      if (!isValid.email) {
-        alert("유효한 이메일 형식을 입력해주세요.");
-        return;
-      }
-      setIsLoading(true);
-      try {
-        const isDuplicate = await checkEmail(formData.email); // API에서 가져온 값 (true: 중복, false: 사용 가능)
-        console.log("API 응답 (중복 여부):", isDuplicate);
-    
-        // 상태 업데이트 (true면 중복된 이메일, false면 사용 가능)
-        setIsEmailAvailable(isDuplicate); // 반전하여 사용 가능 여부 저장
-        setIsEmailChecked(false); // 중복 확인 완료 상태 업데이트
-      } catch (error) {
-        console.error("이메일 확인 중 오류 발생:", error);
-        alert("이메일 확인 중 오류가 발생했습니다.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-  
-    const handleNicknameCheck = async () => {
-      // if (!isValid.nickname) {
-      //   alert("유효한 닉네임 형식을 입력해주세요.");
-      //   return;
-      // }
-      setIsLoading(true);
-      try {
-        const isDuplicate = await checkNickname(formData.nickname); // API에서 가져온 값 (true: 중복, false: 사용 가능)
-        console.log("API 응답 (닉네임 중복 여부):", isDuplicate);
-    
-        // 상태 업데이트 (true면 중복된 닉네임, false면 사용 가능)
-        setIsNicknameAvailable(!isDuplicate);
-        setIsNicknameChecked(false); // 중복 확인 완료 상태 업데이트
-      } catch (error) {
-        console.error("닉네임 확인 중 오류 발생:", error);
-        alert("닉네임 확인 중 오류가 발생했습니다.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
+      // 상태 업데이트 (true면 중복된 이메일, false면 사용 가능)
+      setIsEmailAvailable(isDuplicate); // 반전하여 사용 가능 여부 저장
+      setIsEmailChecked(false); // 중복 확인 완료 상태 업데이트
+    } catch (error) {
+      console.error("이메일 확인 중 오류 발생:", error);
+      alert("이메일 확인 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleNicknameCheck = async () => {
+    // if (!isValid.nickname) {
+    //   alert("유효한 닉네임 형식을 입력해주세요.");
+    //   return;
+    // }
+    setIsLoading(true);
+    try {
+      const isDuplicate = await checkNickname(formData.nickname); // API에서 가져온 값 (true: 중복, false: 사용 가능)
+      console.log("API 응답 (닉네임 중복 여부):", isDuplicate);
+
+      // 상태 업데이트 (true면 중복된 닉네임, false면 사용 가능)
+      setIsNicknameAvailable(!isDuplicate);
+      setIsNicknameChecked(false); // 중복 확인 완료 상태 업데이트
+    } catch (error) {
+      console.error("닉네임 확인 중 오류 발생:", error);
+      alert("닉네임 확인 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -117,13 +120,24 @@ const Register: React.FC = () => {
     });
   };
 
+  // 현재 유효성 검사 결과를 콘솔에 출력하여 확인
+  console.log("isValid 상태:", isValid);
+  console.log("isEmailChecked 상태:", isEmailChecked);
+  console.log("isNicknameChecked 상태:", isNicknameChecked);
+  console.log("isEmailAvailable 상태:", isEmailAvailable);
+  console.log("isNicknameAvailable 상태:", isNicknameAvailable);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isValid.email || !isValid.password || !isValid.confirmPassword || !isValid.nickname) {
+    if (
+      !isValid.email ||
+      !isValid.password ||
+      !isValid.confirmPassword ||
+      !isValid.nickname
+    ) {
       alert("입력값을 확인해주세요.");
       return;
     }
-    if (!isEmailChecked || !isNicknameChecked) {
+    if (isEmailChecked || isNicknameChecked) {
       alert("이메일과 닉네임 중복 확인을 해주세요.");
       return;
     }
@@ -143,12 +157,16 @@ const Register: React.FC = () => {
         password: formData.password,
         nickname: formData.nickname,
         phone: formData.phone,
-        address: `${formData.address} ${formData.extraAddress} ${formData.detailAddress}`.trim(),
+        name: formData.name,
+        address:
+          `${formData.address} ${formData.extraAddress} ${formData.detailAddress}`.trim(),
+        birthDate: formData.birthdate,
       };
       const success = await registerUser(userData);
       if (success) {
         alert("회원가입이 완료되었습니다.");
         setFormData(initState);
+        navigate("/auth/login");
       } else {
         alert("회원가입에 실패했습니다.");
       }
@@ -159,7 +177,12 @@ const Register: React.FC = () => {
       setIsLoading(false);
     }
   };
-  
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // 🚀 엔터 입력 방지
+    }
+  };
 
   return (
     <div className="bg-gray min-h-screen">
@@ -167,7 +190,7 @@ const Register: React.FC = () => {
         <div className="max-w-md mx-auto rounded-lg shadow-xl">
           <div className="p-8">
             <h1 className="text-2xl font-bold text-center mb-8">회원가입</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
               <div className="space-y-6">
                 <InputField
                   label="이메일"
@@ -244,7 +267,11 @@ const Register: React.FC = () => {
                   placeholder="'-' 없이 입력"
                   disabled={isLoading}
                 />
-                <AddressFields formData={formData} setFormData={setFormData} isLoading={isLoading} />
+                <AddressFields
+                  formData={formData}
+                  setFormData={setFormData}
+                  isLoading={isLoading}
+                />
                 <TermsAgreement
                   agreeAll={agreeAll}
                   checkedTerms={checkedTerms}

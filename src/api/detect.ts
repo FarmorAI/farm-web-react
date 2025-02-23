@@ -1,6 +1,6 @@
 import axios from "axios";
+import { API_BASE_URL } from "./memberApi";
 
-const API_BASE_URL = "/api";
 
 export const detectObjects = async (imageFile: File): Promise<string | null> => {
     const formData = new FormData();

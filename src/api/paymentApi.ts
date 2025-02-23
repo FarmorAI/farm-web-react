@@ -1,7 +1,7 @@
 import axios from "axios";
 import { PaymentResult } from "../model/subscription";
+import { API_BASE_URL } from "./memberApi";
 
-const API_BASE_URL = "/api";
 
 export const handlePaymentCancel = async(paymentResult: PaymentResult) => {
    try {
