@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Notice, NoticeListResponse} from "../model/contents";
 
-const API_BASE_URL = "http://localhost:6060/api";
+export const API_BASE_URL = `${import.meta.env.VITE_SPRING_API_URL}/api`;
 
   export const getNoticeList = async (pageParam : { page: number; size: number }): Promise<NoticeListResponse[]> => {
     const { page, size } = pageParam;

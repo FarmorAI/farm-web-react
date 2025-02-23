@@ -1,6 +1,7 @@
 import  { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '/public/assets/css/login/Login.css';
+import KaKaoLoginComponent from "../../components/auth/KaKaoLoginComponent.tsx";
 
 
 const Login = () => {
@@ -81,6 +82,7 @@ const Login = () => {
               </button>
             </a>
           </div>
+          <KaKaoLoginComponent/>
         </form>
 
         <div className="text-center mt-4">
