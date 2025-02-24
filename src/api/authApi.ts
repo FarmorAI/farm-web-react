@@ -40,7 +40,7 @@ export const authApi = createApi({
 
     getUserInfo: builder.query({
       query: () => ({
-        url: "/user",
+        url: "/member/user",
         method: "GET",
         headers: { Authorization: `Bearer ${getCookie("jwt")}` }, // 쿠키에서 토큰을 가져와 헤더에 포함
       }),
