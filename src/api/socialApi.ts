@@ -1,8 +1,8 @@
 import axios from "axios";
 import {API_BASE_URL} from "./noticeApi.ts";
 
-const rest_api_key: string = "05cf7054b98aa71dddecf6434cecf8da";
-const redirect_uri: string = "http://localhost:3030/auth/kakao/callback";
+const rest_api_key: string = "";
+const redirect_uri: string = "";
 
 const auth_code_path = "https://kauth.kakao.com/oauth/authorize"
 const access_token_url = "https://kauth.kakao.com/oauth/token";
