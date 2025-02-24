@@ -1,8 +1,8 @@
 import axios from "axios";
 import { InsertNotice, Notice, NoticeListResponse} from "../model/contents";
+import { API_BASE_URL } from "./memberApi";
 
 
-export const API_BASE_URL = `${import.meta.env.VITE_SPRING_API_URL}/api`;
 
   export const getNoticeList = async (pageParam : { page: number; size: number }): Promise<NoticeListResponse[]> => {
     const { page, size } = pageParam;
@@ -35,7 +35,3 @@ export const insertNotice = async (noticeinsert: {title: string; content:string 
     return null;
   }
 }
-
-
-
-
