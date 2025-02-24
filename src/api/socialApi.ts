@@ -39,7 +39,7 @@ export const getMemberWithAccessToken = async (accessToken: string) => {
         }
     };
     try {
-        const res = await axios.post(`${API_BASE_URL}/member/kakao`,{}, header)
+        const res = await axios.post(`${API_BASE_URL}/member/social/kakao`,{}, header)
         return res.data
     } catch (error) {
         console.error("Error getting member info:", error);
