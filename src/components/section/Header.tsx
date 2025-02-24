@@ -1,13 +1,30 @@
-import React, { useState } from "react";
-import { Link,  useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Lock, User } from "lucide-react";
 import { menuData } from "../pagelayout/MenuData";
 import Breadcrumbs from "../pagelayout/Breadcrumbs";
+import { set } from "react-hook-form";
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setNickname(JSON.parse(storedUser).user);
+    }
+  }, []);
+
+  // 로그아웃 처리 함수
+  const handleLogout = () => {
+    localStorage.removeItem("user"); // 저장된 로그인 정보 삭제
+    setNickname(null);
+    alert("로그아웃 되었습니다.");
+    navigate("/"); // 로그아웃 후 홈으로 이동
+  };
 
   return (
     <>
@@ -52,9 +69,27 @@ const Header: React.FC = () => {
                 </div>
               ))}
             </div>
+
+            {/* 🔹 로그인 여부에 따른 UI 변경 */}
             <div className="hidden md:flex space-x-4">
-              <AuthLinks />
+              {nickname ? (
+                <div className="flex items-center space-x-6">
+                  <span className="text-lg font-semibold text-gray-800">
+                    {nickname}님
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="text-lg font-semibold text-red-600 hover:text-red-700"
+                  >
+                    로그아웃
+                  </button>
+                </div>
+              ) : (
+                <AuthLinks />
+              )}
             </div>
+
+            {/* 🔹 모바일 메뉴 버튼 */}
             <div className="md:hidden flex items-center">
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -65,6 +100,8 @@ const Header: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* 🔹 모바일 메뉴 (로그인 상태 반영) */}
         {isOpen && (
           <div className="md:hidden px-4 pb-4 space-y-2 text-lg font-semibold text-gray-800">
             {menuData.map(({ name, links }) => (
@@ -83,7 +120,21 @@ const Header: React.FC = () => {
                 </div>
               </div>
             ))}
-            <AuthLinks />
+            {nickname ? (
+              <div className="text-center py-2">
+                <p className="text-lg font-semibold text-gray-800">
+                  {nickname}님
+                </p>
+                <button
+                  onClick={handleLogout}
+                  className="text-red-600 font-semibold hover:text-red-700"
+                >
+                  로그아웃
+                </button>
+              </div>
+            ) : (
+              <AuthLinks />
+            )}
           </div>
         )}
       </nav>
@@ -91,13 +142,19 @@ const Header: React.FC = () => {
     </>
   );
 };
-
+/* 🔥 로그인하지 않은 경우 보여줄 링크 */
 const AuthLinks: React.FC = () => (
   <div className="flex items-center space-x-6">
-    <Link to="/auth/login" className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500">
+    <Link
+      to="/auth/login"
+      className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500"
+    >
       <Lock className="w-5 h-5 mr-1" /> 로그인
     </Link>
-    <Link to="/auth/register" className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500">
+    <Link
+      to="/auth/register"
+      className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500"
+    >
       <User className="w-5 h-5 mr-1" /> 회원가입
     </Link>
   </div>

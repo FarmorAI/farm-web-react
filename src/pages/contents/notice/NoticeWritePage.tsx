@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 interface FormData {
   title: string;
   file1?: FileList;
-  file2?: FileList;
 }
 
 const NoticeWritePage = () => {
@@ -57,12 +56,6 @@ const NoticeWritePage = () => {
                 <td className="bg-gray-100 px-4 py-2 font-semibold">파일 #1</td>
                 <td className="px-4 py-2">
                   <input type="file" {...register("file1")} />
-                </td>
-              </tr>
-              <tr>
-                <td className="bg-gray-100 px-4 py-2 font-semibold">파일 #2</td>
-                <td className="px-4 py-2">
-                  <input type="file" {...register("file2")} />
                 </td>
               </tr>
             </tbody>
