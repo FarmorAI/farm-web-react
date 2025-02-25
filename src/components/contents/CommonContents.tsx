@@ -28,7 +28,6 @@ const CommonContents = ({ title, activeItem }: CommonListPageProps) => {
         )
     }
 
-
   return (
     <PageLayout title={title} activeItem={activeItem}>
      <div>
