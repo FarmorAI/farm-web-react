@@ -7,7 +7,7 @@ const API_BASE_URL = '/api';
 export const getBoardList = async (pageParam: {page: number; size:number }): Promise<BoardListResponse[] | null> =>{
   const {page, size} = pageParam;
   try {
-    const response= await axios.get<BoardListResponse[]>(`${API_BASE_URL}/board`, {params : {page, size}});
+    const response= await axios.get<BoardListResponse[]>(`${API_BASE_URL}/board/list`, {params : {page, size}});
     return response.data;
   } catch (error) {
     console.error("Error fetching board list:", error);
