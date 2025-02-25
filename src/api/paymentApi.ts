@@ -1,7 +1,7 @@
 import axios from "axios";
 import { PaymentResult } from "../model/subscription";
+import { API_BASE_URL } from "./memberApi";
 
-const API_BASE_URL = "/api";
 
 export const handlePaymentNaver = async(selectedPlan: string, selectedPrice: number): Promise<void> => {
    const response = await axios.post(`${API_BASE_URL}/payment/naverpay`, {
