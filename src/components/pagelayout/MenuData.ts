@@ -25,11 +25,11 @@ export const menuData = [
     ],
   },
   {
-    name: "고객지원",
+    name: "고객문의",
     path: "/support",
     links: [
-      { to: "/support/email", label: "이메일 문의" },
-      { to: "/support/list", label: "문의 목록" },
+      { to: "/support/customer", label: "1:1 문의" },
+      { to: "/support/list", label: "고객문의 목록" },
     ],
   },
   {

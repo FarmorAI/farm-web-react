@@ -1,23 +1,16 @@
-
 import KaKaoLoginComponent from "../../components/auth/KaKaoLoginComponent.tsx";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../api/authApi";
-import { useDispatch } from "react-redux";
 import "/public/assets/css/login/Login.css";
-import { setUser } from "../../redux/slices/authslices";
 import { getCookie } from "../../util/cookieUtill";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/slices/authslices.ts";
 
 // ✅ 로그인 정보 타입 정의
 interface LoginInfo {
   email: string;
   password: string;
-}
-
-// ✅ 사용자 정보 타입 정의
-interface UserData {
-  email: string;
-  nickname: string;
 }
 
 const LoginPage: React.FC = () => {
@@ -34,26 +27,18 @@ const LoginPage: React.FC = () => {
     e.preventDefault(); // 기본 폼 제출 방지
 
     try {
-      const userData: UserData = (await login(loginInfo).unwrap()) as UserData; // ✅ unwrap() 사용하여 오류 처리 가능
+      const userData =await login(loginInfo).unwrap();
+      const token = getCookie("jwt");
+      console.log("🔑 JWT 쿠키:", token);
+      console.log("✅ 로그인 응답 데이터:", userData);
 
-      console.log("🔍 로그인 응답 데이터:", userData); // 응답 확인
-
-      if (userData) {
+      if (token) {
         alert("로그인 성공!");
-
-        // ✅ Redux Store에 로그인된 유저 정보 저장 (타입 명시)
-        dispatch(
-          setUser({ email: userData.email, nickname: userData.nickname })
-        );
-
-        console.log("======================================");
-        console.log(getCookie("jwt"));
-
-        // ✅ 홈 페이지로 이동
+        dispatch(setUser(userData));
         navigate("/");
       }
     } catch (error) {
-      console.error("로그인 실패:", error);
+      console.error("❌ 로그인 실패:", error);
       alert("로그인 실패! 다시 시도하세요.");
     }
   };
@@ -167,7 +152,7 @@ const LoginPage: React.FC = () => {
               </button>
             </a>
           </div>
-          <KaKaoLoginComponent/>
+          <KaKaoLoginComponent />
         </form>
 
         <div className="text-center mt-4">

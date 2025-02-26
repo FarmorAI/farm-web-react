@@ -1,30 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Lock, User } from "lucide-react";
 import { menuData } from "../pagelayout/MenuData";
 import Breadcrumbs from "../pagelayout/Breadcrumbs";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetUserInfoQuery } from "../../api/authApi";
+import { RootState } from "../../redux/store";
+import { logoutUser, setUser } from "../../redux/slices/authslices";
+import { getCookie, removeCookie } from "../../util/cookieUtill";
 
 
 const Header: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
-  const [nickname, setNickname] = useState<string | null>(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { data: userData } = useGetUserInfoQuery(undefined, {
+    skip: !getCookie("jwt"), // ✅ JWT 토큰이 없으면 실행 안 함
+  });
+  const user = useSelector((state: RootState)=> state.auth.user);
+  const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setNickname(JSON.parse(storedUser).user);
+  useEffect(()=>{
+    if (userData) {
+      dispatch(setUser(userData));
     }
-  }, []);
+  },[userData, dispatch]);
+
+  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
+
 
   // 로그아웃 처리 함수
   const handleLogout = () => {
-    localStorage.removeItem("user"); // 저장된 로그인 정보 삭제
-    setNickname(null);
-    alert("로그아웃 되었습니다.");
-    navigate("/"); // 로그아웃 후 홈으로 이동
+    dispatch(logoutUser());
+    removeCookie("jwt");
+    window.location.replace("/");
   };
+
 
   return (
     <>
@@ -72,10 +82,10 @@ const Header: React.FC = () => {
 
             {/* 🔹 로그인 여부에 따른 UI 변경 */}
             <div className="hidden md:flex space-x-4">
-              {nickname ? (
+              {user ? (
                 <div className="flex items-center space-x-6">
                   <span className="text-lg font-semibold text-gray-800">
-                    {nickname}님
+                    {user.nickname}님
                   </span>
                   <button
                     onClick={handleLogout}
@@ -120,10 +130,10 @@ const Header: React.FC = () => {
                 </div>
               </div>
             ))}
-            {nickname ? (
+            {user ? (
               <div className="text-center py-2">
                 <p className="text-lg font-semibold text-gray-800">
-                  {nickname}님
+                  {user.nickname}님
                 </p>
                 <button
                   onClick={handleLogout}

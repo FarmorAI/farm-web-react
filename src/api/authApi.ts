@@ -2,29 +2,33 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getCookie, removeCookie, setCookie } from "../util/cookieUtill";
 import { API_BASE_URL } from "./memberApi";
 
+// ✅ 응답 데이터 타입 정의
+interface UserResponse {
+  email: string;
+  nickname: string;
+}
+
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL, // 백엔드 API 주소
+    baseUrl: API_BASE_URL,
     credentials: "include", // 쿠키 전송 허용
   }),
   endpoints: (builder) => ({
-    login: builder.mutation({
+    login: builder.mutation<{ email: string; nickname: string }, { email: string; password: string }>({
       query: ({ email, password }) => ({
         url: "/login",
         method: "POST",
         body: { email, password },
       }),
-      transformResponse: (response, meta) => {
+      transformResponse: (response: UserResponse, meta) => {
         console.log("🛠 로그인 응답 헤더:", meta?.response?.headers);
-        const token = meta?.response?.headers
-          .get("Authorization")
-          ?.split(" ")[1];
+        const token = meta?.response?.headers?.get("Authorization")?.split(" ")[1];
         console.log(token);
         if (token) {
-          setCookie("jwt", token); // ✅ JWT 저장
+          setCookie("jwt", token);
         }
-        return response; // 기존 응답 반환
+        return response; // ✅ response 타입이 명확해짐
       },
     }),
 
@@ -34,19 +38,18 @@ export const authApi = createApi({
         method: "POST",
       }),
       transformResponse: () => {
-        removeCookie("jwt"); // 로그아웃 시 쿠키 삭제
+        removeCookie("jwt");
       },
     }),
 
-    getUserInfo: builder.query({
+    getUserInfo: builder.query<UserResponse, void>({
       query: () => ({
-        url: "/user",
+        url: "/member/auth",
         method: "GET",
-        headers: { Authorization: `Bearer ${getCookie("jwt")}` }, // 쿠키에서 토큰을 가져와 헤더에 포함
+        headers: { Authorization: `Bearer ${getCookie("jwt")}` },
       }),
     }),
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useGetUserInfoQuery } =
-  authApi;
+export const { useLoginMutation, useLogoutMutation, useGetUserInfoQuery } = authApi;

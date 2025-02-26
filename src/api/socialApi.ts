@@ -1,5 +1,5 @@
 import axios from "axios";
-import {API_BASE_URL} from "./noticeApi.ts";
+import { API_BASE_URL } from "./memberApi";
 
 const rest_api_key: string = "";
 const redirect_uri: string = "";

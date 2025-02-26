@@ -17,14 +17,14 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<AuthState["user"]>) => {
+    setUser: (state, action: PayloadAction<{ email: string; nickname: string }>) => {
       console.log(action.payload);
       state.user = action.payload;
       state.isAuthenticated = !!action.payload;
     },
     logoutUser: (state) => {
       state.user = null;
-      state.isAuthenticated = false;
+      state.isAuthenticated = false;  
     },
   },
 });

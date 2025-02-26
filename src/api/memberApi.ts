@@ -51,26 +51,3 @@ export const registerUser = async (memberDto: {
   }
 };
 
-//로그인 요청
-export const loginUser = async (email: string, password: string) => {
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/login`,
-      { email, password }, // 요청 바디
-      { withCredentials: true } // ✅ 세션 기반 인증 사용 시 필요
-    );
-
-    console.log("로그인 응답:", response.data);
-
-    if (response.data.success) {
-      return response.data; // 사용자 정보 반환
-    } else {
-      alert("로그인 실패: " + response.data.message);
-      return null;
-    }
-  } catch (error) {
-    console.error("로그인 오류:", error);
-    alert("로그인 실패: " + (error || "서버 오류"));
-    return null;
-  }
-};
