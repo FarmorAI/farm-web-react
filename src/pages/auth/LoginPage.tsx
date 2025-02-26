@@ -1,9 +1,11 @@
 import KaKaoLoginComponent from "../../components/auth/KaKaoLoginComponent.tsx";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../api/authApi";
 import "/public/assets/css/login/Login.css";
 import { getCookie } from "../../util/cookieUtill";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/slices/authslices.ts";
 
 // ✅ 로그인 정보 타입 정의
 interface LoginInfo {
@@ -12,6 +14,8 @@ interface LoginInfo {
 }
 
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loginInfo, setLoginInfo] = useState<LoginInfo>({
     email: "",
     password: "",
@@ -23,11 +27,15 @@ const LoginPage: React.FC = () => {
     e.preventDefault(); // 기본 폼 제출 방지
 
     try {
-      await login(loginInfo).unwrap();
+      const userData =await login(loginInfo).unwrap();
       const token = getCookie("jwt");
+      console.log("🔑 JWT 쿠키:", token);
+      console.log("✅ 로그인 응답 데이터:", userData);
+
       if (token) {
         alert("로그인 성공!");
-        window.location.href = "/"; //나중에 수정해야함
+        dispatch(setUser(userData));
+        navigate("/");
       }
     } catch (error) {
       console.error("❌ 로그인 실패:", error);

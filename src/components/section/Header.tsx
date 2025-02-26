@@ -7,13 +7,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetUserInfoQuery } from "../../api/authApi";
 import { RootState } from "../../redux/store";
 import { logoutUser, setUser } from "../../redux/slices/authslices";
-import { removeCookie } from "../../util/cookieUtill";
+import { getCookie, removeCookie } from "../../util/cookieUtill";
 
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
-  const { data: userData } = useGetUserInfoQuery({});
+  const navigate = useNavigate();
+  const { data: userData } = useGetUserInfoQuery(undefined, {
+    skip: !getCookie("jwt"), // ✅ JWT 토큰이 없으면 실행 안 함
+  });
   const user = useSelector((state: RootState)=> state.auth.user);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(()=>{
     if (userData) {
@@ -21,16 +25,14 @@ const Header: React.FC = () => {
     }
   },[userData, dispatch]);
 
-  const [isOpen, setIsOpen] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
-  const navigate = useNavigate();
 
 
   // 로그아웃 처리 함수
   const handleLogout = () => {
     dispatch(logoutUser());
     removeCookie("jwt");
-    navigate("/");
+    window.location.replace("/");
   };
 
 
