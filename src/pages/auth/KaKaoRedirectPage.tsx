@@ -1,6 +1,6 @@
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {useEffect} from "react";
-import {getAccessToken, getMemberWithAccessToken} from "../../api/socialApi.ts";
+import {getKakaoAccessToken, getKakaoWithAccessToken} from "../../api/socialApi.ts";
 
 const KaKaoRedirectPage = () => {
 
@@ -10,8 +10,8 @@ const KaKaoRedirectPage = () => {
 
     useEffect(() => {
         if (code != null) {
-            getAccessToken(code).then((accessToken) => {
-                getMemberWithAccessToken(accessToken).then((result) =>{
+            getKakaoAccessToken(code).then((accessToken) => {
+                getKakaoWithAccessToken(accessToken).then((result) =>{
                     console.log(result);
                     if(result && result.social){
                         navigate("/"); //사용자 정보를 수정하게 마이페이지로 강제로 가게 해줍니다.
