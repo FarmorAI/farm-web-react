@@ -7,14 +7,12 @@ import PageComponent from "../PageComponent.tsx";
 import SearchBar from "../SearchBar.tsx"; // ✅ 검색바 추가
 
 const NoticeList = () => {
-  const { moveToRead, moveToList, moveToWrite, size, page, refresh } =
-    useMove();
+  const { moveToRead, moveToList, moveToWrite, size, page, refresh } = useMove();
 
   // ✅ notices를 객체로 설정
   const [notices, setNotices] = useState<NoticeListResponse | null>(null);
   const [searchQuery, setSearchQuery] = useState(""); // 🔹 검색어 상태 추가
-  const [filteredNotices, setFilteredNotices] =
-    useState<NoticeListResponse | null>(null);
+  const [filteredNotices, setFilteredNotices] = useState<NoticeListResponse | null>(null);
 
   useEffect(() => {
     const noticeDB = async () => {

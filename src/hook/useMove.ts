@@ -46,7 +46,7 @@ const useMove = () => {
             navigate(`/contents/${basePath}/write?${queryDefault}`);
         };
 
-    return { moveToList, moveToModify, moveToRead, moveToWrite,page, size, refresh };
+    return { moveToList, moveToModify, moveToRead, moveToWrite, page, size, refresh };
 };
 
 export default useMove;
