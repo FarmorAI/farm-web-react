@@ -1,0 +1,1 @@
+import{j as t}from"./index-BI7l_kRr.js";import{C as o}from"./CommonContents-CPB-hsmd.js";import"./PageLayout-BSf8JYxn.js";import"./noticeApi-Bl0irjlo.js";import"./useMove-RkYOmwFb.js";import"./boardApi-BiKSb5z4.js";const a=()=>t.jsx(o,{title:"공지사항",activeItem:"공지사항"});export{a as default};

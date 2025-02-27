@@ -1,0 +1,1 @@
+import{j as t}from"./index-BI7l_kRr.js";import{P as e}from"./PageLayout-BSf8JYxn.js";const s=()=>t.jsx(e,{title:"문의 목록",activeItem:"문의 목록",children:t.jsx("div",{children:t.jsx("p",{children:"문의 목록 내용"})})});export{s as default};
