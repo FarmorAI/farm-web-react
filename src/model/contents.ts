@@ -56,6 +56,32 @@ export interface BoardListResponse {
   current: number;
 }
 
+export type InsertSupport = Pick<Support, "inquiryId" | "title">;
+
+export interface Support {
+  inquiryId: number;
+  title: string;
+  content?: string; // 선택적 필드
+  writer: string;
+  views: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SupportListResponse {
+  dtoList: Support[];
+  pageNumList: number[];
+  pageRequestDto: PageRequestDto;
+  prev: boolean;
+  next: boolean;
+  totalCount: number;
+  prevPage: number;
+  nextPage: number;
+  totalPage: number;
+  current: number;
+}
+
+
 export interface WriteFormProps {
   title: string; // 페이지 제목
   onSubmit: (data: WriteFormData, content: string) => void; // 제출 함수
