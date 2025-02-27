@@ -3,7 +3,7 @@ import { RouteObject } from "react-router-dom";
 
 // Lazy 로딩된 컴포넌트
 const SupportList = lazy(() => import("../pages/support/SupportListPage"));
-const SupportEmail = lazy(() => import("../pages/support/SupportEmailPage"));
+const SupportCustomerPage = lazy(() => import("../pages/support/SupportCustomerPage"));
 
 // ✅ supportRoutes 배열을 export
 export const supportRoutes: RouteObject[] = [
@@ -16,10 +16,10 @@ export const supportRoutes: RouteObject[] = [
     ),
   },
   {
-    path: "support/email",
+    path: "support/customer",
     element: (
       <Suspense fallback={<div>Loading...</div>}>
-        <SupportEmail />
+        <SupportCustomerPage />
       </Suspense>
     ),
   },

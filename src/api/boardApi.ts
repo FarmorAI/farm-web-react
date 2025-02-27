@@ -3,9 +3,6 @@ import { Board, BoardListResponse } from "../model/contents";
 import { API_BASE_URL } from "./memberApi";
 
 
-
-
-
 export const getBoardList = async (pageParam: {page: number; size:number }): Promise<BoardListResponse[] | null> =>{
   const {page, size} = pageParam;
   try {
