@@ -7,6 +7,7 @@ import { getCookie } from "../../util/cookieUtill";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/slices/authslices.ts";
 import GoogleLoginComponent from "../../components/auth/GoogleLoginComponent.tsx";
+import NaverLoginComponent from "../../components/auth/NaverLoginComponent.tsx";
 
 // ✅ 로그인 정보 타입 정의
 interface LoginInfo {
@@ -109,6 +110,7 @@ const LoginPage: React.FC = () => {
           </div>
 
           <GoogleLoginComponent />
+          <NaverLoginComponent/>
           <KaKaoLoginComponent />
         </form>
 

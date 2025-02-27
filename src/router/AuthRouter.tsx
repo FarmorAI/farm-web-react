@@ -9,7 +9,7 @@ const Mypage = lazy(() => import("../pages/auth/ProfilePage"));
 // @ts-ignore
 const KakaoRedirect = lazy(() => import("../pages/auth/KakaoRedirectPage"));
 const GoogleRedirect = lazy(() => import("../pages/auth/GoogleRedirectPage"));
-
+const NaverRedirect = lazy(() => import("../pages/auth/NaverRedirectPage"));
 // ✅ authRoutes 배열을 export
 export const authRoutes: RouteObject[] = [
   {
@@ -60,5 +60,13 @@ export const authRoutes: RouteObject[] = [
           <GoogleRedirect/>
         </Suspense>
     )
-  }
+  },
+  {
+    path: "auth/naver/callback",
+    element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <NaverRedirect />
+        </Suspense>
+    ),
+  },
 ];

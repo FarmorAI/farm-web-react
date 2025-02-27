@@ -11,9 +11,9 @@ const BoardList = () => {
     useMove();
 
   const [boards, setBoards] = useState<BoardListResponse | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [filteredBoards, setFilteredBoards] =
     useState<BoardListResponse | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const boardDB = async () => {

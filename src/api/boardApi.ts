@@ -24,4 +24,30 @@ export const getBoardById = async (id: number) : Promise<Board | null> =>{
   }
 }
 
+/**
+ * 게시글 추가 (파일 포함 가능)
+ */
+export const insertBoard = async (boardData: FormData): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/board`, boardData, {
+      headers: { "Content-Type": "multipart/form-data" }, // FormData 전송을 위해 설정
+    });
+    return response.status === 200; // 성공 시 true 반환
+  } catch (error) {
+    console.error("Error inserting board:", error);
+    return false;
+  }
+};
 
+/**
+ * 게시글 삭제
+ */
+export const deleteBoard = async (id: number): Promise<boolean> => {
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/board/${id}`);
+    return response.status === 200; // 성공 시 true 반환
+  } catch (error) {
+    console.error(`Error deleting board with ID ${id}:`, error);
+    return false;
+  }
+};
