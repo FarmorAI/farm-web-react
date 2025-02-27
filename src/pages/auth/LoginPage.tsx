@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import "/public/assets/css/login/Login.css";
 import { setUser } from "../../redux/slices/authslices";
 import { getCookie } from "../../util/cookieUtill";
+import NaverLoginComponent from "../../components/auth/NaverLoginComponent.tsx";
 
 // ✅ 로그인 정보 타입 정의
 interface LoginInfo {
@@ -145,28 +146,7 @@ const LoginPage: React.FC = () => {
             </a>
           </div>
 
-          <div className="d-flex justify-content-between">
-            <a
-              href="/api/api/auth/naver?server=react"
-              style={{ width: "100%" }}
-            >
-              <button
-                type="button"
-                className="mt-3 btn w-100"
-                style={{
-                  border: "1px solid rgb(207, 207, 207)",
-                  background: "none",
-                }}
-              >
-                <img
-                  src="src/assets/login/naverLogo.png"
-                  alt="네이버 로그인"
-                  style={{ maxHeight: "25px", objectFit: "cover" }}
-                />{" "}
-                Sign up with Naver
-              </button>
-            </a>
-          </div>
+          <NaverLoginComponent/>
           <KaKaoLoginComponent/>
         </form>
 
