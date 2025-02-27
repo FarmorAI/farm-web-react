@@ -6,6 +6,7 @@ import "/public/assets/css/login/Login.css";
 import { getCookie } from "../../util/cookieUtill";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/slices/authslices.ts";
+import GoogleLoginComponent from "../../components/auth/GoogleLoginComponent.tsx";
 
 // ✅ 로그인 정보 타입 정의
 interface LoginInfo {
@@ -107,51 +108,7 @@ const LoginPage: React.FC = () => {
             </Link>
           </div>
 
-          <div className="d-flex justify-content-between">
-            <a
-              href="/api/api/signup/google?server=react"
-              style={{ width: "100%" }}
-            >
-              <button
-                type="button"
-                className="mt-1 btn w-100"
-                style={{
-                  border: "1px solid rgb(207, 207, 207)",
-                  background: "none",
-                }}
-              >
-                <img
-                  src="src/assets/login/google.webp"
-                  alt="Google"
-                  style={{ maxHeight: "25px", objectFit: "cover" }}
-                />{" "}
-                Sign up with Google
-              </button>
-            </a>
-          </div>
-
-          <div className="d-flex justify-content-between">
-            <a
-              href="/api/api/auth/naver?server=react"
-              style={{ width: "100%" }}
-            >
-              <button
-                type="button"
-                className="mt-3 btn w-100"
-                style={{
-                  border: "1px solid rgb(207, 207, 207)",
-                  background: "none",
-                }}
-              >
-                <img
-                  src="src/assets/login/naverLogo.png"
-                  alt="네이버 로그인"
-                  style={{ maxHeight: "25px", objectFit: "cover" }}
-                />{" "}
-                Sign up with Naver
-              </button>
-            </a>
-          </div>
+          <GoogleLoginComponent />
           <KaKaoLoginComponent />
         </form>
 
