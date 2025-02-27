@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getNoticeById } from "../../../api/noticeApi";
+import {deleteNotice, getNoticeById} from "../../../api/noticeApi";
 import { Notice } from "../../../model/contents";
 import useMove from "../../../hook/useMove.ts";
 import PageLayout from "../../pagelayout/PageLayout.tsx";
@@ -43,6 +43,17 @@ const NoticeDetail: React.FC<NoticeDetailProps> = ({ noticeId }) => {
       </div>
     );
 
+  const handleDelete = async () => {
+    const isDelete = await deleteNotice(noticeId as number);
+    if(isDelete){
+      alert("공지사항이 삭제되었습니다.");
+      moveToList();
+    }
+    else {
+      alert("삭제에 실패했습니다.");
+    }
+  }
+
   return (
     <PageLayout title="상세 페이지" activeItem="공지사항">
       <div className="max-w-7xl mx-auto p-6 bg-white  rounded-lg ">
@@ -76,12 +87,12 @@ const NoticeDetail: React.FC<NoticeDetailProps> = ({ noticeId }) => {
         </table>
         <div className="flex justify-end mt-6 space-x-4">
           <button className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">수정</button>
-          <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">삭제</button>
+          <button onClick={() => handleDelete()} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">삭제</button>
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             onClick={() => moveToList()}
           >
-            뒤로
+            목록으로
           </button>
         </div>
       </div>
