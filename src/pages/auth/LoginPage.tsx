@@ -109,29 +109,6 @@ const LoginPage: React.FC = () => {
 
           <div className="d-flex justify-content-between">
             <a
-              href="/api/api/signup/google?server=react"
-              style={{ width: "100%" }}
-            >
-              <button
-                type="button"
-                className="mt-1 btn w-100"
-                style={{
-                  border: "1px solid rgb(207, 207, 207)",
-                  background: "none",
-                }}
-              >
-                <img
-                  src="src/assets/login/google.webp"
-                  alt="Google"
-                  style={{ maxHeight: "25px", objectFit: "cover" }}
-                />{" "}
-                Sign up with Google
-              </button>
-            </a>
-          </div>
-
-          <div className="d-flex justify-content-between">
-            <a
               href="/api/api/auth/naver?server=react"
               style={{ width: "100%" }}
             >
