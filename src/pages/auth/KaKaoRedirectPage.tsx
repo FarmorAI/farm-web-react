@@ -2,7 +2,7 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import {useEffect} from "react";
 import {getAccessToken, getMemberWithAccessToken} from "../../api/socialApi.ts";
 
-const KaKaoRedirectPage = () => {
+const KakaoRedirectPage = () => {
 
     const [searchParmas] = useSearchParams()
     const navigate = useNavigate();
@@ -29,4 +29,4 @@ const KaKaoRedirectPage = () => {
     );
 };
 
-export default KaKaoRedirectPage;
+export default KakaoRedirectPage;
