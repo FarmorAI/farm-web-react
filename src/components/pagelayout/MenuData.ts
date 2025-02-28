@@ -28,7 +28,7 @@ export const menuData = [
     name: "고객문의",
     path: "/support",
     links: [
-      { to: "/support/customer", label: "1:1 문의" },
+      { to: "/support", label: "1:1 문의" },
       { to: "/support/list", label: "고객문의 목록" },
     ],
   },
