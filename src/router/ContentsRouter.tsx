@@ -10,6 +10,9 @@ const NoticeList = lazy(() => import("../pages/contents/notice/NoticeListPage"))
 const NoticeDetail = lazy(() => import("../pages/contents/notice/NoticeDetailPage")); // ✅ 상세 페이지 추가
 const NoticeWritePage = lazy(() => import("../pages/contents/notice/NoticeWritePage"));
 
+const SupportList = lazy(() => import("../components/contents/support/SupportList"));
+const SupportDetail = lazy(() => import("../components/contents/support/SupportDetail"))
+
 // ✅ boardRoutes 배열을 export
 export const boardRoutes: RouteObject[] = [
   {
@@ -60,4 +63,20 @@ export const boardRoutes: RouteObject[] = [
       </Suspense>
     ),
   },
+  {
+    path: "contents/support",
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <SupportList />
+      </Suspense>
+    ),
+  },
+  {
+    path: "contents/support/:id", // ✅ 동적 라우팅 추가 (게시판 상세보기)
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <SupportDetail />
+      </Suspense>
+    ),
+  }
 ];
