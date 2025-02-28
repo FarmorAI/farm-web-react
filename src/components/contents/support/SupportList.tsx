@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import SearchBar from '../SearchBar'
 import PageComponent from '../PageComponent'
 import { SupportListResponse } from '../../../model/contents';
@@ -32,27 +32,27 @@ const SupportList = () => {
         supportDB();
     }, [size, page, refresh]);
 
+
     // 🔹 검색 기능 추가
     const handleSearch = (category: string) => {
         if (!supports) return;
 
-        const filtered = supports.dtoList.filter((notice) => {
+        const filtered = supports.dtoList.filter((support) => {
             switch (category) {
                 case "제목":
-                    return notice.title.includes(searchQuery);
+                    return support.title.includes(searchQuery);
                 case "내용":
-                    return notice.content?.includes(searchQuery); // `content`가 있을 경우 검색
+                    return support.content.includes(searchQuery);
                 case "작성자":
-                    return notice.writer.includes(searchQuery);
+                    return support.writer?.includes(searchQuery);
                 default:
                     return (
-                        notice.title.includes(searchQuery) ||
-                        notice.content?.includes(searchQuery) ||
-                        notice.writer.includes(searchQuery)
+                        support.title.includes(searchQuery) ||
+                        support.content.includes(searchQuery) ||
+                        support.writer?.includes(searchQuery)
                     );
             }
         });
-
         setFilteredSupport({ ...supports, dtoList: filtered });
     };
 
@@ -72,10 +72,7 @@ const SupportList = () => {
                 <thead>
                     <tr className="bg-gray-50 text-left">
                         {["번호", "제목", "작성자", "등록일", "조회"].map((header, idx) => (
-                            <th
-                                key={idx}
-                                className="px-6 py-3 text-xs font-medium text-gray-500 uppercase"
-                            >
+                            <th key={idx} className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">
                                 {header}
                             </th>
                         ))}
@@ -117,6 +114,7 @@ const SupportList = () => {
                     movePage={moveToList}
                 />
             )}
+            
             {/* ✅ 글 작성 버튼 (페이지네이션 바로 옆) */}
             <button
                 onClick={moveToWrite} // 글 작성 페이지 이동 함수
