@@ -3,7 +3,7 @@ import { getCookie, removeCookie, setCookie } from "../util/cookieUtill";
 import { API_BASE_URL } from "./memberApi";
 
 // ✅ 응답 데이터 타입 정의
-interface UserResponse {
+export interface UserResponse {
   email: string;
   nickname: string;
 }
