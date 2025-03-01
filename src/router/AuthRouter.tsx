@@ -5,6 +5,8 @@ import { RouteObject } from "react-router-dom";
 const Login = lazy(() => import("../pages/auth/LoginPage"));
 const Register = lazy(() => import("../pages/auth/RegisterPage"));
 const LoginFind = lazy(() => import("../pages/auth/FindPage"));
+const GoogleRedirect = lazy(() => import("../pages/auth/GoogleRedirectPage"));
+const NaverRedirect = lazy(() => import("../pages/auth/NaverRedirectPage"));
 const ProfilePage = lazy(() => import("../pages/auth/ProfilePage"));
 const KakaoRedirectPage = lazy(() => import("../pages/auth/KakaoRedirectPage"));
 
@@ -50,5 +52,21 @@ export const authRoutes: RouteObject[] = [
           <KakaoRedirectPage />
         </Suspense>
     )
-  }
+  },
+  {
+    path : "auth/google/callback",
+    element : (
+        <Suspense fallback={<div>Loading...</div>}>
+          <GoogleRedirect/>
+        </Suspense>
+    )
+  },
+  {
+    path: "auth/naver/callback",
+    element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <NaverRedirect />
+        </Suspense>
+    ),
+  },
 ];

@@ -59,5 +59,5 @@ export const boardRoutes: RouteObject[] = [
         <BoardWritePage />
       </Suspense>
     ),
-  },
+  }
 ];

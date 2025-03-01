@@ -46,8 +46,7 @@ const NoticeDetail: React.FC<NoticeDetailProps> = ({ noticeId }) => {
   return (
     <PageLayout title="상세 페이지" activeItem="공지사항">
       <div className="max-w-7xl mx-auto p-6 bg-white  rounded-lg ">
-        <div className="page_tits mb-4">
-        </div>
+        <div className="page_tits mb-4"></div>
         <table className="w-full border-collapse border border-gray-300">
           <tbody>
             <tr className="border-b">
