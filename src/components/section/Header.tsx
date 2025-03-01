@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, User, Lock } from "lucide-react";
+import {  User, Lock } from "lucide-react";
 import { menuData } from "../pagelayout/MenuData";
 import Breadcrumbs from "../pagelayout/Breadcrumbs";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,6 @@ const Header: React.FC = () => {
   });
   
   const user = useSelector((state: RootState) => state.auth.user);
-  const [isOpen, setIsOpen] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null); // 🔥 드롭다운 상태
 
   useEffect(() => {
@@ -33,18 +32,17 @@ const Header: React.FC = () => {
     removeCookie("jwt");
     window.location.replace("/");
   };
-
   return (
     <>
       <nav className="bg-white shadow-sm">
-        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
+        <div className="max-w-8xl mx-auto px-4 sm:px-5 lg:px-8">
+          <div className="flex justify-between mx-5 h-16 items-center">
             {/* 로고 */}
-            <div className="flex items-center space-x-10">
+            <div className="flex items-center  px-5">
               <img
-                className="h-8 w-auto pr-12"
-                src="https://ai-public.creatie.ai/gen_page/logo_placeholder.png"
-                alt="스마트팜"
+                className="h-14 w-auto  "
+                src="/public/assets/images/logo/headerlogo1.png"
+                alt="Berrypick"
               />
             </div>
 
@@ -90,7 +88,7 @@ const Header: React.FC = () => {
                 >
                   <button className="flex items-center space-x-1 text-gray-800 text-lg font-semibold">
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-                      <User className="w-5 h-5 text-white" />
+                      <User className="w-5 h-5 text-white " />
                     </div>
                     <span >{user.nickname}님</span> 
                   </button>
@@ -116,13 +114,6 @@ const Header: React.FC = () => {
               ) : (
                 <AuthLinks />
               )}
-            </div>
-
-            {/* 🔹 모바일 메뉴 버튼 */}
-            <div className="md:hidden flex items-center">
-              <button onClick={() => setIsOpen(!isOpen)} className="p-2 text-gray-600">
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
             </div>
           </div>
         </div>

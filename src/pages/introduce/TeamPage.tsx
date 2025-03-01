@@ -2,28 +2,28 @@ import { motion } from "framer-motion";
 
 const teamMembers = [
   {
-    name: "김태호",
-    role: "CEO & 공동 창업자",
+    name: "오준명",
+    role: "풀스택 엔지니어",
     description: "농업 기술 혁신과 지속 가능한 발전을 위한 비전을 제시합니다.",
-    img: "https://creatie.ai/ai/api/search-image?query=A%20professional%20headshot%20of%20a%20business%20person...",
+    img: "/public/assets/images/member/준명.png",
   },
   {
-    name: "이수진",
-    role: "CTO",
-    description: "최신 기술을 농업에 접목시키는 혁신적인 솔루션을 개발합니다.",
-    img: "https://creatie.ai/ai/api/search-image?query=A%20professional%20headshot%20of%20a%20business%20woman...",
+    name: "김도훈",
+    role: "풀스택 엔지니어",
+    description: "프론트 1등공신",
+    img: "/public/assets/images/member/도훈.png",
   },
   {
-    name: "박준영",
-    role: "개발 책임자",
+    name: "김종범",
+    role: "풀스택 엔지니어",
     description: "스마트팜 시스템 개발과 데이터 분석을 담당합니다.",
-    img: "https://creatie.ai/ai/api/search-image?query=A%20professional%20headshot%20of%20a%20business%20person...",
+    img: "/public/assets/images/member/종범.png",
   },
   {
-    name: "최미영",
-    role: "디자인 책임자",
+    name: "이다혜",
+    role: "풀스택 엔지니어",
     description: "사용자 중심의 직관적인 인터페이스를 디자인합니다.",
-    img: "https://creatie.ai/ai/api/search-image?query=A%20professional%20headshot%20of%20a%20business%20woman...",
+    img: "/public/assets/images/member/다혜.png",
   },
 ];
 
@@ -69,7 +69,7 @@ const Team = () => {
     <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="text-center mb-16">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          우리 팀을 소개합니다
+          FarmorAI 팀을 소개합니다
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
           FarmSmarter는 혁신적인 농업 기술을 통해 더 나은 미래를 만들어가는
