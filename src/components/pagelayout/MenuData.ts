@@ -40,4 +40,12 @@ export const menuData = [
       { to: "/payment/result", label: "결제확인" },
     ],
   },
+  {
+    name : "상품 페이지",
+    path : "/product",
+    links : [
+      { to : "/product/list", label : "상품 목록" },
+      { to : "/product/detail", label : "상품 상세" }
+    ]
+  }
 ];

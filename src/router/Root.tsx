@@ -7,6 +7,7 @@ import { boardRoutes } from "./ContentsRouter";
 import { supportRoutes } from "./SupportRouter";
 import { introduceRoutes } from "./IntroduceRouter";
 import { paymentRoutes } from "./PaymentRouter";
+import {productRouter} from "./ProductRouter.tsx";
 
 // ✅ Suspense 적용 (라우트 전체에 로딩 표시)
 const withSuspense = (routes: RouteObject[]): RouteObject[] =>
@@ -30,7 +31,8 @@ const Root = createBrowserRouter([
       ...withSuspense(boardRoutes),
       ...withSuspense(supportRoutes),
       ...withSuspense(introduceRoutes),
-      ...withSuspense(paymentRoutes)
+      ...withSuspense(paymentRoutes),
+      ...withSuspense(productRouter),
     ],
   },
 ]);
