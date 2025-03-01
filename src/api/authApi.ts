@@ -44,7 +44,7 @@ export const authApi = createApi({
 
     getUserInfo: builder.query<UserResponse, void>({
       query: () => ({
-        url: "/member/auth",
+        url: "/member/user",
         method: "GET",
         headers: { Authorization: `Bearer ${getCookie("jwt")}` },
       }),
