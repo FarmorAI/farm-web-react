@@ -11,7 +11,7 @@ const KaKaoLoginComponent = () => {
             <Link to = {link}
             >
                 <img
-                    src="/public/assets/images/kakao_login.png"
+                    src="/public/assets/images/auth/kakao.png"
                     alt="Kakao"
                 />
             </Link>

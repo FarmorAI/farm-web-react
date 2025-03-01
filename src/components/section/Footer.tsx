@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
         <div className="mt-10 pt-6 border-t border-gray-200 text-center text-gray-500 text-sm">
-          © 2024 스마트팜 AI. All rights reserved.
+          © 2025 FarmorAI. All rights reserved.
         </div>
       </div>
     </footer>
