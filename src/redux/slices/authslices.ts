@@ -5,6 +5,8 @@ export interface AuthState {
   user: {
     email: string;
     nickname: string;
+    password?: string;
+    phone?: string;
     createdAt?: string; // 가입일 (선택적)
     address?: string;   // 주소 (선택적)
   } | null;

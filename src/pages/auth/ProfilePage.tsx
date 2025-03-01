@@ -1,18 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
-import { useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 
 const ProfilePage = () => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [nickname, setNickname] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+
+
 
 
   // ✅ Redux에서 사용자 정보 가져오기
   const user = useSelector((state: RootState)=> state.auth.user)
+
+
+  useEffect(() => {
+    if (user) {
+      setNickname(user.nickname || '');
+      setPhone(user.phone || '');
+      setAddress(user.address || '');
+    }
+  }, [user]);
+
 
   useEffect(() => {
     if (chartRef.current) {
@@ -61,11 +74,6 @@ const ProfilePage = () => {
     }
   };
 
-  const handleLogin = (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsLoggedIn(true);
-    setIsLoginModalOpen(false);
-  };
 
   return (
     <main className="bg-gray-50 font-['Noto_Sans_KR'] max-w-8xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -75,7 +83,7 @@ const ProfilePage = () => {
           <div className="col-span-2 bg-white rounded-lg shadow-lg p-6 flex items-center relative">
             <button
               className="absolute top-6 right-7 bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition"
-              onClick={() => isLoggedIn ? setIsEditModalOpen(true) : setIsLoginModalOpen(true)}
+              onClick={() => setIsEditModalOpen(true) }
             >
               회원정보 수정
             </button>
@@ -280,43 +288,46 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      {/* 로그인 모달 */}
-      {isLoginModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-medium mb-4">로그인</h2>
-            <form onSubmit={handleLogin}>
-              <div className="mb-4">
-                <label className="block text-gray-700">이메일</label>
-                <input type="email" className="w-full p-2 border rounded-lg" required />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">비밀번호</label>
-                <input type="password" className="w-full p-2 border rounded-lg" required />
-              </div>
-              <div className="flex justify-end">
-                <button type="button" onClick={() => setIsLoginModalOpen(false)}
-                  className="mr-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
-                  취소
-                </button>
-                <button type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                  로그인
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
       {/* 회원정보 수정 모달 */}
       {isEditModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-lg font-medium mb-4">회원정보 수정</h2>
-            <p>여기에 회원정보 수정 폼을 추가하세요.</p>
-            <button onClick={() => setIsEditModalOpen(false)} className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
-              닫기
-            </button>
+            <div className="mb-4">
+              <label className="block text-gray-700">닉네임</label>
+              <input
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                className="w-full p-2 border rounded-lg"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">휴대폰 번호</label>
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full p-2 border rounded-lg"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">주소</label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full p-2 border rounded-lg"
+              />
+            </div>
+            <div className="flex justify-end">
+              <button onClick={() => setIsEditModalOpen(false)} className="mr-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                취소
+              </button>
+              <button  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                저장
+              </button>
+            </div>
           </div>
         </div>
       )}
