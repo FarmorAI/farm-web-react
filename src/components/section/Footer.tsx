@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <img className="h-10 w-auto mb-4" src="https://ai-public.creatie.ai/gen_page/logo_placeholder.png" alt="스마트팜" />
+            <img className="h-10 w-auto mb-4" src="/public/assets/images/logo/headerlogo.png" alt="Berrypick" />
             <p className="text-sm text-gray-600">AI 기반 스마트팜 기술로 농업의 미래를 선도합니다.</p>
           </div>
           <div>

@@ -41,7 +41,7 @@ const Header: React.FC = () => {
             <div className="flex items-center  px-5">
               <img
                 className="h-14 w-auto  "
-                src="/public/assets/images/logo/headerlogo1.png"
+                src="/public/assets/images/logo/headerlogo.png"
                 alt="Berrypick"
               />
             </div>

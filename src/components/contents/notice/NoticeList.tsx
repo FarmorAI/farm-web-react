@@ -5,16 +5,23 @@ import { getNoticeList } from "../../../api/noticeApi.ts";
 import useMove from "../../../hook/useMove.ts";
 import PageComponent from "../PageComponent.tsx";
 import SearchBar from "../SearchBar.tsx"; // ✅ 검색바 추가
+import { getCookie } from "../../../util/cookieUtill.ts";
 
 const NoticeList = () => {
-  const { moveToRead, moveToList, moveToWrite, size, page, refresh } = useMove();
+  const { moveToRead, moveToList, moveToWrite, size, page, refresh } =
+    useMove();
 
   // ✅ notices를 객체로 설정
   const [notices, setNotices] = useState<NoticeListResponse | null>(null);
   const [searchQuery, setSearchQuery] = useState(""); // 🔹 검색어 상태 추가
-  const [filteredNotices, setFilteredNotices] = useState<NoticeListResponse | null>(null);
+  const [filteredNotices, setFilteredNotices] =
+    useState<NoticeListResponse | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // 🔹 로그인 여부 상태 추가
 
   useEffect(() => {
+    // ✅ 토큰 확인하여 로그인 상태 업데이트
+    const token = getCookie("jwt");
+    setIsLoggedIn(!!token); // 토큰이 있으면 true, 없으면 false
     const noticeDB = async () => {
       try {
         const res = await getNoticeList({ page, size });
@@ -120,13 +127,15 @@ const NoticeList = () => {
           movePage={moveToList}
         />
       )}
-      {/* ✅ 글 작성 버튼 (페이지네이션 바로 옆) */}
-      <button
-        onClick={moveToWrite} // 글 작성 페이지 이동 함수
-        className="px-6 py-2 mx-20 mb-5  bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-      >
-        글 작성
-      </button>
+      {/* ✅ 토큰이 있는 경우에만 글 작성 버튼을 보여줌 */}
+      {isLoggedIn && (
+        <button
+          onClick={moveToWrite} // 글 작성 페이지 이동 함수
+          className="px-6 py-2 mx-20 mb-5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
+          글 작성
+        </button>
+      )}
     </div>
   );
 };

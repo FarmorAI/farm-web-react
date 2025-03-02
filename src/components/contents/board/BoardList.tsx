@@ -5,6 +5,7 @@ import { getBoardList } from "../../../api/boardApi";
 import useMove from "../../../hook/useMove";
 import SearchBar from "../SearchBar";
 import PageComponent from "../PageComponent";
+import { getCookie } from "../../../util/cookieUtill";
 
 const BoardList = () => {
   const { moveToWrite, moveToList, moveToRead, page, size, refresh } =
@@ -14,8 +15,11 @@ const BoardList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredBoards, setFilteredBoards] =
     useState<BoardListResponse | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
+    const token= getCookie("jwt");
+    setIsLoggedIn(!!token);
     const boardDB = async () => {
       try {
         const res = await getBoardList({ page, size });
@@ -117,13 +121,15 @@ const BoardList = () => {
           movePage={moveToList}
         />
       )}
-      {/* ✅ 글 작성 버튼 (페이지네이션 바로 옆) */}
-      <button
-        onClick={moveToWrite} // 글 작성 페이지 이동 함수
-        className="px-6 py-2 mx-20 mb-5  bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-      >
-        글 작성
-      </button>
+    {/* ✅ 토큰이 있는 경우에만 글 작성 버튼을 보여줌 */}
+      {isLoggedIn && (
+        <button
+          onClick={moveToWrite} // 글 작성 페이지 이동 함수
+          className="px-6 py-2 mx-20 mb-5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
+          글 작성
+        </button>
+      )}
     </div>
   );
 };

@@ -42,6 +42,9 @@ export interface Board {
   updatedAt: string;
 }
 
+export type InsertBoard = Pick<Board, "boardId" | "title">;
+
+
 export interface BoardListResponse {
   dtoList: Board[];
   pageNumList: number[];
@@ -91,3 +94,5 @@ export interface WriteFormData {
   title: string;
   file1?: FileList;
 }
+
+

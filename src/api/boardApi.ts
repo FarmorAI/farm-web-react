@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Board, BoardListResponse } from "../model/contents";
+import { Board, BoardListResponse, InsertBoard } from "../model/contents";
 import { API_BASE_URL } from "./memberApi";
 
 
@@ -24,20 +24,35 @@ export const getBoardById = async (id: number) : Promise<Board | null> =>{
   }
 }
 
+interface BoardInsertData {
+  title: string;
+  content: string;
+}
+
+
 /**
  * 게시글 추가 (파일 포함 가능)
  */
-export const insertBoard = async (boardData: FormData): Promise<boolean> => {
+export const insertBoard = async (boardData: BoardInsertData, token : string): Promise<InsertBoard| null> => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/board`, boardData, {
-      headers: { "Content-Type": "multipart/form-data" }, // FormData 전송을 위해 설정
-    });
-    return response.status === 200; // 성공 시 true 반환
+      // 올바른 요청 형식
+      const response = await axios.post<InsertBoard>(
+          `${API_BASE_URL}/board`,
+          boardData, // 기존 { boardinsert: {title, content} } → { title, content }
+          {
+              headers: {
+                  Authorization: `Bearer ${token}`, // JWT 추가
+                  "Content-Type": "application/json",
+              },
+          }
+      );
+      return response.data;
   } catch (error) {
-    console.error("Error inserting board:", error);
-    return false;
+      console.error("공지사항 등록 실패:", error);
+      return null;
   }
 };
+
 
 /**
  * 게시글 삭제
