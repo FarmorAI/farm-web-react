@@ -9,6 +9,7 @@ export interface AuthState {
     phone?: string;
     createdAt?: string; // 가입일 (선택적)
     address?: string;   // 주소 (선택적)
+    imageUrl?: string;   // 프로필 이미지 URL (선택적)
   } | null;
 }
 
@@ -31,8 +32,13 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;  
     },
+    updateUserProfileImage(state, action) {
+      if (state.user) {
+        state.user.imageUrl = action.payload;
+      }
+    },
   },
 });
 
-export const { setUser, logoutUser } = authSlice.actions;
+export const { setUser, logoutUser, updateUserProfileImage } = authSlice.actions;
 export default authSlice.reducer;

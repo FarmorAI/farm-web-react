@@ -5,12 +5,15 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": false,
     "baseUrl": ".",
     "paths": {
       "swiper/css": ["node_modules/swiper/swiper.min.css"],
       "swiper/css/autoplay": ["node_modules/swiper/components/autoplay/autoplay.min.css"]
     },
-    "types": ["vite/client"],
+    "types": ["vite/client"]
     
   }
 }

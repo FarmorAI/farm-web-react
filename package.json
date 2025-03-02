@@ -39,7 +39,8 @@
     "recharts": "^2.15.1",
     "styled-components": "^6.1.15",
     "suneditor": "^2.47.5",
-    "suneditor-react": "^3.6.1"
+    "suneditor-react": "^3.6.1",
+    "swiper": "^11.2.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
@@ -47,6 +48,7 @@
     "@types/node": "^22.13.4",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.3",
+    "@types/swiper": "^5.4.3",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.16",
     "eslint": "^9.19.0",
