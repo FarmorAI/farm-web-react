@@ -78,7 +78,7 @@ const BoardList = () => {
         <table className="w-full border-t border-b border-gray-300">
           <thead>
           <tr className="bg-gray-50 text-left">
-            {["번호", "제목", "작성자", "등록일", "조회"].map((header, idx) => (
+            {["번호",  "제목", "작성자", "등록일", "조회"].map((header, idx) => (
                 <th
                     key={idx}
                     className="px-6 py-3 text-xs font-medium text-gray-500 uppercase"

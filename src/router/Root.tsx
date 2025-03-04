@@ -7,6 +7,7 @@ import { boardRoutes } from "./ContentsRouter";
 import { supportRoutes } from "./SupportRouter";
 import { introduceRoutes } from "./IntroduceRouter";
 import { paymentRoutes } from "./PaymentRouter";
+import { mainRoutes } from "./MainRouter";
 
 // ✅ Suspense 적용 (라우트 전체에 로딩 표시)
 const withSuspense = (routes: RouteObject[]): RouteObject[] =>
@@ -25,6 +26,7 @@ const Root = createBrowserRouter([
     path: "/",
     element: <Layout />, // 공통 레이아웃
     children: [
+      ...withSuspense(mainRoutes),
       ...withSuspense(authRoutes),
       ...withSuspense(aiRoutes),
       ...withSuspense(boardRoutes),
