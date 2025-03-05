@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
-import {  useSelector } from 'react-redux';
+import { useSelector} from 'react-redux';
 import { RootState } from '../../redux/store';
+import {getCookie} from "../../util/cookieUtill.ts";
+import {API_BASE_URL} from "../../api/memberApi.ts";
+import axios from "axios";
 
 const ProfilePage = () => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
@@ -20,6 +23,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (user) {
+      setProfileImage(user.imageUrl || null);
       setNickname(user.nickname || '');
       setPhone(user.phone || '');
       setAddress(user.address || '');
@@ -63,14 +67,31 @@ const ProfilePage = () => {
     }
   }, []);
 
-  const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProfileImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profileImage", file);
+
+    try {
+      const response = await axios.patch(`${API_BASE_URL}/member/auth/upload-profile`, formData, {
+        headers: {
+          "Authorization": `Bearer ${getCookie("jwt")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        console.log(response.data)
+        const { imageUrl } = response.data;
+        console.log("Uploaded Image URL:", imageUrl);
+        setProfileImage(imageUrl);  // ✅ 상태 업데이트
+      } else {
+        console.error("Image upload failed:", response);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
     }
   };
 
@@ -89,7 +110,7 @@ const ProfilePage = () => {
             </button>
             <div className="flex flex-col items-center w-1/3">
               <img 
-                src={profileImage || "https://via.placeholder.com/100"} 
+                src={profileImage || "https://via.placeholder.com/100"}
                 alt="프로필 사진" 
                 className="w-32 h-32 rounded-full object-cover mb-2" 
               />

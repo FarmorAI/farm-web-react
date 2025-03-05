@@ -24,15 +24,15 @@ const BoardWritePage = () => {
     }
 
     try {
-      const noticeData = {
+      const boardData = {
         title: data.title,
         content: content, // SunEditor에서 작성한 내용
       };
 
-      const response = await insertBoard(noticeData, token);
+      const response = await insertBoard(boardData, token);
       if (response) {
         alert("공지사항이 등록되었습니다.");
-        navigate("/contents/notice"); // 공지사항 목록으로 이동
+        navigate("/contents/board"); // 공지사항 목록으로 이동
       } else {
         alert("공지사항 등록 실패");
       }
@@ -43,7 +43,7 @@ const BoardWritePage = () => {
   };
 
   return (
-      <PageLayout title="공지사항 작성" activeItem="공지사항 작성">
+      <PageLayout title="게시판 작성" activeItem="게시판 작성">
         <div className="max-w-7xl mx-auto p-6">
           <form onSubmit={handleSubmit(onSubmit)}>
             <table className="w-full border border-gray-300">
@@ -80,7 +80,7 @@ const BoardWritePage = () => {
             <div className="flex justify-end mt-8 space-x-4">
               <button
                   type="button"
-                  onClick={() => navigate("/contents/notice")}
+                  onClick={() => navigate("/contents/board")}
                   className="px-6 py-3 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
               >
                 취소
