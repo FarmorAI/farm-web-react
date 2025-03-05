@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Container, Form, Button, Row, Col, Card, InputGroup } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import { FaTag, FaMoneyBillWave, FaSeedling, FaLayerGroup, FaBoxes } from "react-icons/fa";
+import {ProductForm} from "../../model/product.ts";
+import axios from "axios";
+import {API_BASE_URL} from "../../api/memberApi.ts";
+import {getCookie} from "../../util/cookieUtill.ts";
 
 // ✅ 등록 가능한 딸기 품종 목록
 const strawberryVarieties = [
@@ -13,15 +16,13 @@ const strawberryVarieties = [
 const productCategories = ["유기농", "고당도", "제철", "특대형", "일반"];
 
 const ProductRegisterPage = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<ProductForm>({
         name: "",
         variety: "",
-        category: "",
-        price: "",
-        stock: "",
+        price: 0,
+        stock: 0,
         description: "",
-        image: null as File | null,
+        imageUrl: null,
         previewUrl: "",
     });
 
@@ -43,7 +44,7 @@ const ProductRegisterPage = () => {
             reader.onloadend = () => {
                 setFormData({
                     ...formData,
-                    image: file,
+                    imageUrl: file,
                     previewUrl: reader.result as string, // base64 URL 저장
                 });
             };
@@ -51,13 +52,37 @@ const ProductRegisterPage = () => {
     };
 
     // ✅ 폼 제출 핸들러
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit =  async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("📌 등록할 상품 데이터:", formData);
+        console.log("📌 등록할 상품 데이터:", formData.imageUrl);
+        if(!formData.imageUrl){
+            alert("❌ 이미지를 업로드하세요.");
+            return;
+        }
+        const productData = {
+            name: formData.name,
+            variety: formData.variety,
+            price: formData.price,
+            stock: formData.stock,
+            description: formData.description,
+        }
+        const data = new FormData();
+        data.append("product", new Blob([JSON.stringify(productData)], { type: "application/json" }));
+        data.append("file", formData.imageUrl);
+        try {
+            const res = await axios.post(`${API_BASE_URL}/product`, data, {
+                headers: {
+                    "Authorization": `Bearer ${getCookie("jwt")}`,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            alert("✅ 상품이 성공적으로 등록되었습니다.");
+            console.log("상품 등록 결과:", res.data);
+        } catch (error) {
+            console.error("상품 등록 실패:", error);
+            alert("❌ 상품 등록에 실패했습니다. 다시 시도하세요.");
+        }
 
-        // 📌 백엔드 API 연결 (추후 fetch 또는 axios 사용)
-        alert("✅ 상품이 성공적으로 등록되었습니다.");
-        navigate("/product/list"); // 상품 목록 페이지로 이동
     };
 
     return (
@@ -114,7 +139,6 @@ const ProductRegisterPage = () => {
                                     <InputGroup.Text className="bg-secondary text-white"><FaLayerGroup /></InputGroup.Text>
                                     <Form.Select
                                         name="category"
-                                        value={formData.category}
                                         onChange={handleChange}
                                         required
                                         style={{ height: "50px", fontSize: "18px" }}
