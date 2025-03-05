@@ -1,11 +1,11 @@
 import WeatherDisplay from "./weather/WeatherDisplay";
-import InfoDisplay from "./InfoDisplay";
+import BlogDisplay from "./weather/BlogDisplay.tsx";
 
 const Main = () => {
     return (
         <div>
             <WeatherDisplay />
-            <InfoDisplay query="농업" />
+            <BlogDisplay query="농업" />
         </div>
     );
 };

@@ -12,6 +12,7 @@
   "dependencies": {
     "@faker-js/faker": "^9.4.0",
     "@reduxjs/toolkit": "^2.5.1",
+    "@shadcn/ui": "^0.0.4",
     "@tailwindcss/vite": "^4.0.6",
     "@types/chart.js": "^2.9.41",
     "@types/react-router-dom": "^5.3.3",
@@ -39,7 +40,8 @@
     "recharts": "^2.15.1",
     "styled-components": "^6.1.15",
     "suneditor": "^2.47.5",
-    "suneditor-react": "^3.6.1"
+    "suneditor-react": "^3.6.1",
+    "swiper": "^11.2.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

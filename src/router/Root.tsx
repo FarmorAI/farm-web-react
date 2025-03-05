@@ -2,6 +2,8 @@ import { createBrowserRouter, RouteObject } from "react-router-dom";
 import { Suspense } from "react";
 import Layout from "../layout/Layout";
 import WeatherDisplay from "../pages/weather/WeatherDisplay";
+import InfoDisplay from "../pages/weather/InfoDisplay";
+
 import { authRoutes } from "./AuthRouter";
 import { aiRoutes } from "./AiRouter";
 import { boardRoutes } from "./ContentsRouter";
@@ -9,6 +11,7 @@ import { supportRoutes } from "./SupportRouter";
 import { introduceRoutes } from "./IntroduceRouter";
 import { paymentRoutes } from "./PaymentRouter";
 import {productRouter} from "./ProductRouter.tsx";
+import BlogDisplay from "../pages/weather/BlogDisplay.tsx";
 
 // ✅ Suspense 적용 (라우트 전체에 로딩 표시)
 const withSuspense = (routes: RouteObject[]): RouteObject[] =>
@@ -29,7 +32,13 @@ const Root = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <WeatherDisplay />,
+        element:(
+            <>
+                <InfoDisplay />
+              <WeatherDisplay />
+              <BlogDisplay query={"농업"} />
+            </>
+        )
       },
       ...withSuspense(authRoutes),
       ...withSuspense(aiRoutes),
