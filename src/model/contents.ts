@@ -32,6 +32,13 @@ export interface NoticeListResponse {
   current: number;
 }
 
+export interface NoticeUpdateData {
+  title: string;
+  content: string;
+}
+
+
+
 export interface Board {
   boardId: number;
   title: string;
