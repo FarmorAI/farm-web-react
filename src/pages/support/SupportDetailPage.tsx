@@ -1,10 +1,14 @@
 import { useParams } from "react-router-dom";
-import SupportDetail from "../../components/contents/support/SupportDetail";
+import DetailComponent from "../../components/contents/DetailComponent";
 
 const SupportDetailPage = () => {
-   const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
 
-   return <SupportDetail inquiryId={id ? parseInt(id, 10) : undefined} />;
+  if (!id) {
+    return <div>잘못된 접근입니다.</div>; // ✅ `id`가 없는 경우 예외 처리
+  }
+
+  return <DetailComponent type="support" id={parseInt(id, 10)} />;
 };
 
 export default SupportDetailPage;

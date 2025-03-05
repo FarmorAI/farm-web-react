@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {  User, Lock } from "lucide-react";
+import { User, Lock } from "lucide-react";
 import { menuData } from "../pagelayout/MenuData";
 import Breadcrumbs from "../pagelayout/Breadcrumbs";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,11 +12,11 @@ import { getCookie, removeCookie } from "../../util/cookieUtill";
 const Header: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const { data: userData } = useGetUserInfoQuery(undefined, {
     skip: !getCookie("jwt"), // ✅ JWT 토큰 없으면 API 호출 안 함
   });
-  
+
   const user = useSelector((state: RootState) => state.auth.user);
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null); // 🔥 드롭다운 상태
 
@@ -41,7 +41,7 @@ const Header: React.FC = () => {
             <div className="flex items-center  px-5">
               <img
                 className="h-14 w-auto  "
-                src="/assets/images/logo/headerlogo1.png"
+                src="/assets/images/logo/headerlogo.png"
                 alt="Berrypick"
               />
             </div>
@@ -79,7 +79,7 @@ const Header: React.FC = () => {
             </div>
 
             {/* 🔹 프로필 드롭다운 */}
-            <div className="hidden md:flex items-center space-x-4"> 
+            <div className="hidden md:flex items-center space-x-4">
               {user ? (
                 <div
                   className="relative group "
@@ -89,12 +89,14 @@ const Header: React.FC = () => {
                   <button className="flex items-center space-x-1 text-gray-800 text-lg font-semibold">
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
                       <img
-                          className="w-8 h-8 rounded-full object-cover m-5"
-                          src={user?.imageUrl || "https://via.placeholder.com/100"}
-                          alt="프로필"
+                        className="w-8 h-8 rounded-full object-cover m-5"
+                        src={
+                          user?.imageUrl || "https://via.placeholder.com/100"
+                        }
+                        alt="프로필"
                       />
                     </div>
-                    <span >{user.nickname}님</span> 
+                    <span>{user.nickname}님</span>
                   </button>
 
                   {/* 드롭다운 메뉴 */}
@@ -130,10 +132,16 @@ const Header: React.FC = () => {
 /* 🔥 로그인하지 않은 경우 보여줄 링크 */
 const AuthLinks: React.FC = () => (
   <div className="flex items-center space-x-6">
-    <Link to="/auth/login" className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500">
+    <Link
+      to="/auth/login"
+      className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500"
+    >
       <Lock className="w-5 h-5 mr-1" /> 로그인
     </Link>
-    <Link to="/auth/register" className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500">
+    <Link
+      to="/auth/register"
+      className="flex items-center text-gray-700 text-lg font-semibold hover:text-blue-500"
+    >
       <User className="w-5 h-5 mr-1" /> 회원가입
     </Link>
   </div>

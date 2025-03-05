@@ -50,7 +50,7 @@ const LoginPage: React.FC = () => {
       <div>
         <div className="text-center mb-2">
           <img
-            src={"/public/assets/images/logo/headerlogo1.png"}
+            src={"/public/assets/images/logo/headerlogo.png"}
             alt="로고"
             className="mb-3 ml-3"
             style={{ height: "100px" }}

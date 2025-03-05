@@ -8,7 +8,7 @@ const LoginFind = lazy(() => import("../pages/auth/FindPage"));
 const GoogleRedirect = lazy(() => import("../pages/auth/GoogleRedirectPage"));
 const NaverRedirect = lazy(() => import("../pages/auth/NaverRedirectPage"));
 const ProfilePage = lazy(() => import("../pages/auth/ProfilePage"));
-const KakaoRedirectPage = lazy(() => import("../pages/auth/KakaoRedirectPage"));
+const KakaoRedirectPage = lazy(() => import("../pages/auth/KaKaoRedirectPage"));
 
 // ✅ authRoutes 배열을 export
 export const authRoutes: RouteObject[] = [
@@ -43,30 +43,29 @@ export const authRoutes: RouteObject[] = [
         <ProfilePage />
       </Suspense>
     ),
-
   },
   {
-    path : "auth/kakao/callback",
-    element : (
-        <Suspense fallback={<div>Loading...</div>}>
-          <KakaoRedirectPage />
-        </Suspense>
-    )
+    path: "auth/kakao/callback",
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <KakaoRedirectPage />
+      </Suspense>
+    ),
   },
   {
-    path : "auth/google/callback",
-    element : (
-        <Suspense fallback={<div>Loading...</div>}>
-          <GoogleRedirect/>
-        </Suspense>
-    )
+    path: "auth/google/callback",
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <GoogleRedirect />
+      </Suspense>
+    ),
   },
   {
     path: "auth/naver/callback",
     element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <NaverRedirect />
-        </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <NaverRedirect />
+      </Suspense>
     ),
   },
 ];

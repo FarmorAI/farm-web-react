@@ -47,5 +47,5 @@ export const menuData = [
       { to : "/product/list", label : "상품 목록" },
       { to : "/product/register", label : "상품 등록" }
     ]
-  }
+  },
 ];
