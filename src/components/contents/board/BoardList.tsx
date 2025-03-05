@@ -25,7 +25,6 @@ const BoardList = () => {
           setBoards(res[0]);
           setFilteredBoards(res[0]);
         } else {
-          res.dtoList.sort((a, b) => b.boardId - a.boardId); // 최신 게시글 우선 정렬
           setBoards(res);
           setFilteredBoards(res);
         }
@@ -38,7 +37,6 @@ const BoardList = () => {
     boardDB();
   }, [page, size, refresh]);
 
-  // 🔍 검색 기능 (검색 후에도 내림차순 유지)
   const handleSearch = (category: string) => {
     if (!boards) return;
 
