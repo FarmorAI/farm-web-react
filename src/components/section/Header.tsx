@@ -41,7 +41,7 @@ const Header: React.FC = () => {
             <div className="flex items-center  px-5">
               <img
                 className="h-14 w-auto  "
-                src="/public/assets/images/logo/headerlogo1.png"
+                src="/assets/images/logo/headerlogo1.png"
                 alt="Berrypick"
               />
             </div>
@@ -88,7 +88,11 @@ const Header: React.FC = () => {
                 >
                   <button className="flex items-center space-x-1 text-gray-800 text-lg font-semibold">
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-                      <User className="w-5 h-5 text-white " />
+                      <img
+                          className="w-8 h-8 rounded-full object-cover m-5"
+                          src={user?.imageUrl || "https://via.placeholder.com/100"}
+                          alt="프로필"
+                      />
                     </div>
                     <span >{user.nickname}님</span> 
                   </button>
