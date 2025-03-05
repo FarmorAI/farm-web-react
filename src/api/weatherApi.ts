@@ -2,13 +2,14 @@ export const API_BASE_URL = `${import.meta.env.VITE_SPRING_API_URL}/api/weather`
 
 export interface WeatherResponse {
     [date: string]: {
-        "일 최저기온"?: string;
-        "일 최고기온"?: string;
+        "일 최저기온"?: number;
+        "일 최고기온"?: number;
         "기타 정보"?: {
-            "풍속"?: string;
-            "하늘상태"?: string;
-            "강수 확률"?: string;
-            "습도"?: string;
+            "오늘 기온"?: number;
+            "풍속"?: number;
+            "하늘상태"?: number;
+            "강수 확률"?: number;
+            "습도"?: number;
         };
     };
 }
