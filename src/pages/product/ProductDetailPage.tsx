@@ -4,7 +4,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../../api/memberApi";
 import { ProductDto } from "../../model/product";
 import {Container, Row, Col, Card, Button, Spinner, Alert, Form, Tab, Tabs, Table} from "react-bootstrap";
-import { FaShoppingCart, FaTruck } from "react-icons/fa";
+import { FaTruck} from "react-icons/fa";
 
 const ProductDetailPage = () => {
     const { productId } = useParams<{ productId: string }>();
@@ -115,9 +115,9 @@ const ProductDetailPage = () => {
 
                         <div className="d-flex justify-content-center align-items-center gap-3 mt-3">
                             <Button variant="outline-secondary" size="lg" className="w-50 fw-bold d-flex align-items-center justify-content-center gap-2">
-                                <FaShoppingCart /> 장바구니
+                                장바구니
                             </Button>
-                            <Button variant="danger" size="lg" className="w-50 fw-bold">
+                            <Button variant="danger" size="lg" className="w-50 fw-bold d-flex align-items-center justify-content-center gap-2">
                                 구매하기
                             </Button>
                         </div>
