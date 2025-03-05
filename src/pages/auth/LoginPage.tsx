@@ -29,7 +29,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault(); // 기본 폼 제출 방지
 
     try {
-      const userData =await login(loginInfo).unwrap();
+      const userData = await login(loginInfo).unwrap();
       const token = getCookie("jwt");
       console.log("🔑 JWT 쿠키:", token);
       console.log("✅ 로그인 응답 데이터:", userData);
@@ -48,14 +48,13 @@ const LoginPage: React.FC = () => {
   return (
     <div className="d-flex min-vh-100 justify-content-center align-items-center">
       <div>
-        <div className="text-center mb-4">
+        <div className="text-center mb-2">
           <img
-            src={"https://ai-public.creatie.ai/gen_page/logo_placeholder.png"}
+            src={"/public/assets/images/logo/headerlogo1.png"}
             alt="로고"
-            className="mb-3"
+            className="mb-3 ml-3"
             style={{ height: "100px" }}
           />
-          <h1 className="h4 fw-bold">에코라이프에 오신 것을 환영합니다</h1>
         </div>
 
         <form onSubmit={handleLogin}>
@@ -94,12 +93,16 @@ const LoginPage: React.FC = () => {
           </div>
           <button
             type="submit"
-            className="btn btn-success w-100 custom-btn py-2"
+            className="w-100 py-2"
+            style={{
+              backgroundColor: "#4CAF50",
+              borderColor: "#4CAF50",
+              color: "white",
+            }}
             disabled={isLoading}
           >
             {isLoading ? "로그인 중..." : "로그인"}
           </button>
-
           <div className="text-center mt-3 mb-3">
             <Link
               to="/auth/login/find"
@@ -108,10 +111,18 @@ const LoginPage: React.FC = () => {
               아이디/비밀번호 찾기
             </Link>
           </div>
-
-          <GoogleLoginComponent />
-          <NaverLoginComponent/>
-          <KaKaoLoginComponent />
+          {/* SNS 로그인 구분선 */}
+          <div className="d-flex align-items-center my-4">
+            <div className="flex-grow-1 border-top border-secondary"></div>
+            <div className="mx-3 text-secondary fw-bold">SNS LOGIN</div>
+            <div className="flex-grow-1 border-top border-secondary"></div>
+          </div>
+          {/* SNS 로그인 아이콘 가로 정렬 */}
+          <div className="d-flex justify-content-center gap-3 mt-3">
+            <GoogleLoginComponent />
+            <NaverLoginComponent />
+            <KaKaoLoginComponent />
+          </div>
         </form>
 
         <div className="text-center mt-4">
@@ -133,7 +144,7 @@ const LoginPage: React.FC = () => {
               개인정보처리방침
             </Link>
           </div>
-          <p className="mt-2 mb-0">© 2024 에코라이프. All rights reserved.</p>
+          <p className="mt-2 mb-0">© 2025 FarmorAI. All rights reserved.</p>
         </div>
       </div>
     </div>

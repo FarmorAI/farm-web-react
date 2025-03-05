@@ -1,9 +1,12 @@
 import { createSearchParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { useState } from "react";
 
+
+// 문자열 형태의 쿼리 파라미터 값을 정수로 변환하는 함수
 const getNum = (param: string | null, defaultValue: number): number => {
     return param ? parseInt(param, 10) : defaultValue;
 };
+
 
 const useMove = () => {
     const navigate = useNavigate();
@@ -19,7 +22,8 @@ const useMove = () => {
         size: size.toString(),
     }).toString();
 
-    const basePath = location.pathname.includes("/board") ? "board" : "notice";
+    const basePath =  location.pathname.includes("/board") ? "board"
+        : location.pathname.includes("/notice") ? "notice" : "support";
 
     const moveToList = (pageParam?: { page?: number; size?: number }) => {
         const pageNum = pageParam?.page !== undefined ? pageParam.page : page;  // 기본값을 현재 페이지로 유지
@@ -41,12 +45,13 @@ const useMove = () => {
     const moveToRead = (num: number) => {
         navigate(`/contents/${basePath}/${num}?${queryDefault}`);
     };
-        // ✅ 글쓰기 이동 함수 추가
-        const moveToWrite = () => {
-            navigate(`/contents/${basePath}/write?${queryDefault}`);
-        };
 
-    return { moveToList, moveToModify, moveToRead, moveToWrite,page, size, refresh };
+    // ✅ 글쓰기 이동 함수 추가
+    const moveToWrite = () => {
+        navigate(`/contents/${basePath}/write?${queryDefault}`);
+    };
+
+    return { moveToList, moveToModify, moveToRead, moveToWrite, page, size, refresh };
 };
 
 export default useMove;

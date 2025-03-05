@@ -5,11 +5,11 @@ import { RouteObject } from "react-router-dom";
 const Login = lazy(() => import("../pages/auth/LoginPage"));
 const Register = lazy(() => import("../pages/auth/RegisterPage"));
 const LoginFind = lazy(() => import("../pages/auth/FindPage"));
-const Mypage = lazy(() => import("../pages/auth/ProfilePage"));
-// @ts-ignore
-const KakaoRedirect = lazy(() => import("../pages/auth/KakaoRedirectPage"));
 const GoogleRedirect = lazy(() => import("../pages/auth/GoogleRedirectPage"));
 const NaverRedirect = lazy(() => import("../pages/auth/NaverRedirectPage"));
+const ProfilePage = lazy(() => import("../pages/auth/ProfilePage"));
+const KakaoRedirectPage = lazy(() => import("../pages/auth/KakaoRedirectPage"));
+
 // ✅ authRoutes 배열을 export
 export const authRoutes: RouteObject[] = [
   {
@@ -37,10 +37,10 @@ export const authRoutes: RouteObject[] = [
     ),
   },
   {
-    path: "auth/mypage",
+    path: "auth/profile",
     element: (
       <Suspense fallback={<div>Loading...</div>}>
-        <Mypage />
+        <ProfilePage />
       </Suspense>
     ),
 
@@ -49,7 +49,7 @@ export const authRoutes: RouteObject[] = [
     path : "auth/kakao/callback",
     element : (
         <Suspense fallback={<div>Loading...</div>}>
-          <KakaoRedirect />
+          <KakaoRedirectPage />
         </Suspense>
     )
   },

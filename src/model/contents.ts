@@ -11,7 +11,6 @@ export interface Notice {
 export type InsertNotice = Pick<Notice, "noticeId" | "title">;
 
 
-
 export interface PageRequestDto {
   page: number;
   size: number;
@@ -55,6 +54,33 @@ export interface BoardListResponse {
   totalPage: number;
   current: number;
 }
+
+export type InsertSupport = Pick<Support, "inquiryId" | "title">;
+
+export interface Support {
+  inquiryId: number;
+  title: string;
+  content: string;
+  category: string;
+  createdAt: string;
+  updatedAt?: string;
+  views?: number;
+  writer?: string;
+}
+
+export interface SupportListResponse {
+  dtoList: Support[];
+  pageNumList: number[];
+  pageRequestDto: PageRequestDto;
+  prev: boolean;
+  next: boolean;
+  totalCount: number;
+  prevPage: number;
+  nextPage: number;
+  totalPage: number;
+  current: number;
+}
+
 
 export interface WriteFormProps {
   title: string; // 페이지 제목

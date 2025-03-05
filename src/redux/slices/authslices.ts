@@ -5,6 +5,10 @@ export interface AuthState {
   user: {
     email: string;
     nickname: string;
+    password?: string;
+    phone?: string;
+    createdAt?: string; // 가입일 (선택적)
+    address?: string;   // 주소 (선택적)
   } | null;
 }
 
@@ -17,6 +21,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+
     setUser: (state, action: PayloadAction<{ email: string; nickname: string }>) => {
       console.log(action.payload);
       state.user = action.payload;

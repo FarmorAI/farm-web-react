@@ -8,7 +8,7 @@ const NaverLoginComponent = () => {
         <div className="flex justify-center">
             <Link to={link}>
                 <img
-                    src="/assets/images/naver_login.png"
+                    src="/public/assets/images/auth/naver.png"
                     alt="Naver"
                 />
             </Link>

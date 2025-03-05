@@ -9,9 +9,8 @@ const GoogleLoginComponent = () => {
         <div className="flex justify-center">
             <Link to = {link}>
                 <img
-                    src="/public/assets/images/google_login.png"
+                    src="/public/assets/images/auth/google.png"
                     alt="google"
-                    className="w-51 h-12 cursor-pointer mb-3"
                 />
             </Link>
         </div>

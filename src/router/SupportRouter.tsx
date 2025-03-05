@@ -2,25 +2,34 @@ import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 
 // Lazy 로딩된 컴포넌트
-const SupportList = lazy(() => import("../pages/support/SupportListPage"));
+const SupportListPage = lazy(() => import("../pages/support/SupportListPage"));
 const SupportCustomerPage = lazy(() => import("../pages/support/SupportCustomerPage"));
+const SupportDetailPage = lazy(() => import("../pages/support/SupportDetailPage"));
 
 // ✅ supportRoutes 배열을 export
 export const supportRoutes: RouteObject[] = [
   {
-    path: "support/list",
-    element: (
-      <Suspense fallback={<div>Loading...</div>}>
-        <SupportList />
-      </Suspense>
-    ),
-  },
-  {
-    path: "support/customer",
+    path: "/support",
     element: (
       <Suspense fallback={<div>Loading...</div>}>
         <SupportCustomerPage />
       </Suspense>
     ),
   },
+  {
+    path: "/support/list",
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <SupportListPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "contents/support/:id", // ✅ 동적 라우팅 추가 (공지사항 상세보기)
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <SupportDetailPage />
+      </Suspense>
+    ),
+  }
 ];
