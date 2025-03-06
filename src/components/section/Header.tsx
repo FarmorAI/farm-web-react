@@ -13,34 +13,54 @@ const Header: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { data: userData } = useGetUserInfoQuery(undefined, {
-    skip: !getCookie("jwt"), // ✅ JWT 토큰 없으면 API 호출 안 함
+  // JWT 토큰을 state로 관리 (초기값은 쿠키에서 읽어옴)
+  const [jwtToken, setJwtToken] = useState(getCookie("jwt"));
+
+  // 쿠키의 변화를 주기적으로 감지하여 jwtToken 업데이트 (5초마다 체크)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const token = getCookie("jwt");
+      if (token !== jwtToken) {
+        setJwtToken(token);
+      }
+    }, 100); // 5초마다 체크
+    return () => clearInterval(interval);
+  }, [jwtToken]);
+
+  // jwtToken을 query key로 사용하여, 토큰이 변경되면 새로 데이터를 요청함
+  const { data: userData } = useGetUserInfoQuery(jwtToken, {
+    skip: !jwtToken,
+    refetchOnMountOrArgChange: true,
   });
 
-  const user = useSelector((state: RootState) => state.auth.user);
-  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null); // 🔥 드롭다운 상태
-
+  // API로 받은 사용자 데이터가 있으면 Redux 상태 업데이트
   useEffect(() => {
     if (userData) {
       dispatch(setUser(userData));
     }
   }, [userData, dispatch]);
 
-  // ✅ 로그아웃 처리
+  // Redux에서 사용자 정보 가져오기
+  const user = useSelector((state: RootState) => state.auth.user);
+  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
+
+  // 로그아웃 처리: Redux, 쿠키, jwtToken state 모두 초기화
   const handleLogout = () => {
     dispatch(logoutUser());
     removeCookie("jwt");
-    window.location.replace("/");
+    setJwtToken(""); // jwtToken state 초기화
+    navigate("/");
   };
+
   return (
     <>
       <nav className="bg-white shadow-sm">
         <div className="max-w-8xl mx-auto px-4 sm:px-5 lg:px-8">
           <div className="flex justify-between mx-5 h-16 items-center">
             {/* 로고 */}
-            <div className="flex items-center  px-5">
+            <div className="flex items-center px-5">
               <img
-                className="h-14 w-auto  "
+                className="h-14 w-auto"
                 src="/assets/images/logo/headerlogo.png"
                 alt="Berrypick"
               />
@@ -78,11 +98,11 @@ const Header: React.FC = () => {
               ))}
             </div>
 
-            {/* 🔹 프로필 드롭다운 */}
+            {/* 프로필 드롭다운 */}
             <div className="hidden md:flex items-center space-x-4">
               {user ? (
                 <div
-                  className="relative group "
+                  className="relative group"
                   onMouseEnter={() => setHoveredMenu("profile")}
                   onMouseLeave={() => setHoveredMenu(null)}
                 >
@@ -90,15 +110,12 @@ const Header: React.FC = () => {
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
                       <img
                         className="w-8 h-8 rounded-full object-cover m-5"
-                        src={
-                          user?.imageUrl || "https://via.placeholder.com/100"
-                        }
+                        src={user?.imageUrl || "https://via.placeholder.com/100"}
                         alt="프로필"
                       />
                     </div>
                     <span>{user.nickname}님</span>
                   </button>
-
                   {/* 드롭다운 메뉴 */}
                   {hoveredMenu === "profile" && (
                     <div className="absolute right-0 bg-white shadow-lg rounded-md py-2 w-48 z-50">
@@ -129,7 +146,7 @@ const Header: React.FC = () => {
   );
 };
 
-/* 🔥 로그인하지 않은 경우 보여줄 링크 */
+// 로그인하지 않은 경우 보여줄 링크 컴포넌트
 const AuthLinks: React.FC = () => (
   <div className="flex items-center space-x-6">
     <Link
