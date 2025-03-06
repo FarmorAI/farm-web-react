@@ -1,7 +1,6 @@
 import axios from "axios";
 import { InsertSupport, Support, SupportListResponse } from "../model/contents";
 import { API_BASE_URL } from "./memberApi";
-import { getCookie } from "../util/cookieUtill";
 
 export const getSupportList = async (
     pageParam: { page: number; size: number }): Promise<SupportListResponse[]> => {
@@ -29,25 +28,25 @@ export const getSupportById = async (id: number): Promise<Support | null> => {
 
 
 export const insertSupport = async (
-    insertParam: { category: string;  title: string; content: string },
-    token: string
+    insertParam: { category: string;  title: string; content: string }
 ): Promise<InsertSupport | null> => {
-        const { category, title, content } = insertParam;
-        try {
-            const response = await axios.post<InsertSupport>(`${API_BASE_URL}/inquiry`, 
-                { category, title, content },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            return response.data;
-        } catch (error) {
-            console.error("문의 작성 오류:", error);
-            return null;
-        }
+    const token = document.cookie.split('=')[1]   // 쿠키에서 토큰 가져오기
+    const { category, title, content } = insertParam;
+    try {
+        const response = await axios.post<InsertSupport>(`${API_BASE_URL}/inquiry`,
+            { category, title, content },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("문의 작성 오류:", error);
+        return null;
+    }
 }
 
 
 export const deleteSupport = async (id: number): Promise<boolean> => {
-    const token = getCookie("jwt");
+    const token = document.cookie.split('=')[1]   // 쿠키에서 토큰 가져오기
     if (!token) {
         console.error("JWT 토큰 없음");
         return false;
