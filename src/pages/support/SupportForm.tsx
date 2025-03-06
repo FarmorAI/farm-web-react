@@ -1,8 +1,11 @@
 import React from 'react'
 import { InquiryFormProps } from '../../model/support'
+import { insertSupport } from '../../api/supportApi';
+import { useNavigate } from 'react-router-dom';
 
 // model > support 디렉토리에 타입 interface 생성
 const SupportForm: React.FC<InquiryFormProps> = ({ formData, setFormData }) => {
+   const navigate = useNavigate();
 
    // e는 이벤트 객체로 HTMLInputElement, HTMLTextAreaElement, HTMLSelectElement 
    // 즉, <input> <textarea> <select> 등에서 이벤트가 발생하면 name, value, type을 가져옴
@@ -21,13 +24,23 @@ const SupportForm: React.FC<InquiryFormProps> = ({ formData, setFormData }) => {
          alert("개인정보 수집 및 이용에 동의해야 합니다.")
          return;
       }
-      console.log("Form submitted:", formData);
-      alert("문의가 성공적으로 제출되었습니다.");
+
+      try {
+         insertSupport({
+            category: formData.inquiryType,
+            title: formData.title,
+            content: formData.content
+         })
+         alert("문의가 성공적으로 제출되었습니다.");
+         navigate('/support/list');
+      } catch(error) {
+         console.error("Error inserting inquiry:", error);
+      }
    }
 
    // 취소 버튼 클릭 시, FormData 초기화
    const resetForm = () => {
-      setFormData({ inquiryType: "", subInquiryType: "", title: "", content: "", agree: false })
+      setFormData({ inquiryType: "", title: "", content: "", agree: false })
    }
 
    return (
@@ -44,10 +57,10 @@ const SupportForm: React.FC<InquiryFormProps> = ({ formData, setFormData }) => {
                className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             >
                <option value="">선택해주세요</option>
-               <option value="general">일반 문의</option>
-               <option value="service">결제 문의</option>
-               <option value="support">서비스 이용 문의</option>
-               <option value="partnership">기타</option>
+               <option value="GENERAL">일반 문의</option>
+               <option value="BILLING">결제 문의</option>
+               <option value="TECHNICAL">서비스 이용 문의</option>
+               <option value="OTHER">기타</option>
             </select>
          </div>
          <div>

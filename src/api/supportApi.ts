@@ -1,7 +1,6 @@
 import axios from "axios";
 import { InsertSupport, Support, SupportListResponse } from "../model/contents";
 import { API_BASE_URL } from "./memberApi";
-import { getCookie } from "../util/cookieUtill";
 
 export const getSupportList = async (
     pageParam: { page: number; size: number }): Promise<SupportListResponse[]> => {
@@ -27,35 +26,59 @@ export const getSupportById = async (id: number): Promise<Support | null> => {
     }
 };
 
+
 export const insertSupport = async (
-    insertParam: { category: string; title: string; content: string },
-    token: string // ✅ 토큰 추가
+    insertParam: { category: string;  title: string; content: string }
 ): Promise<InsertSupport | null> => {
+    const token = document.cookie.split('=')[1]   // 쿠키에서 토큰 가져오기
     const { category, title, content } = insertParam;
     try {
-        const response = await axios.post<InsertSupport>(`${API_BASE_URL}/inquiry`, 
-            { insertParam: { category, title, content } }, // ✅ 요청 바디
-            { headers: { Authorization: `Bearer ${token}` } } // ✅ JWT 토큰 포함
+        const response = await axios.post<InsertSupport>(`${API_BASE_URL}/inquiry`,
+            { category, title, content },
+            { headers: { Authorization: `Bearer ${token}` } }
         );
         return response.data;
     } catch (error) {
-        console.error("Error inserting inquiry:", error);
+        console.error("문의 작성 오류:", error);
         return null;
     }
-};
+}
 
 
-export const deleteSupport = async (inquiryId: number): Promise<boolean> => {
-    const token = getCookie("jwt");
+export const deleteSupport = async (id: number): Promise<boolean> => {
+    const token = document.cookie.split('=')[1]   // 쿠키에서 토큰 가져오기
     if (!token) {
-        console.error("JWT 토큰이 없습니다.");
+        console.error("JWT 토큰 없음");
         return false;
     }
+
     try {
-        await axios.delete(`${API_BASE_URL}/inquiry/${inquiryId}`, {headers: {Authorization: `Bearer ${token}`}});
-        return true;
+        const response = await axios.delete(`${API_BASE_URL}/inquiry/${id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return response.status === 200; // 성공 시 true
     } catch (error) {
-        console.error(`문의사항 삭제 실패`, error);
+        console.error(`문의 삭제 에러 ${id}:`, error);
         return false;
+    }
+}
+
+
+export const updateSupport = async (
+    id: number, updateParam: { category: string;  title: string; content: string, createAt: string }
+): Promise<boolean> => {
+    try {
+        const response = await axios.put<Support>(`${API_BASE_URL}/inquiry/${id}`, {
+            inquiryId: id,
+            category: updateParam.category,
+            title: updateParam.title,
+            content: updateParam.content,
+            createAt: updateParam.createAt
+        });
+        console.log(response.data)
+        return response.status === 200;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Failed to update inquiry");
     }
 }

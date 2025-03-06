@@ -10,7 +10,6 @@ import SupportPrivacy from "./SupportPrivacy";
 const SupportCustomerPage = () => {
   const [formData, setFormData] = useState({
     inquiryType: "",
-    subInquiryType: "",
     title: "",
     content: "",
     agree: false,
