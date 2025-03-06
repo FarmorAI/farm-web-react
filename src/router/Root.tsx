@@ -34,8 +34,8 @@ const Root = createBrowserRouter([
         index: true,
         element:(
             <>
+                <WeatherDisplay />
                 <InfoDisplay />
-              <WeatherDisplay />
               <BlogDisplay query={"농업"} />
             </>
         )
