@@ -1,3 +1,6 @@
+import { UseFormRegister, UseFormHandleSubmit} from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+
 export interface Notice {
   noticeId: number;
   title: string;
@@ -95,11 +98,20 @@ export interface SupportListResponse {
 export interface WriteFormProps {
   title: string; // 페이지 제목
   onSubmit: (data: WriteFormData, content: string) => void; // 제출 함수
+  initialData?: WriteFormData | null; // ✅ null 허용
+  register: UseFormRegister<WriteFormData>; // ✅ 추가
+  handleSubmit: UseFormHandleSubmit<WriteFormData>; // ✅ 추가
+  content: string;
+  setContent: React.Dispatch<React.SetStateAction<string>>;
+  isSubmitting: boolean;
+  navigate: ReturnType<typeof useNavigate>;
+  isEdit?: boolean;
 }
 
 export interface WriteFormData {
   title: string;
   file1?: FileList;
+  content: string;
 }
 
 
