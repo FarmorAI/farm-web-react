@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const API_BASE_URL = "/api";
+import { API_BASE_URL } from "./memberApi";
 
 /**
  * 파일 업로드 요청

@@ -32,6 +32,13 @@ export interface NoticeListResponse {
   current: number;
 }
 
+export interface NoticeUpdateData {
+  title: string;
+  content: string;
+}
+
+
+
 export interface Board {
   boardId: number;
   title: string;
@@ -41,6 +48,9 @@ export interface Board {
   createdAt: string;
   updatedAt: string;
 }
+
+export type InsertBoard = Pick<Board, "boardId" | "title">;
+
 
 export interface BoardListResponse {
   dtoList: Board[];
@@ -91,3 +101,5 @@ export interface WriteFormData {
   title: string;
   file1?: FileList;
 }
+
+

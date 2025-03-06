@@ -1,10 +1,14 @@
 import { useParams } from "react-router-dom";
-import BoardDetail from "../../../components/contents/board/BoardDetail";
+import DetailComponent from "../../../components/contents/DetailComponent";
 
 const BoardDetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
-  return <BoardDetail boardId={id ? parseInt(id, 10) : undefined} />;
+  if (!id) {
+    return <div>잘못된 접근입니다.</div>; // ✅ `id`가 없는 경우 예외 처리
+  }
+
+  return <DetailComponent type="board" id={parseInt(id, 10)} />;
 };
 
 export default BoardDetailPage;
