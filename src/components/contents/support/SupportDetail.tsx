@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react'
 import PageLayout from '../../pagelayout/PageLayout'
 import { Support } from '../../../model/contents';
 import useMove from '../../../hook/useMove';
-import { getSupportById } from '../../../api/supportApi';
+import { deleteSupport, getSupportById } from '../../../api/supportApi';
+import { useNavigate } from 'react-router-dom';
 
 interface SupportDetailProps {
    inquiryId?: number;
 }
 
 const SupportDetail: React.FC<SupportDetailProps> = ({ inquiryId }) => {
+   const navigate = useNavigate();
    const [support, setSupport] = useState<Support | null>(null);
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const { moveToList } = useMove();
@@ -43,6 +45,16 @@ const SupportDetail: React.FC<SupportDetailProps> = ({ inquiryId }) => {
       </div>
    );
 
+   const handleDelete = async () => {
+      try {
+         deleteSupport(inquiryId as number);
+         alert("문의가 성공적으로 삭제되었습니다.");
+         navigate(`/support/list`);
+      } catch(error) {
+         console.error("Error deleting inquiry:", error);
+      }
+   }
+
    return (
       <PageLayout title="상세 페이지" activeItem="공지사항">
          <div className="max-w-7xl mx-auto p-6 bg-white  rounded-lg ">
@@ -75,7 +87,7 @@ const SupportDetail: React.FC<SupportDetailProps> = ({ inquiryId }) => {
             </table>
             <div className="flex justify-end mt-6 space-x-4">
                <button className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">수정</button>
-               <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">삭제</button>
+               <button onClick={() => handleDelete()} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">삭제</button>
                <button
                   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                   onClick={() => moveToList()}

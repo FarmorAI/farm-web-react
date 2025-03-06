@@ -38,6 +38,21 @@ const useMove = () => {
         navigate(`/contents/${basePath}?${queryStr}`);
     };
 
+
+    const moveToListSupport = (pageParam?: { page?: number; size?: number }) => {
+        const pageNum = pageParam?.page !== undefined ? pageParam.page : page;  // 기본값을 현재 페이지로 유지
+        const sizeNum = pageParam?.size !== undefined ? pageParam.size : size;
+
+        const queryStr = createSearchParams({
+            page: pageNum.toString(),
+            size: sizeNum.toString(),
+        }).toString();
+
+        setRefresh((prev) => !prev);
+        navigate(`/support/list?${queryStr}`);
+    };
+
+
     const moveToModify = (num: number) => {
         navigate(`/contents/${basePath}/modify/${num}?${queryDefault}`);
     };
@@ -51,7 +66,7 @@ const useMove = () => {
         navigate(`/contents/${basePath}/write?${queryDefault}`);
     };
 
-    return { moveToList, moveToModify, moveToRead, moveToWrite, page, size, refresh };
+    return { moveToList, moveToListSupport, moveToModify, moveToRead, moveToWrite, page, size, refresh };
 };
 
 export default useMove;

@@ -6,7 +6,7 @@ import useMove from '../../../hook/useMove';
 import { getSupportList } from '../../../api/supportApi';
 
 const SupportList = () => {
-    const { moveToRead, moveToList, moveToWrite, size, page, refresh } = useMove();
+    const { moveToRead, moveToWrite, moveToListSupport, size, page, refresh } = useMove();
     const [supports, setSupports] = useState<SupportListResponse | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredSupport, setFilteredSupport] = useState<SupportListResponse | null>(null);
@@ -111,7 +111,7 @@ const SupportList = () => {
                         totalPage: filteredSupport.totalPage,
                         pageNumList: filteredSupport.pageNumList,
                     }}
-                    movePage={moveToList}
+                    movePage={moveToListSupport}
                 />
             )}
             
