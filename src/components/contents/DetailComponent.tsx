@@ -6,7 +6,7 @@ interface DetailComponentProps {
   type: "board" | "notice" | "support";
   id: number;
 }
-const DetailComponent: React.FC<DetailComponentProps> = ({ type}) => {
+const DetailComponent: React.FC<DetailComponentProps> = ({ type }) => {
   const { id } = useParams<{ id: string }>(); // URL에서 id 가져오기
   const parsedId = id ? parseInt(id, 10) : undefined;
   const navigate = useNavigate();
@@ -26,6 +26,8 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ type}) => {
     return <div className="text-center py-10 text-gray-500">데이터를 찾을 수 없습니다.</div>;
   }
 
+
+  
   return (
     <PageLayout title="상세 페이지" activeItem={type}>
       <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg">
@@ -47,12 +49,19 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ type}) => {
             </tr>
             <tr>
               <td className="bg-gray-100 px-4 py-24 font-semibold align-top">내용</td>
-              <td className="px-4 py-28 min-h-[550px]" colSpan={3}>{data.content}</td>
+              <td className="px-4 py-28 min-h-[550px]" colSpan={3}>
+                {/* ✅ HTML을 정상적으로 렌더링하도록 적용 */}
+                <div dangerouslySetInnerHTML={{ __html: data.content ?? "" }} />
+              </td>
             </tr>
           </tbody>
         </table>
         <div className="flex justify-end mt-6 space-x-4">
-          <button className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">수정</button>
+          {/* ✅ 수정 버튼을 클릭하면 올바른 수정 페이지로 이동 */}
+          <button
+            className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+            onClick={() => navigate(`/contents/${type}/update/${parsedId}`)} // ✅ 경로 변경
+          >수정</button>
           <button onClick={deleteItem} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">삭제</button>
           <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => navigate(-1)}>
             뒤로가기

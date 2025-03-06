@@ -9,6 +9,7 @@ const BoardDetail = lazy(() => import("../pages/contents/board/BoardDetailPage")
 const NoticeList = lazy(() => import("../pages/contents/notice/NoticeListPage"));
 const NoticeDetail = lazy(() => import("../pages/contents/notice/NoticeDetailPage")); // ✅ 상세 페이지 추가
 const NoticeWritePage = lazy(() => import("../pages/contents/notice/NoticeWritePage"));
+const NoticeUpdatePage = lazy(() => import("../pages/contents/notice/NoticeUpdatePage"));
 
 // ✅ boardRoutes 배열을 export
 export const boardRoutes: RouteObject[] = [
@@ -29,10 +30,18 @@ export const boardRoutes: RouteObject[] = [
     ),
   },
   {
-    path: "contents/notice/write", // ✅ 동적 라우팅 추가 (공지사항 상세보기)
+    path: "contents/notice/write", // ✅ 동적 라우팅 추가 (공지사항 작성)
     element: (
       <Suspense fallback={<div>Loading...</div>}>
         <NoticeWritePage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "contents/notice/update/:id", // ✅ 동적 라우팅 추가 (공지사항 수정)
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <NoticeUpdatePage />
       </Suspense>
     ),
   },

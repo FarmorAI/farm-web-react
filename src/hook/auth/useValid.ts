@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FormType } from "../../components/register/RegisterForm";
+import { FormType } from "../../components/auth/register/RegisterForm";
 
 export const useValid = (
   form: FormType,
@@ -112,28 +112,31 @@ export const useValid = (
     }
     const regex = /^[a-zA-Z0-9가-힣]{2,10}$/;
     if (!regex.test(form.nickname)) {
-      setValidMessage(prev => ({
+      setValidMessage((prev) => ({
         ...prev,
       }));
-      setIsValid(prev => ({ ...prev, nickname: false }));
+      setIsValid((prev) => ({ ...prev, nickname: false }));
     } else {
       // 🚀 닉네임 형식이 맞다면 기본적으로 유효성 true
-      setIsValid(prev => ({ ...prev, nickname: true }));
-  
+      setIsValid((prev) => ({ ...prev, nickname: true }));
+
       if (!isNicknameChecked) {
-        setValidMessage(prev => ({
+        setValidMessage((prev) => ({
           ...prev,
         }));
       } else {
         if (isNicknameAvailable === false) {
-          setValidMessage(prev => ({
+          setValidMessage((prev) => ({
             ...prev,
             nicknameMessage: "중복된 닉네임입니다.",
           }));
-          setIsValid(prev => ({ ...prev, nickname: false }));
+          setIsValid((prev) => ({ ...prev, nickname: false }));
         } else if (isNicknameAvailable === true) {
-          setValidMessage(prev => ({ ...prev, nicknameMessage: "사용 가능한 닉네임입니다." }));
-          setIsValid(prev => ({ ...prev, nickname: true })); // ✅ 사용 가능하면 true 유지
+          setValidMessage((prev) => ({
+            ...prev,
+            nicknameMessage: "사용 가능한 닉네임입니다.",
+          }));
+          setIsValid((prev) => ({ ...prev, nickname: true })); // ✅ 사용 가능하면 true 유지
         }
       }
     }

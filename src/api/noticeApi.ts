@@ -3,7 +3,6 @@ import {
     InsertNotice,
     Notice,
     NoticeListResponse,
-    NoticeUpdateData,
 } from "../model/contents";
 import { API_BASE_URL } from "./memberApi";
 import { getCookie } from "../util/cookieUtill.ts";
@@ -79,27 +78,32 @@ export const deleteNotice = async (noticeId: number): Promise<boolean> => {
         return false;
     }
 };
-
-// 공지사항 수정 API
-export const updateNotice = async (
-    noticeId: number,
-    noticeData: NoticeUpdateData
-): Promise<boolean> => {
-    const token = getCookie("jwt"); // JWT 인증 토큰 가져오기
+export const updateNotice = async (noticeId: number, noticeData: { title: string; content: string }) => {
+    const token = getCookie("jwt");
     if (!token) {
-        console.error("JWT 토큰이 없습니다.");
-        return false;
+      console.error("🚨 JWT 토큰이 없습니다.");
+      return false;
     }
+  
     try {
-        await axios.put(`${API_BASE_URL}/notice/${noticeId}`, noticeData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-        });
-        return true;
+      console.log("📡 공지사항 수정 요청 데이터:", noticeData.content); // ✅ 요청 데이터 확인
+      console.log(noticeData.content);
+      
+      
+  
+      const response = await axios.put(`${API_BASE_URL}/notice/${noticeId}`, noticeData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      console.log("✅ 서버 응답:", response.data); // ✅ 응답 확인
+  
+      return response.data.result === "success";
     } catch (error) {
-        console.error(`공지사항 수정 실패`, error);
-        return false;
+      console.error("🚨 공지사항 수정 실패:", error);
+      return false;
     }
-};
+  };
+  
