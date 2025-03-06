@@ -4,7 +4,8 @@ import {lazy, Suspense} from "react";
 
 // Lazy Loding
 const ProductPage = lazy(() => import("../pages/product/ProductListPage"));
-
+const ProductRegisterPage = lazy(() => import("../pages/product/ProductRegisterPage"));
+const ProductDetailPage = lazy(() => import("../pages/product/ProductDetailPage"));
 // Routes export
 export const productRouter: RouteObject[] = [
     {
@@ -12,6 +13,22 @@ export const productRouter: RouteObject[] = [
         element: (
             <Suspense fallback={<div>Loading...</div>}>
                 <ProductPage/>
+            </Suspense>
+        )
+    },
+    {
+        path: "product/register",
+        element: (
+            <Suspense fallback={<div>Loading...</div>}>
+                <ProductRegisterPage/>
+            </Suspense>
+        )
+    },
+    {
+        path: "product/:productId",
+        element: (
+            <Suspense fallback={<div>Loading...</div>}>
+                <ProductDetailPage/>
             </Suspense>
         )
     },

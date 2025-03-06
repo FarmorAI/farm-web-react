@@ -1,13 +1,23 @@
 import axios from "axios";
-import {InsertNotice, Notice, NoticeListResponse} from "../model/contents";
-import {API_BASE_URL} from "./memberApi";
-import {getCookie} from "../util/cookieUtill.ts";
+import {
+    InsertNotice,
+    Notice,
+    NoticeListResponse,
+    NoticeUpdateData,
+} from "../model/contents";
+import { API_BASE_URL } from "./memberApi";
+import { getCookie } from "../util/cookieUtill.ts";
 
-
-export const getNoticeList = async (pageParam: { page: number; size: number }): Promise<NoticeListResponse[]> => {
-    const {page, size} = pageParam;
+export const getNoticeList = async (pageParam: {
+    page: number;
+    size: number;
+}): Promise<NoticeListResponse[]> => {
+    const { page, size } = pageParam;
     try {
-        const response = await axios.get<NoticeListResponse[]>(`${API_BASE_URL}/notice/list`, {params: {page, size}});
+        const response = await axios.get<NoticeListResponse[]>(
+            `${API_BASE_URL}/notice/list`,
+            { params: { page, size } }
+        );
         return response.data;
     } catch (error) {
         console.error("Error fetching notice list:", error);
@@ -30,8 +40,10 @@ interface NoticeInsertData {
     content: string;
 }
 
-
-export const insertNotice = async (noticeData: NoticeInsertData, token : string): Promise<InsertNotice | null> => {
+export const insertNotice = async (
+    noticeData: NoticeInsertData,
+    token: string
+): Promise<InsertNotice | null> => {
     try {
         // 올바른 요청 형식
         const response = await axios.post<InsertNotice>(
@@ -58,10 +70,36 @@ export const deleteNotice = async (noticeId: number): Promise<boolean> => {
         return false;
     }
     try {
-        await axios.delete(`${API_BASE_URL}/notice/${noticeId}`, {headers: {Authorization: `Bearer ${token}`}});
+        await axios.delete(`${API_BASE_URL}/notice/${noticeId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
         return true;
     } catch (error) {
         console.error(`공지사항 삭제 실패`, error);
         return false;
     }
-}
+};
+
+// 공지사항 수정 API
+export const updateNotice = async (
+    noticeId: number,
+    noticeData: NoticeUpdateData
+): Promise<boolean> => {
+    const token = getCookie("jwt"); // JWT 인증 토큰 가져오기
+    if (!token) {
+        console.error("JWT 토큰이 없습니다.");
+        return false;
+    }
+    try {
+        await axios.put(`${API_BASE_URL}/notice/${noticeId}`, noticeData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        return true;
+    } catch (error) {
+        console.error(`공지사항 수정 실패`, error);
+        return false;
+    }
+};

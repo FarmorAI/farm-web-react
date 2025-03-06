@@ -1,68 +1,152 @@
-import { Card, Button, Container, Row, Col, Form} from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Card, Button, Container, Row, Col, Nav, Spinner, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import Carousel from "../../components/pagelayout/Carousel.tsx";
+import axios from "axios";
+import { API_BASE_URL } from "../../api/memberApi";
 
-const products = [
-    { id: 1, name: "유기농 사과", category: "과일", seller: "Janey", date: "2025. 2. 18.", stock: 20, image: "/apple.jpg", price: "₩5,000" },
-    { id: 2, name: "신선한 당근", category: "채소", seller: "Johnny", date: "2025. 2. 26.", stock: 15, image: "/carrot.jpg", price: "₩3,000" },
-    { id: 3, name: "제철 딸기", category: "과일", seller: "Janey", date: "2025. 2. 18.", stock: 10, image: "/strawberry.jpg", price: "₩7,000" },
+// ✅ 메인 배너 데이터
+const slidesData = [
+    {
+        image: "/assets/images/product/productList1.png",
+        title: "신선한 딸기 마켓",
+        subtitle: "최고 품질의 딸기를 만나보세요.",
+    },
+    {
+        image: "/assets/images/product/productList2.png",
+        title: "자연 그대로의 딸기",
+        subtitle: "신선함과 달콤함을 그대로 담았습니다.",
+    },
+    {
+        image: "/assets/images/product/productList3.png",
+        title: "자연 그대로의 딸기",
+        subtitle: "신선함과 달콤함을 그대로 담았습니다.",
+    },
 ];
 
-const categories = ["전체", "과일", "채소"];
+// ✅ 딸기 품종 카테고리
+const categories = [
+    { title: "전체", key: "all" },
+    { title: "단단하고 달콤한", key: "sweet_firm" },
+    { title: "단단하고 상큼한", key: "tangy_firm" },
+    { title: "부드럽고 달콤한", key: "sweet_soft" },
+    { title: "부드럽고 상큼한", key: "tangy_soft" },
+];
 
 const ProductListPage = () => {
-    const [selectedCategory, setSelectedCategory] = useState("전체");
-    const [searchTerm, setSearchTerm] = useState("");
+    const navigate = useNavigate();
+    const [selectedCategory, setSelectedCategory] = useState("all");
+    const [products, setProducts] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
-    // 필터링된 상품 목록
-    const filteredProducts = products.filter((product) =>
-        (selectedCategory === "전체" || product.category === selectedCategory) &&
-        product.name.includes(searchTerm)
-    );
+    // ✅ 백엔드에서 상품 목록 불러오기
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/product/list`);
+            setProducts(response.data); // 상품 목록 상태 업데이트
+        } catch (error) {
+            console.error("상품 목록 불러오기 실패:", error);
+            setError("상품 목록을 불러오는 중 오류가 발생했습니다.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    if (loading) {
+        return (
+            <Container className="py-5 text-center">
+                <Spinner animation="border" role="status" />
+                <p>상품 목록을 불러오는 중...</p>
+            </Container>
+        );
+    }
+
+    if (error) {
+        return (
+            <Container className="py-5 text-center">
+                <Alert variant="danger">{error}</Alert>
+            </Container>
+        );
+    }
+
+    // ✅ 현재 선택된 카테고리에 따른 상품 목록 필터링
+    const filteredProducts =
+        selectedCategory === "all"
+            ? products
+            : products.filter((product) => product.category === selectedCategory);
 
     return (
-        <Container className="py-5">
+        <Container fluid className="py-4">
             {/* 🔹 메인 배너 */}
-            <div className="text-center mb-5">
-                <img src="/public/assets/banner.png" alt="과일 배너" className="img-fluid rounded shadow-lg" />
+            <div className="mb-4">
+                <Carousel slides={slidesData} />
             </div>
 
-            {/* 🔹 필터 및 검색창 */}
-            <Row className="mb-4">
-                <Col md={3}>
-                    <Form.Select onChange={(e) => setSelectedCategory(e.target.value)}>
-                        {categories.map((cat, index) => (
-                            <option key={index} value={cat}>{cat}</option>
-                        ))}
-                    </Form.Select>
-                </Col>
-                <Col md={6}>
-                    <Form.Control
-                        type="text"
-                        placeholder="상품명을 입력하세요"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </Col>
-                <Col md={3} className="text-end">
-                    <Button variant="success">상품 등록</Button>
-                </Col>
-            </Row>
+            {/* 🔹 카테고리 네비게이션 */}
+            <Nav variant="pills" className="justify-content-center mb-4 gap-2">
+                {categories.map((category) => (
+                    <Nav.Item key={category.key}>
+                        <Nav.Link
+                            active={selectedCategory === category.key}
+                            onClick={() => setSelectedCategory(category.key)}
+                            className="fw-bold px-4 py-2 rounded-pill"
+                            style={{
+                                backgroundColor: selectedCategory === category.key ? "#ff4d4d" : "#f8f9fa",
+                                color: selectedCategory === category.key ? "#fff" : "#333",
+                                transition: "0.3s",
+                                border: "1px solid #ff4d4d",
+                            }}
+                        >
+                            {category.title}
+                        </Nav.Link>
+                    </Nav.Item>
+                ))}
+            </Nav>
 
-            {/* 🔹 상품 리스트 */}
-            <Row>
+            {/* 🔹 상품 목록 (그리드 형식) */}
+            <Row className="g-3">
                 {filteredProducts.map((product) => (
-                    <Col md={4} key={product.id} className="mb-4">
-                        <Card className="shadow-sm border-0">
-                            <Card.Img variant="top" src={product.image} className="rounded-top" />
-                            <Card.Body>
-                                <Card.Title className="fw-bold">{product.name}</Card.Title>
-                                <Card.Subtitle className="mb-2 text-muted">{product.category}</Card.Subtitle>
-                                <Card.Text>
-                                    <strong className="text-danger">{product.price}</strong>
-                                    <br />
-                                    <small className="text-muted">등록일: {product.date}</small>
+                    <Col key={product.productId} xs={6} md={4} lg={3}>
+                        <Card
+                            className="shadow-sm border-0 h-100"
+                            style={{
+                                cursor: "pointer",
+                                borderRadius: "12px",
+                                transition: "0.3s",
+                            }}
+                            onClick={() => navigate(`/product/${product.productId}`)}
+                            onMouseOver={(e) => (e.currentTarget.style.boxShadow = "0px 4px 15px rgba(0, 0, 0, 0.2)")}
+                            onMouseOut={(e) => (e.currentTarget.style.boxShadow = "none")}
+                        >
+                            <Card.Img
+                                variant="top"
+                                src={product.imageUrl || "/assets/images/default.png"}
+                                className="rounded-top w-100 object-cover"
+                                style={{ height: "200px", borderBottom: "3px solid #ff4d4d" }}
+                            />
+                            <Card.Body className="p-3 text-center d-flex flex-column justify-content-between">
+                                <Card.Title className="fw-bold text-truncate">{product.name}</Card.Title>
+                                <Card.Text className="text-danger fw-semibold">
+                                    {new Intl.NumberFormat("ko-KR").format(product.price)}원
                                 </Card.Text>
-                                <Button variant="primary" className="w-100">구매하기</Button>
+                                <Button
+                                    variant="outline-danger"
+                                    className="w-100 mt-auto"
+                                    style={{
+                                        transition: "0.3s",
+                                        fontWeight: "bold",
+                                        borderRadius: "8px",
+                                    }}
+                                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#ff4d4d")}
+                                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                                >
+                                    구매하기
+                                </Button>
                             </Card.Body>
                         </Card>
                     </Col>

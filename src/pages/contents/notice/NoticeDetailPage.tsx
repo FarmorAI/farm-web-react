@@ -1,10 +1,14 @@
 import { useParams } from "react-router-dom";
-import NoticeDetail from "../../../components/contents/notice/NoticeDetail";
+import DetailComponent from "../../../components/contents/DetailComponent";
 
 const NoticeDetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
-  return <NoticeDetail noticeId={id ? parseInt(id, 10) : undefined} />;
+  if (!id) {
+    return <div>잘못된 접근입니다.</div>; // ✅ `id`가 없는 경우 예외 처리
+  }
+
+  return <DetailComponent type="notice" id={parseInt(id, 10)} />;
 };
 
 export default NoticeDetailPage;

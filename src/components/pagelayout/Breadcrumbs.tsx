@@ -18,8 +18,10 @@ const Breadcrumbs: React.FC = () => {
   };
   const authBreadcrumb = authPaths[currentPath];
 
+  const profilePath = currentPath === "/auth/profile" ? { label: "마이페이지" } : null;
+
   return (
-    <nav className="bg-gray-20 bg-gray-200">
+    <nav className="bg-gray-100">
       <div className="max-w-8xl mx-auto px-4">
         <div className="flex items-center space-x-4 py-3 text-sm text-gray-600 ml-20">
           <Link to="/" className="hover:text-custom hover:underline">
@@ -55,7 +57,18 @@ const Breadcrumbs: React.FC = () => {
                 </>
               )}
               <span className="text-gray-400">&gt;</span>
-              <span className="text-custom font-medium">{authBreadcrumb.label}</span>
+              <span className="text-custom font-medium">
+                {authBreadcrumb.label}
+              </span>
+            </>
+          )}
+          {/* 마이페이지 경로 */}
+          {profilePath && (
+            <>
+              <span className="text-gray-400">&gt;</span>
+              <span className="text-custom font-medium">
+                {profilePath.label}
+              </span>
             </>
           )}
         </div>
