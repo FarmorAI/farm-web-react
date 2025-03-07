@@ -1,6 +1,5 @@
 export interface FormData {
    inquiryType: string;
-   subInquiryType: string;
    title: string;
    content: string;
    agree: boolean;
