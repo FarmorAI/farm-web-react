@@ -1,4 +1,4 @@
-import Register from "../../components/register/RegisterForm"; // RegisterForm.tsx에서 내보낸 Register 컴포넌트 임포트
+import Register from "../../components/auth/register/RegisterForm"; // RegisterForm.tsx에서 내보낸 Register 컴포넌트 임포트
 
 const RegisterPage: React.FC = () => {
   return (

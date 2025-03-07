@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-import { checkEmail, checkNickname, registerUser } from "../../api/memberApi";
-import { useValid } from "../../hook/register/useValid";
+import {
+  checkEmail,
+  checkNickname,
+  registerUser,
+} from "../../../api/memberApi";
+import { useValid } from "../../../hook/auth/useValid";
 import { InputField } from "./InputField";
 import { AddressFields } from "./AddressFields";
 import { TermsAgreement } from "./TermsAgreement";

@@ -1,53 +1,58 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { WriteFormData, WriteFormProps } from "../../model/contents";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
-import { uploadFiles } from "../../api/fileApi"; // 파일 업로드 API 추가
-
-const WriteForm: React.FC<WriteFormProps> = ({ title, onSubmit }) => {
-  const { register, handleSubmit } = useForm<WriteFormData>();
-  const [content, setContent] = useState("");
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
-  const [isUploading, setIsUploading] = useState(false); // 업로드 상태 추가
+import { updateNotice } from "../../api/noticeApi.ts";
+const WriteForm: React.FC<WriteFormProps> = ({ title,  initialData }) => {
+  const { register, handleSubmit, setValue, getValues, watch } = useForm<WriteFormData>();
   const navigate = useNavigate();
-
-  // 파일 선택 시 상태 업데이트
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setSelectedFiles(event.target.files);
+  const [isUploading, setIsUploading] = useState(false);
+  const params = useParams();
+  const noticeId = params.id ? parseInt(params.id, 10) : undefined;
+  // :흰색_확인_표시: SunEditor의 내용을 실시간으로 감지하여 useForm과 동기화
+  const watchedContent = watch("content", "");
+  useEffect(() => {
+    if (initialData) {
+      setValue("title", initialData.title);
+      setValue("content", initialData.content);
     }
+  }, [initialData, setValue]);
+  // :흰색_확인_표시: SunEditor 변경 시 useForm 동기화
+  useEffect(() => {
+    setValue("content", watchedContent, { shouldValidate: true });
+  }, [watchedContent, setValue]);
+  // :흰색_확인_표시: SunEditor 내용 변경 시 즉시 반영
+  const handleContentChange = (newContent: string) => {
+    console.log(":메모: SunEditor 내용 변경:", newContent);
+    setValue("content", newContent, { shouldValidate: true });
   };
-
-  // 폼 제출 시 파일 업로드 후 게시글 저장
+  // :흰색_확인_표시: 폼 제출 핸들러
   const handleFormSubmit = async (data: WriteFormData) => {
-    setIsUploading(true); // 업로드 시작
-    let uploadedFileNames: string[] = [];
-
+    setIsUploading(true);
     try {
-      if (selectedFiles) {
-        uploadedFileNames = await uploadFiles(selectedFiles); // 파일 업로드 요청
-      }
-
-      // 게시글 데이터 구성
+      // :흰색_확인_표시: SunEditor 최신 내용 반영
+      setValue("content", watchedContent);
+      const latestContent = getValues("content"); // 최신 데이터 가져오기
+      console.log(":로켓: 최신 content 값:", latestContent);
       const postData = {
         ...data,
-        content,
-        files: uploadedFileNames, // 업로드된 파일명 추가
+        content: latestContent, // 최신 SunEditor 내용 반영
       };
-
-      onSubmit(postData,content); // 게시글 데이터 전달
-      alert("게시글이 성공적으로 등록되었습니다!"); // 성공 메시지
-      navigate("/contents/board"); // 게시판 목록 페이지로 이동 (예시)
+      console.log(":로켓: 최종 전송 데이터:", postData);
+      if (noticeId != null) {
+        const res = await updateNotice(noticeId, postData);
+        console.log(res);
+      }
+      navigate("/contents/notice");
     } catch (error) {
-      alert("게시글 작성 중 오류가 발생했습니다."); // 오류 메시지 표시
-      console.error("게시글 작성 오류:", error);
+      alert("게시글 수정 중 오류가 발생했습니다.");
+      console.error("게시글 수정 오류:", error);
     } finally {
-      setIsUploading(false); // 업로드 상태 초기화
+      setIsUploading(false);
     }
   };
-
   return (
       <div className="max-w-7xl mx-auto p-6">
         <h2 className="text-2xl font-semibold mb-4">{title}</h2>
@@ -57,51 +62,29 @@ const WriteForm: React.FC<WriteFormProps> = ({ title, onSubmit }) => {
             <tr className="border-b">
               <td className="bg-gray-100 px-4 py-2 font-semibold w-1/5">제목</td>
               <td className="px-4 py-2">
-                <input
-                    type="text"
-                    {...register("title", { required: true })}
-                    className="w-full p-2 border rounded"
-                />
+                <input type="text" {...register("title", { required: true })} className="w-full p-2 border rounded" />
               </td>
             </tr>
             <tr>
               <td className="bg-gray-100 px-4 py-2 font-semibold align-top">내용</td>
               <td className="px-4 py-4">
                 <SunEditor
-                    setContents={content}
-                    onChange={setContent}
+                    setContents={watchedContent} // :흰색_확인_표시: 최신 값 동기화
+                    onChange={handleContentChange}
                     setOptions={{
                       height: "400px",
-                      buttonList: [
-                        ["bold", "underline", "italic", "strike"],
-                        ["font", "align", "list", "image", "link"],
-                      ],
+                      buttonList: [["bold", "underline", "italic", "strike"], ["font", "align", "list", "image", "link"]],
                     }}
                 />
-              </td>
-            </tr>
-            <tr>
-              <td className="bg-gray-100 px-4 py-2 font-semibold">파일 업로드</td>
-              <td className="px-4 py-2">
-                <input type="file" multiple {...register("file1")} onChange={handleFileChange} />
               </td>
             </tr>
             </tbody>
           </table>
           <div className="flex justify-end mt-8 space-x-4">
-            <button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="px-6 py-3 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
-                disabled={isUploading}
-            >
+            <button type="button" onClick={() => navigate(-1)} className="px-6 py-3 bg-gray-400 text-white rounded-lg hover:bg-gray-500" disabled={isUploading}>
               취소
             </button>
-            <button
-                className={`px-4 py-2 text-white rounded ${isUploading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"}`}
-                type="submit"
-                disabled={isUploading}
-            >
+            <button type="submit" className={`px-4 py-2 text-white rounded ${isUploading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"}`} disabled={isUploading}>
               {isUploading ? "업로드 중..." : "작성 완료"}
             </button>
           </div>
@@ -109,5 +92,4 @@ const WriteForm: React.FC<WriteFormProps> = ({ title, onSubmit }) => {
       </div>
   );
 };
-
 export default WriteForm;

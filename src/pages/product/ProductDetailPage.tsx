@@ -10,7 +10,6 @@ const ProductDetailPage = () => {
     const { productId } = useParams<{ productId: string }>();
     const [product, setProduct] = useState<ProductDto | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
     const [selectedImage, setSelectedImage] = useState<string>("");
     const [selectedOption, setSelectedOption] = useState<string>("");
     const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -18,12 +17,11 @@ const ProductDetailPage = () => {
     // ✅ 상품 상세 정보 가져오기
     const fetchProductDetail = async () => {
         try {
-            const response = await axios.get<ProductDto>(`${API_BASE_URL}/product/${productId}`);
-            setProduct(response.data);
-            setSelectedImage(response.data.imageUrl); // 기본 이미지 설정
+            const response = await axios.get<{ data: ProductDto }>(`${API_BASE_URL}/product/${productId}`);
+            setProduct(response.data.data);
+            setSelectedImage(response.data.data.imageUrl); // 기본 이미지 설정
         } catch (error) {
             console.error("상품 상세정보 불러오기 실패:", error);
-            setError("상품 정보를 불러올 수 없습니다.");
         } finally {
             setLoading(false);
         }
@@ -42,13 +40,6 @@ const ProductDetailPage = () => {
         );
     }
 
-    if (error) {
-        return (
-            <Container className="py-5 text-center">
-                <Alert variant="danger">{error}</Alert>
-            </Container>
-        );
-    }
 
     if (!product) {
         return (

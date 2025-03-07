@@ -8,6 +8,7 @@ import { useGetUserInfoQuery } from "../../api/authApi";
 import { RootState } from "../../redux/store";
 import { logoutUser, setUser } from "../../redux/slices/authslices";
 import { getCookie, removeCookie } from "../../util/cookieUtill";
+import {FaShoppingCart} from "react-icons/fa";
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -80,7 +81,15 @@ const Header: React.FC = () => {
 
             {/* 🔹 프로필 드롭다운 */}
             <div className="hidden md:flex items-center space-x-4">
-              {user ? (
+                {/* 장바구니 아이콘 */}
+
+                {user ? (
+                    <div className="flex items-center space-x-6">
+                        {/* 장바구니 아이콘 */}
+                        <Link to="/cart" className="relative text-gray-700 hover:text-red-500">
+                            <FaShoppingCart size={28} />
+                        </Link>
+
                 <div
                   className="relative group "
                   onMouseEnter={() => setHoveredMenu("profile")}
@@ -116,6 +125,7 @@ const Header: React.FC = () => {
                       </button>
                     </div>
                   )}
+                </div>
                 </div>
               ) : (
                 <AuthLinks />
