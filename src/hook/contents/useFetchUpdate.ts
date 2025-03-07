@@ -41,7 +41,8 @@ const useFetchUpdate = () => {
       setValue("content", content);
       // getValues로 최신 content 값 가져오기
       const updatedContent = getValues("content");
-      
+      console.log("✅ 최신 content 값:", updatedContent);
+      console.log(updatedContent)
       const isSuccess = await updateNotice(noticeId, {
         title: data.title,
         content: updatedContent,
