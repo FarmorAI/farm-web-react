@@ -14,6 +14,7 @@ import {productRouter} from "./ProductRouter.tsx";
 import BlogDisplay from "../pages/weather/BlogDisplay.tsx";
 import TechDisplay from "../pages/weather/TechDisplay.tsx";
 import Banner from "../pages/weather/Banner.tsx"
+import GraphDisplay from "../pages/weather/GraphDisplay.tsx";
 // ✅ Suspense 적용 (라우트 전체에 로딩 표시)
 const withSuspense = (routes: RouteObject[]): RouteObject[] =>
   routes.map((route) => ({
@@ -38,11 +39,12 @@ const Root = createBrowserRouter([
                   <Banner />
                   <div className="flex gap-4 p-6 justify-center">
                       <WeatherDisplay />
-                      <BlogDisplay query={"농업"} />
+                      <BlogDisplay query={"사과"} />
                       <InfoDisplay />
                   </div>
                   <div className="mt-6">
-                    <TechDisplay />
+                    <TechDisplay query={"사과"}/>
+                      <GraphDisplay />
                   </div>
               </div>
         )

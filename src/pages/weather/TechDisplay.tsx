@@ -5,8 +5,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { fetchTechInfo } from "../../api/infoApi.ts";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const TechDisplay = () => {
+interface TechDisplayProps {
+    query: string;
+}
+const TechDisplay:React.FC<TechDisplayProps> = ({query}) => {
     const style = document.createElement("style");
     style.innerHTML = `
             @font-face {
@@ -26,7 +28,7 @@ const TechDisplay = () => {
 
     useEffect(() => {
         const loadTechInfo = async () => {
-            const data = await fetchTechInfo();
+            const data = await fetchTechInfo(query);
             console.log("🔍 Tech Info Data:", data);
             setTechInfo(data.map((item: any) => ({
                 title: item.title,
@@ -35,7 +37,7 @@ const TechDisplay = () => {
             })));
         };
         loadTechInfo();
-    }, []);
+    }, [query]);
 
     return (
         <div className="max-w-[1500px] mx-auto px-6 ">
@@ -43,10 +45,10 @@ const TechDisplay = () => {
             <div className="bg-blue-50 text-gray-800 text-lg font-semibold py-3 px-4 rounded-t-lg flex items-center justify-between" style={{ fontFamily: "Gyeonggi_Title_Medium" }}>
                 <span>📢 이달의 농업기술</span>
                 <div className="flex space-x-2" >
-                    <button className="tech-swiper-button-prev bg-white p-2 rounded-full cursor-pointer text-green-700">
+                    <button className="tech-swiper-button-prev bg-white p-2 rounded-full cursor-pointer text-blue-300">
                         <ChevronLeft size={20} />
                     </button>
-                    <button className="tech-swiper-button-next bg-white p-2 rounded-full cursor-pointer text-green-700">
+                    <button className="tech-swiper-button-next bg-white p-2 rounded-full cursor-pointer text-blue-300">
                         <ChevronRight size={20} />
                     </button>
                 </div>
@@ -69,7 +71,8 @@ const TechDisplay = () => {
                                     href={`https://www.nongsaro.go.kr/portal/ps/psv/psvr/psvre/curationDtl.ps?menuId=PS03352&srchCurationNo=${item.contentId}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="block p-3 text-sm font-semibold text-center text-gray-900 hover:text-green-700"
+                                    className="block p-3 text-sm font-semibold text-center text-gray-900 hover:text-green-700 break-words overflow-wrap break-word"
+                                    style={{ wordBreak: "keep-all", whiteSpace: "normal", lineHeight: "1.4", maxWidth: "90%" }}
                                 >
                                     {item.title}
                                 </a>

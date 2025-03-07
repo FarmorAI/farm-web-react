@@ -22,6 +22,7 @@ const PestInfoDisplay: React.FC = () => {
                 font-style: normal;
             }`;
     document.head.appendChild(style);
+
     const [bugInfo, setBugInfo] = useState<BugInfo[]>([]);
 
     useEffect(() => {
@@ -57,18 +58,23 @@ const PestInfoDisplay: React.FC = () => {
             <div className="overflow-y-auto overflow-x-hidden h-full p-2" style={{ fontFamily: "GowunDodum-Regular" }}>
                 <div className="flex flex-col space-y-4">
                     {bugInfo.slice(0, 10).map((item, index) => (
-                        <a
+                        <div
                             key={index}
-                            href={item.fileurl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-3 border-b border-gray-200 text-left block hover:bg-gray-100 transition flex items-center space-x-3"
+                            className="p-3 border-b border-gray-200 text-left block hover:bg-gray-100 transition flex items-center justify-between"
                         >
-                            <span className="text-gray-600 flex-shrink-0">▪</span>
-                            <div className="flex flex-col justify-center flex-grow">
-                                <h3 className="text-sm font-semibold text-gray-800 truncate w-60">{item.title}</h3>
+                            <div className="flex items-center space-x-3">
+                                <span className="text-gray-600 flex-shrink-0">▪</span>
+                                <h3 className="text-sm font-semibold text-gray-800">{item.title}</h3>
                             </div>
-                        </a>
+                            <a
+                                href={item.fileurl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 text-lg"
+                            >
+                                📥
+                            </a>
+                        </div>
                     ))}
                 </div>
             </div>

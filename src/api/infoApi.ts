@@ -15,9 +15,11 @@ export const fetchBlogData = async (query: string) => {
     }
 };
 
-export const fetchTechInfo = async () => {
+export const fetchTechInfo = async (query: string) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/info/tech`);
+        const response = await axios.get(`${API_BASE_URL}/info/tech`, {
+            params: { query },
+        });
         console.log("기술 정보 :", response.data);
         return response.data;
     } catch (error) {
