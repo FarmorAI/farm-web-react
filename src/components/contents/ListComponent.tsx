@@ -28,10 +28,17 @@ const ListComponent = ({ type }: { type: "board" | "notice" | "support" }) => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState(data);
+  const [totalResults, setTotalResults] = useState(0); // ✅ 전체 검색 개수 상태 추가
+  const [ isSearching, setIsSearching ] = useState(false);
 
   useEffect(() => {
-    setFilteredData(data);
-  }, [data]);
+    if (!isSearching && data) {
+      setFilteredData(data);
+      setTotalResults(data?.totalCount || 0); // ✅ 검색이 아닐 때 전체 개수 유지
+    }
+  }, [data, isSearching]);
+
+
 
   const handleSearch = (category: string) => {
     if (!data) return;
@@ -63,6 +70,8 @@ const ListComponent = ({ type }: { type: "board" | "notice" | "support" }) => {
         ? { ...(data as SupportListResponse), dtoList: filtered as Support[] }
         : null
     );
+    setTotalResults(filtered.length); // ✅ 검색된 개수 반영
+    setIsSearching(true); // ✅ 검색 실행됨
   };
 
   return (
@@ -71,7 +80,7 @@ const ListComponent = ({ type }: { type: "board" | "notice" | "support" }) => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         handleSearch={handleSearch}
-        totalResults={filteredData?.dtoList.length || 0}
+        totalResults={isSearching ? totalResults : data?.totalCount || 0} // ✅ 검색 중이면 검색된 개수, 아니면 전체 개수
       />
 
       <table className="w-full border-t border-b border-gray-300">
