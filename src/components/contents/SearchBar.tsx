@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 interface SearchBarProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  handleSearch: (category: string) => void;
+  handleSearch: (category: string, query: string) => void; // ✅ 검색어도 함께 전달
   totalResults: number;
 }
 
@@ -17,7 +17,7 @@ const SearchBar = ({
   const [searchCategory, setSearchCategory] = useState("전체");
 
   const handleSearchClick = () => {
-    handleSearch(searchCategory);
+    handleSearch(searchCategory,  searchQuery);
   };
 
   return (

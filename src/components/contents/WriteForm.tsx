@@ -5,8 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
 import { updateNotice } from "../../api/noticeApi.ts";
-const WriteForm: React.FC<WriteFormProps> = ({ title,  initialData }) => {
-  const { register, handleSubmit, setValue, getValues, watch } = useForm<WriteFormData>();
+const WriteForm: React.FC<WriteFormProps> = ({ title, initialData }) => {
+  const { register, handleSubmit, setValue, getValues, watch } =
+    useForm<WriteFormData>();
   const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState(false);
   const params = useParams();
@@ -54,42 +55,64 @@ const WriteForm: React.FC<WriteFormProps> = ({ title,  initialData }) => {
     }
   };
   return (
-      <div className="max-w-7xl mx-auto p-6">
-        <h2 className="text-2xl font-semibold mb-4">{title}</h2>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <table className="w-full border border-gray-300">
-            <tbody>
+    <div className="max-w-7xl mx-auto p-6">
+      <h2 className="text-2xl font-semibold mb-4">{title}</h2>
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <table className="w-full border border-gray-300">
+          <tbody>
             <tr className="border-b">
-              <td className="bg-gray-100 px-4 py-2 font-semibold w-1/5">제목</td>
-              <td className="px-4 py-2">
-                <input type="text" {...register("title", { required: true })} className="w-full p-2 border rounded" />
+              <td className="bg-gray-100 px-4 py-2 font-semibold w-1/5">
+                제목
               </td>
-            </tr>
-            <tr>
-              <td className="bg-gray-100 px-4 py-2 font-semibold align-top">내용</td>
-              <td className="px-4 py-4">
-                <SunEditor
-                    setContents={watchedContent} // :흰색_확인_표시: 최신 값 동기화
-                    onChange={handleContentChange}
-                    setOptions={{
-                      height: "400px",
-                      buttonList: [["bold", "underline", "italic", "strike"], ["font", "align", "list", "image", "link"]],
-                    }}
+              <td className="px-4 py-2">
+                <input
+                  type="text"
+                  {...register("title", { required: true })}
+                  className="w-full p-2 border rounded"
                 />
               </td>
             </tr>
-            </tbody>
-          </table>
-          <div className="flex justify-end mt-8 space-x-4">
-            <button type="button" onClick={() => navigate(-1)} className="px-6 py-3 bg-gray-400 text-white rounded-lg hover:bg-gray-500" disabled={isUploading}>
-              취소
-            </button>
-            <button type="submit" className={`px-4 py-2 text-white rounded ${isUploading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"}`} disabled={isUploading}>
-              {isUploading ? "업로드 중..." : "작성 완료"}
-            </button>
-          </div>
-        </form>
-      </div>
+            <tr>
+              <td className="bg-gray-100 px-4 py-2 font-semibold align-top">
+                내용
+              </td>
+              <td className="px-4 py-4">
+                <SunEditor
+                  setContents={watchedContent} // :흰색_확인_표시: 최신 값 동기화
+                  onChange={handleContentChange}
+                  setOptions={{
+                    height: "400px",
+                    buttonList: [
+                      ["bold", "underline", "italic", "strike"],
+                      ["font", "align", "list", "image", "link"],
+                    ],
+                  }}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="flex justify-end mt-8 space-x-4">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="px-6 py-3 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+            disabled={isUploading}
+          >
+            취소
+          </button>
+          <button
+            type="submit"
+            className={`px-4 py-2 text-white rounded ${
+              isUploading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+            }`}
+            disabled={isUploading}
+          >
+            {isUploading ? "업로드 중..." : "작성 완료"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 export default WriteForm;

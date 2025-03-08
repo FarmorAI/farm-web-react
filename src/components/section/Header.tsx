@@ -31,7 +31,7 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     dispatch(logoutUser());
     removeCookie("jwt");
-    window.location.replace("/");
+    navigate("/");
   };
   return (
     <>
@@ -40,11 +40,13 @@ const Header: React.FC = () => {
           <div className="flex justify-between mx-5 h-16 items-center">
             {/* 로고 */}
             <div className="flex items-center  px-5">
+              <Link to ="/">
               <img
                 className="h-14 w-auto  "
                 src="/assets/images/logo/headerlogo.png"
                 alt="Berrypick"
               />
+              </Link>
             </div>
 
             {/* 네비게이션 메뉴 */}
