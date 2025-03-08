@@ -88,7 +88,7 @@ const Header: React.FC = () => {
                 {user ? (
                     <div className="flex items-center space-x-6">
                         {/* 장바구니 아이콘 */}
-                        <Link to="/cart" className="relative text-gray-700 hover:text-red-500">
+                        <Link to="/product/cart" className="relative text-gray-700 hover:text-red-500">
                             <FaShoppingCart size={28} />
                         </Link>
 
