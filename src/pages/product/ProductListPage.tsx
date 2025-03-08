@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { Card, Button, Container, Row, Col, Nav, Spinner, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Carousel from "../../components/pagelayout/Carousel.tsx";
 import axios from "axios";
 import { API_BASE_URL } from "../../api/memberApi";
 
-// ✅ 메인 배너 데이터
 const slidesData = [
     {
         image: "/assets/images/product/productList1.png",
@@ -24,27 +22,16 @@ const slidesData = [
     },
 ];
 
-// ✅ 딸기 품종 카테고리
-const categories = [
-    { title: "전체", key: "all" },
-    { title: "단단하고 달콤한", key: "sweet_firm" },
-    { title: "단단하고 상큼한", key: "tangy_firm" },
-    { title: "부드럽고 달콤한", key: "sweet_soft" },
-    { title: "부드럽고 상큼한", key: "tangy_soft" },
-];
-
 const ProductListPage = () => {
     const navigate = useNavigate();
-    const [selectedCategory, setSelectedCategory] = useState("all");
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    // ✅ 백엔드에서 상품 목록 불러오기
     const fetchProducts = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/product/list`);
-            setProducts(response.data); // 상품 목록 상태 업데이트
+            setProducts(response.data);
         } catch (error) {
             console.error("상품 목록 불러오기 실패:", error);
             setError("상품 목록을 불러오는 중 오류가 발생했습니다.");
@@ -59,100 +46,61 @@ const ProductListPage = () => {
 
     if (loading) {
         return (
-            <Container className="py-5 text-center">
-                <Spinner animation="border" role="status" />
-                <p>상품 목록을 불러오는 중...</p>
-            </Container>
+            <div className="flex flex-col items-center justify-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-red-500"></div>
+                <p className="mt-4 text-gray-600">상품 목록을 불러오는 중...</p>
+            </div>
         );
     }
 
     if (error) {
         return (
-            <Container className="py-5 text-center">
-                <Alert variant="danger">{error}</Alert>
-            </Container>
+            <div className="flex flex-col items-center justify-center h-screen">
+                <p className="text-red-500 font-semibold">{error}</p>
+            </div>
         );
     }
 
-    // ✅ 현재 선택된 카테고리에 따른 상품 목록 필터링
-    const filteredProducts =
-        selectedCategory === "all"
-            ? products
-            : products.filter((product) => product.category === selectedCategory);
-
     return (
-        <Container fluid className="py-4">
-            {/* 🔹 메인 배너 */}
-            <div className="mb-4">
+        <div className="container px-4 py-6">
+            <div className="mb-6">
                 <Carousel slides={slidesData} />
             </div>
 
-            {/* 🔹 카테고리 네비게이션 */}
-            <Nav variant="pills" className="justify-content-center mb-4 gap-2">
-                {categories.map((category) => (
-                    <Nav.Item key={category.key}>
-                        <Nav.Link
-                            active={selectedCategory === category.key}
-                            onClick={() => setSelectedCategory(category.key)}
-                            className="fw-bold px-4 py-2 rounded-pill"
-                            style={{
-                                backgroundColor: selectedCategory === category.key ? "#ff4d4d" : "#f8f9fa",
-                                color: selectedCategory === category.key ? "#fff" : "#333",
-                                transition: "0.3s",
-                                border: "1px solid #ff4d4d",
-                            }}
-                        >
-                            {category.title}
-                        </Nav.Link>
-                    </Nav.Item>
-                ))}
-            </Nav>
-
-            {/* 🔹 상품 목록 (그리드 형식) */}
-            <Row className="g-3">
-                {filteredProducts.map((product) => (
-                    <Col key={product.productId} xs={6} md={4} lg={3}>
-                        <Card
-                            className="shadow-sm border-0 h-100"
-                            style={{
-                                cursor: "pointer",
-                                borderRadius: "12px",
-                                transition: "0.3s",
-                            }}
-                            onClick={() => navigate(`/product/${product.productId}`)}
-                            onMouseOver={(e) => (e.currentTarget.style.boxShadow = "0px 4px 15px rgba(0, 0, 0, 0.2)")}
-                            onMouseOut={(e) => (e.currentTarget.style.boxShadow = "none")}
-                        >
-                            <Card.Img
-                                variant="top"
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {products.map((product) => (
+                    <div
+                        key={product.productId}
+                        className="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 border border-gray-200"
+                        onClick={() => navigate(`/product/${product.productId}`)}
+                    >
+                        <div className="relative">
+                            <img
                                 src={product.imageUrl || "/assets/images/default.png"}
-                                className="rounded-top w-100 object-cover"
-                                style={{ height: "200px", borderBottom: "3px solid #ff4d4d" }}
+                                alt={product.name}
+                                className="w-full h-56 object-cover"
                             />
-                            <Card.Body className="p-3 text-center d-flex flex-column justify-content-between">
-                                <Card.Title className="fw-bold text-truncate">{product.name}</Card.Title>
-                                <Card.Text className="text-danger fw-semibold">
-                                    {new Intl.NumberFormat("ko-KR").format(product.price)}원
-                                </Card.Text>
-                                <Button
-                                    variant="outline-danger"
-                                    className="w-100 mt-auto"
-                                    style={{
-                                        transition: "0.3s",
-                                        fontWeight: "bold",
-                                        borderRadius: "8px",
-                                    }}
-                                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#ff4d4d")}
-                                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-                                >
-                                    구매하기
-                                </Button>
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                            {product.discount && (
+                                <span className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 text-xs font-bold rounded">
+                                    {product.discount}% 할인
+                                </span>
+                            )}
+                        </div>
+                        <div className="p-4 text-center flex flex-col">
+                            <h3 className="font-semibold text-lg text-gray-800 truncate">{product.name}</h3>
+                            <p className="text-gray-500 text-sm mt-1">{product.description}</p>
+                            <p className="text-red-500 font-bold text-lg mt-2">{new Intl.NumberFormat("ko-KR").format(product.price)}원</p>
+                            <div className="flex justify-center mt-2">
+                                <span className="text-yellow-400 text-sm font-bold">⭐ {product.rating} ({product.reviews} 리뷰)</span>
+                            </div>
+                            <button className="mt-4 py-2 bg-red-500 text-white font-semibold rounded-lg transition hover:bg-red-600">
+                                구매하기
+                            </button>
+                        </div>
+                    </div>
                 ))}
-            </Row>
-        </Container>
+            </div>
+        </div>
     );
 };
 

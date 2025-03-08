@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { Container, Form, Button, Row, Col, Card, InputGroup } from "react-bootstrap";
-import { FaTag, FaMoneyBillWave, FaSeedling, FaLayerGroup, FaBoxes } from "react-icons/fa";
-import {ProductForm} from "../../model/product.ts";
+import { FaTag, FaMoneyBillWave, FaAppleAlt, FaLayerGroup, FaBoxes, FaCamera } from "react-icons/fa";
+import { ProductForm } from "../../model/product.ts";
 import axios from "axios";
-import {API_BASE_URL} from "../../api/memberApi.ts";
-import {getCookie} from "../../util/cookieUtill.ts";
+import { API_BASE_URL } from "../../api/memberApi.ts";
+import { getCookie } from "../../util/cookieUtill.ts";
 
-// ✅ 등록 가능한 딸기 품종 목록
-const strawberryVarieties = [
-    "죽향", "금실", "메리퀸", "아리향", "비타베리", "육보",
-    "장희", "만년설", "설향", "골드벨", "킹스베리"
+// ✅ 등록 가능한 사과 품종 목록
+const appleVarieties = [
+    "부사", "홍옥", "아오리", "후지", "청송사과", "골든딜리셔스",
+    "애플망고", "파인애플사과", "시나노골드", "한라봉사과"
 ];
 
 // ✅ 상품 카테고리 목록
-const productCategories = ["유기농", "고당도", "제철", "특대형", "일반"];
+const productCategories = ["특", "상", "보통"];
 
 const ProductRegisterPage = () => {
     const [formData, setFormData] = useState<ProductForm>({
@@ -52,10 +52,10 @@ const ProductRegisterPage = () => {
     };
 
     // ✅ 폼 제출 핸들러
-    const handleSubmit =  async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         console.log("📌 등록할 상품 데이터:", formData.imageUrl);
-        if(!formData.imageUrl){
+        if (!formData.imageUrl) {
             alert("❌ 이미지를 업로드하세요.");
             return;
         }
@@ -65,7 +65,7 @@ const ProductRegisterPage = () => {
             price: formData.price,
             stock: formData.stock,
             description: formData.description,
-        }
+        };
         const data = new FormData();
         data.append("product", new Blob([JSON.stringify(productData)], { type: "application/json" }));
         data.append("file", formData.imageUrl);
@@ -76,13 +76,12 @@ const ProductRegisterPage = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            alert("✅ 상품이 성공적으로 등록되었습니다.");
+            alert("✅ 사과 상품이 성공적으로 등록되었습니다.");
             console.log("상품 등록 결과:", res.data);
         } catch (error) {
             console.error("상품 등록 실패:", error);
             alert("❌ 상품 등록에 실패했습니다. 다시 시도하세요.");
         }
-
     };
 
     return (
@@ -90,9 +89,9 @@ const ProductRegisterPage = () => {
             <Row className="justify-content-center w-100" style={{ maxWidth: "1200px" }}>
                 <Col md={10}>
                     <Card className="p-5 border-0 rounded-4">
-                        <h2 className="fw-bold text-center mb-4 text-danger display-5">🍓 상품 등록</h2>
+                        <h2 className="fw-bold text-center mb-4 text-success display-5">🍏 사과 상품 등록</h2>
                         <p className="text-center text-muted mb-4 fs-4">
-                            신선한 딸기를 등록하고 고객들에게 판매하세요!
+                            신선한 사과를 등록하고 고객들에게 판매하세요!
                         </p>
                         <Form onSubmit={handleSubmit}>
                             {/* 🔹 상품명 입력 */}
@@ -103,7 +102,7 @@ const ProductRegisterPage = () => {
                                     <Form.Control
                                         type="text"
                                         name="name"
-                                        placeholder="예: 유기농 설향 딸기"
+                                        placeholder="예: 유기농 부사 사과"
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
@@ -112,11 +111,11 @@ const ProductRegisterPage = () => {
                                 </InputGroup>
                             </Form.Group>
 
-                            {/* 🔹 딸기 품종 선택 */}
+                            {/* 🔹 사과 품종 선택 */}
                             <Form.Group className="mb-4">
-                                <Form.Label className="fw-bold">딸기 품종</Form.Label>
+                                <Form.Label className="fw-bold">사과 품종</Form.Label>
                                 <InputGroup className="w-100">
-                                    <InputGroup.Text className="bg-success text-white"><FaSeedling /></InputGroup.Text>
+                                    <InputGroup.Text className="bg-success text-white"><FaAppleAlt /></InputGroup.Text>
                                     <Form.Select
                                         name="variety"
                                         value={formData.variety}
@@ -125,7 +124,7 @@ const ProductRegisterPage = () => {
                                         style={{ height: "50px", fontSize: "18px" }}
                                     >
                                         <option value="">📌 품종을 선택하세요</option>
-                                        {strawberryVarieties.map((variety, index) => (
+                                        {appleVarieties.map((variety, index) => (
                                             <option key={index} value={variety}>{variety}</option>
                                         ))}
                                     </Form.Select>
@@ -192,7 +191,7 @@ const ProductRegisterPage = () => {
                                     as="textarea"
                                     name="description"
                                     rows={4}
-                                    placeholder="상품의 특징과 신선도를 설명하세요."
+                                    placeholder="사과의 특징과 신선도를 설명하세요."
                                     value={formData.description}
                                     onChange={handleChange}
                                     required
@@ -203,7 +202,10 @@ const ProductRegisterPage = () => {
                             {/* 🔹 이미지 업로드 */}
                             <Form.Group className="mb-4">
                                 <Form.Label className="fw-bold">상품 이미지</Form.Label>
-                                <Form.Control type="file" accept="image/*" onChange={handleFileChange} required />
+                                <InputGroup>
+                                    <InputGroup.Text className="bg-danger text-white"><FaCamera /></InputGroup.Text>
+                                    <Form.Control type="file" accept="image/*" onChange={handleFileChange} required />
+                                </InputGroup>
                             </Form.Group>
 
                             {/* 🔹 이미지 미리보기 */}
@@ -219,8 +221,8 @@ const ProductRegisterPage = () => {
                             )}
 
                             {/* 🔹 등록 버튼 */}
-                            <Button variant="danger" type="submit" className="w-100 fw-bold py-3 fs-4">
-                                상품 등록
+                            <Button variant="success" type="submit" className="w-100 fw-bold py-3 fs-4">
+                                사과 등록 🍏
                             </Button>
                         </Form>
                     </Card>

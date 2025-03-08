@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../../api/memberApi";
 import { ProductDto } from "../../model/product";
-import {Container, Row, Col, Card, Button, Spinner, Alert, Form, Tab, Tabs, Table} from "react-bootstrap";
+import {Container, Row, Col, Card, Spinner, Alert, Tab, Tabs, Table} from "react-bootstrap";
 import { FaTruck} from "react-icons/fa";
 
 const ProductDetailPage = () => {
@@ -76,41 +76,39 @@ const ProductDetailPage = () => {
 
                     {/* 상품 정보 영역 */}
                     <Col lg={6} className="ps-lg-5">
-                        <h2 className="fw-bold text-dark">{product.name}</h2>
-                        <p className="text-muted">{product.variety} / {product.category}</p>
-                        <h3 className="text-danger fw-bold fs-2">{totalPrice.toLocaleString()}원</h3>
-
                         {/* 배송 정보 */}
-                        <div className="d-flex align-items-center mt-3">
-                            <FaTruck size={20} className="text-muted me-2" />
-                            <p className="m-0 text-muted">무료배송 | 2~3일 내 도착</p>
-                        </div>
+                        <div className="flex flex-col space-y-4 p-6 bg-white rounded-lg">
+                            <h2 className="text-2xl font-bold text-gray-800">{product.name}</h2>
+                            <p className="text-gray-500">{product.variety} / {product.category}</p>
+                            <h3 className="text-green-600 font-bold text-2xl">{totalPrice.toLocaleString()}원</h3>
 
-                        <hr />
+                            <div className="flex items-center space-x-2">
+                                <FaTruck size={20} className="text-gray-500" />
+                                <p className="text-gray-500">무료배송 | 2~3일 내 도착</p>
+                            </div>
 
-                        {/* 🔹 옵션 선택 Select Box */}
-                        <Form.Group className="mb-4">
-                            <Form.Label className="fw-bold">상품 옵션 선택</Form.Label>
-                            <Form.Select value={selectedOption} onChange={handleOptionChange} required>
+                            <hr />
+
+                            <label className="font-bold">상품 옵션 선택</label>
+                            <select className="p-2 border rounded-md" value={selectedOption} onChange={handleOptionChange}>
                                 <option value="">상품을 선택하세요</option>
                                 <option value="기본 (1팩)">기본 (1팩)</option>
                                 <option value="대용량 (20팩)">대용량 (20팩)</option>
-                            </Form.Select>
-                        </Form.Group>
+                            </select>
 
-                        {/* 상품 개수 및 버튼 */}
-                        <div className="d-flex align-items-center mt-4">
-                            <p className="fw-bold fs-5 me-3">총 상품금액:</p>
-                            <h3 className="text-danger fw-bold fs-3">{totalPrice.toLocaleString()}원</h3>
-                        </div>
+                            <div className="flex items-center space-x-4">
+                                <p className="font-bold text-lg">총 상품금액:</p>
+                                <h3 className="text-green-600 font-bold text-2xl">{totalPrice.toLocaleString()}원</h3>
+                            </div>
 
-                        <div className="d-flex justify-content-center align-items-center gap-3 mt-3">
-                            <Button variant="outline-secondary" size="lg" className="w-50 fw-bold d-flex align-items-center justify-content-center gap-2">
-                                장바구니
-                            </Button>
-                            <Button variant="danger" size="lg" className="w-50 fw-bold d-flex align-items-center justify-content-center gap-2">
-                                구매하기
-                            </Button>
+                            <div className="flex space-x-4">
+                                <button className="w-1/2 py-3 text-center text-gray-700 border border-gray-400 rounded-lg font-bold hover:bg-gray-100">
+                                    장바구니
+                                </button>
+                                <button className="w-1/2 py-3 text-center bg-green-500 text-white rounded-lg font-bold hover:bg-green-600">
+                                    구매하기
+                                </button>
+                            </div>
                         </div>
                     </Col>
                 </Col>
