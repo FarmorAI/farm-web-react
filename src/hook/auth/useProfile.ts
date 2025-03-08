@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { useGetUserInfoQuery } from "../../api/authApi";
 import { checkNickname, updateUserProfile } from "../../api/memberApi";
+import { getCookie } from "../../util/cookieUtill.ts";
+import { API_BASE_URL } from "../../api/memberApi.ts";
 
 export const useProfile = () => {
-  const { data: userInfo =null, isLoading, error, refetch } = useGetUserInfoQuery();
+  const { data: userInfo = null, isLoading, error, refetch } = useGetUserInfoQuery();
 
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [nickname, setNickname] = useState("");
@@ -21,6 +24,7 @@ export const useProfile = () => {
     }
   }, [userInfo]);
 
+  // ✅ 닉네임 중복 확인
   const handleCheckNickname = async () => {
     if (!nickname.trim()) {
       alert("닉네임을 입력해주세요.");
@@ -31,6 +35,7 @@ export const useProfile = () => {
     setIsNicknameChecked(true);
   };
 
+  // ✅ 회원정보 수정
   const handleUpdateProfile = async () => {
     if (!userInfo || !isNicknameChecked) {
       alert("닉네임 중복 확인을 먼저 해주세요.");
@@ -56,8 +61,35 @@ export const useProfile = () => {
     }
   };
 
+  // ✅ 프로필 이미지 변경
+  const handleProfileImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profileImage", file);
+
+    try {
+      const response = await axios.put(`${API_BASE_URL}/member/auth/upload-profile`, formData, {
+        headers: {
+          "Authorization": `Bearer ${getCookie("jwt")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        console.log("Uploaded Image URL:", response.data.imageUrl);
+        refetch(); // ✅ 프로필 변경 후 데이터 새로 요청
+      } else {
+        console.error("Image upload failed:", response);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+    }
+  };
+
   return {
-    userInfo, // ✅ userInfo 추가
+    userInfo,
     profileImage,
     nickname,
     phone,
@@ -69,6 +101,7 @@ export const useProfile = () => {
     setAddress,
     handleCheckNickname,
     handleUpdateProfile,
+    handleProfileImageChange, // ✅ 추가됨!
     isLoading,
     error,
     refetch,
