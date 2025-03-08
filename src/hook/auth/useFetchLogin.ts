@@ -14,7 +14,10 @@ interface LoginInfo {
 const useFetchLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loginInfo, setLoginInfo] = useState<LoginInfo>({ email: "", password: "" });
+  const [loginInfo, setLoginInfo] = useState<LoginInfo>({
+    email: "",
+    password: "",
+  });
   const [login, { isLoading }] = useLoginMutation(); // RTK Query 사용
 
   // 🔥 로그인 함수
@@ -23,11 +26,14 @@ const useFetchLogin = () => {
 
     try {
       const userData = await login(loginInfo).unwrap();
+
+      console.log(userData);
+      
       const token = getCookie("jwt");
 
       if (token) {
         alert("로그인 성공!");
-        dispatch(setUser(userData));
+        dispatch(setUser(userData.data.user));
         navigate("/");
       }
     } catch (error) {

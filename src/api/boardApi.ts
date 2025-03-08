@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Board, BoardListResponse } from "../model/contents";
 import { API_BASE_URL } from "./memberApi";
+import { getCookie } from "../util/cookieUtill";
 
 export const getBoardList = async (pageParam: {
   page: number;
@@ -84,6 +85,36 @@ export const deleteBoard = async (id: number): Promise<boolean> => {
     return response.status === 200; // 성공 시 true 반환
   } catch (error) {
     console.error(`Error deleting board with ID ${id}:`, error);
+    return false;
+  }
+};
+
+
+export const updateBoard = async (boardId: number, boardData: { title: string; content: string }) => {
+  const token = getCookie("jwt");
+  if (!token) {
+    console.error("🚨 JWT 토큰이 없습니다.");
+    return false;
+  }
+
+  try {
+    console.log("📡 게시판 수정 요청 데이터:", boardData.content); // ✅ 요청 데이터 확인
+    console.log(boardData.content);
+    
+    
+
+    const response = await axios.put(`${API_BASE_URL}/board/${boardId}`, boardData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("✅ 서버 응답:", response.data); // ✅ 응답 확인
+
+    return response.data.result === "success";
+  } catch (error) {
+    console.error("🚨 게시판 수정 실패:", error);
     return false;
   }
 };

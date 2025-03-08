@@ -49,7 +49,6 @@ const useFetchUpdate = () => {
       });
 
       if (isSuccess) {
-        alert("공지사항이 수정되었습니다.");
         navigate(`/contents/notice/${noticeId}`);
       } else {
         alert("공지사항 수정 실패");
