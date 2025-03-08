@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
-import { fetchBlogData } from "../../api/infoApi.ts";
+import { fetchBugInfo } from "../../api/infoApi.ts";
 
-interface BlogPost {
+interface BugInfo {
     title: string;
-    blogname: string;
-    url: string;
+    fileurl: string;
 }
 
-interface InfoDisplayProps {
-    query: string;
-}
-
-const BlogDisplay: React.FC<InfoDisplayProps> = ({ query }) => {
+const PestInfoDisplay: React.FC = () => {
     const style = document.createElement("style");
     style.innerHTML = `
             @font-face {
@@ -26,15 +21,17 @@ const BlogDisplay: React.FC<InfoDisplayProps> = ({ query }) => {
                 font-weight: normal;
                 font-style: normal;
             }`;
-    const [posts, setPosts] = useState<BlogPost[]>([]);
+    document.head.appendChild(style);
+
+    const [bugInfo, setBugInfo] = useState<BugInfo[]>([]);
 
     useEffect(() => {
-        const loadData = async () => {
-            const data = await fetchBlogData(query);
-            setPosts(data);
+        const loadBugInfo = async () => {
+            const data = await fetchBugInfo();
+            setBugInfo(data);
         };
-        loadData();
-    }, [query]);
+        loadBugInfo();
+    }, []);
 
     const customScrollStyle = `
         ::-webkit-scrollbar {
@@ -54,26 +51,30 @@ const BlogDisplay: React.FC<InfoDisplayProps> = ({ query }) => {
             <style>{customScrollStyle}</style>
 
             {/* 제목 영역 추가 */}
-            <div className="bg-blue-50 text-gray-700 text-lg font-semibold py-2 px-4 rounded-t-lg flex items-center" style={{ fontFamily: "Gyeonggi_Title_Medium" }}>
-                📰 블로그 게시글 둘러보기
+            <div className="bg-blue-50 text-gray-800 text-lg font-semibold py-2 px-4 rounded-t-lg flex items-center" style={{ fontFamily: "Gyeonggi_Title_Medium" }}>
+                🐞 병해충 발생 정보 다운받기
             </div>
 
             <div className="overflow-y-auto overflow-x-hidden h-full p-2" style={{ fontFamily: "GowunDodum-Regular" }}>
                 <div className="flex flex-col space-y-4">
-                    {posts.slice(0, 10).map((post, idx) => (
-                        <a
-                            key={idx}
-                            href={post.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-3 border-b border-gray-200 text-left block hover:bg-gray-100 transition flex items-center space-x-2 items-center"
+                    {bugInfo.slice(0, 10).map((item, index) => (
+                        <div
+                            key={index}
+                            className="p-3 border-b border-gray-200 text-left block hover:bg-gray-100 transition flex items-center justify-between"
                         >
-                            <span className="text-gray-600">▪</span>
-                            <div className="flex flex-col justify-center">
-                                <h3 className="text-sm font-semibold text-gray-800 truncate w-56">{post.title}</h3>
-                                <p className="text-xs text-gray-600 truncate w-56">{post.blogname}</p>
+                            <div className="flex items-center space-x-3">
+                                <span className="text-gray-600 flex-shrink-0">▪</span>
+                                <h3 className="text-sm font-semibold text-gray-800">{item.title}</h3>
                             </div>
-                        </a>
+                            <a
+                                href={item.fileurl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 text-lg"
+                            >
+                                📥
+                            </a>
+                        </div>
                     ))}
                 </div>
             </div>
@@ -81,4 +82,4 @@ const BlogDisplay: React.FC<InfoDisplayProps> = ({ query }) => {
     );
 };
 
-export default BlogDisplay;
+export default PestInfoDisplay;

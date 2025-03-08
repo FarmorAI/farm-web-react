@@ -9,6 +9,7 @@ export interface ProductForm{
 }
 
 export interface ProductDto{
+
     productId: number;
     name: string;
     variety: string;
@@ -16,5 +17,7 @@ export interface ProductDto{
     stock: number;
     description: string;
     imageUrl: string;
-    category: string;
+    category: string | null;
+
+
 }
