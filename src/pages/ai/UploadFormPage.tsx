@@ -14,7 +14,7 @@ const AIUploadPage: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/upload",
+        "http://localhost:6060/api/upload",
         formData
       );
       setProcessedImage(response.data);
