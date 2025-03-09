@@ -57,8 +57,12 @@ const useMove = () => {
         navigate(`/contents/${basePath}/modify/${num}?${queryDefault}`);
     };
 
-    const moveToRead = (num: number) => {
-        navigate(`/contents/${basePath}/${num}?${queryDefault}`);
+    const moveToRead = (num: number, type: string) => {
+        if (type !== "support") {
+            navigate(`/contents/${basePath}/${num}?${queryDefault}`);
+        } else {
+            navigate(`/${basePath}/${num}?${queryDefault}`);
+        }
     };
 
     // ✅ 글쓰기 이동 함수 추가

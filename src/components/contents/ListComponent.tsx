@@ -123,7 +123,7 @@ const ListComponent = ({ type }: { type: "board" | "notice" | "support" }) => {
                       ? item.boardId
                       : isNotice(item)
                       ? item.noticeId
-                      : item.inquiryId
+                      : item.inquiryId, type
                   )
                 }
               >
@@ -150,7 +150,7 @@ const ListComponent = ({ type }: { type: "board" | "notice" | "support" }) => {
         />
       )}
 
-      {isLoggedIn && (
+      {isLoggedIn && type !== "support" && (
         <button
           onClick={moveToWrite}
           className="px-6 py-2 mx-20 mb-5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
