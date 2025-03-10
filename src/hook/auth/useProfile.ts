@@ -5,24 +5,37 @@ import { checkNickname, updateUserProfile } from "../../api/memberApi";
 import { getCookie } from "../../util/cookieUtill.ts";
 import { API_BASE_URL } from "../../api/memberApi.ts";
 
-export const useProfile = () => {
+export const  useProfile = () => {
   const { data: userInfo = null, isLoading, error, refetch } = useGetUserInfoQuery();
-
+  const [memberId, setMemberId] = useState<number | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [nickname, setNickname] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean | null>(null);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [ jwtToken , setJwtToken ] = useState(getCookie("jwt"));
+  
+  useEffect(() => {
+    setJwtToken(getCookie("jwt")); // ✅ JWT 변경 시 상태 업데이트
+  }, []); // 🔥 최초 실행 시 한 번만 실행
+  
+  useEffect(() => {
+    refetch();
+  }, [jwtToken, refetch]); // ✅ jwt 값이 변경되면 refetch 실행
 
+  
   useEffect(() => {
     if (userInfo) {
+      setMemberId(userInfo.memberId);
       setProfileImage(userInfo.imageUrl || null);
       setNickname(userInfo.nickname || "");
       setPhone(userInfo.phone || "");
       setAddress(userInfo.address || "");
     }
   }, [userInfo]);
+  
+
 
   // ✅ 닉네임 중복 확인
   const handleCheckNickname = async () => {
@@ -89,6 +102,7 @@ export const useProfile = () => {
   };
 
   return {
+    memberId,
     userInfo,
     profileImage,
     nickname,

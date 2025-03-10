@@ -20,8 +20,7 @@ const isSupport = (item: Board | Notice | Support): item is Support =>
   "inquiryId" in item;
 
 const ListComponent = ({ type }: { type: "board" | "notice" | "support" }) => {
-  const { moveToWrite, moveToList, moveToRead, page, size, refresh } =
-    useMove();
+  const { moveToWrite, moveToList, moveToRead, page, size, refresh } = useMove();
   const { data, isLoggedIn } = useFetchList<
     BoardListResponse | NoticeListResponse | SupportListResponse
   >({ type: type as "board" | "notice" | "support", page, size, refresh });
@@ -123,7 +122,7 @@ const ListComponent = ({ type }: { type: "board" | "notice" | "support" }) => {
                       ? item.boardId
                       : isNotice(item)
                       ? item.noticeId
-                      : item.inquiryId
+                      : item.inquiryId, type
                   )
                 }
               >
@@ -150,7 +149,7 @@ const ListComponent = ({ type }: { type: "board" | "notice" | "support" }) => {
         />
       )}
 
-      {isLoggedIn && (
+      {isLoggedIn && type !== "support" && (
         <button
           onClick={moveToWrite}
           className="px-6 py-2 mx-20 mb-5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"

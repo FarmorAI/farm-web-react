@@ -12,7 +12,7 @@ const SmartFarmBanner: React.FC = () => {
 
             {/* 로고 이미지 (배너 중앙에 크게 배치) */}
             <img
-                src="/assets/images/logo/headerlogo.png"
+                src="/assets/images/logo/applepick.png"
                 alt="Logo"
                 className="absolute top-[45%] left-1/2 max-w-[27rem] h-auto transform -translate-x-1/2 -translate-y-1/2 z-20 scale-105"
             />

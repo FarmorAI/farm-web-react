@@ -4,6 +4,7 @@ import { CloudUpload, FileText } from "lucide-react";
 interface FileUploaderProps {
   onUpload: (files: File[], name: string) => void;
   onViewResults: () => void; // 분석 결과 보기 버튼 클릭 이벤트
+  isLoading: boolean;
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, onViewResults }) => {
