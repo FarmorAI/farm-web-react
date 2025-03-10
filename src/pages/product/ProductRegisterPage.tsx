@@ -5,6 +5,7 @@ import { ProductForm } from "../../model/product.ts";
 import axios from "axios";
 import { API_BASE_URL } from "../../api/memberApi.ts";
 import { getCookie } from "../../util/cookieUtill.ts";
+import { useNavigate } from "react-router-dom";
 
 // ✅ 등록 가능한 사과 품종 목록
 const appleVarieties = [
@@ -25,6 +26,7 @@ const ProductRegisterPage = () => {
         imageUrl: null,
         previewUrl: "",
     });
+    const navigate = useNavigate();
 
     // ✅ 입력값 변경 핸들러
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -78,6 +80,7 @@ const ProductRegisterPage = () => {
             });
             alert("✅ 사과 상품이 성공적으로 등록되었습니다.");
             console.log("상품 등록 결과:", res.data);
+            navigate("/product/list");
         } catch (error) {
             console.error("상품 등록 실패:", error);
             alert("❌ 상품 등록에 실패했습니다. 다시 시도하세요.");

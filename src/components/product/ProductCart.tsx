@@ -57,9 +57,10 @@ const ProductCart: React.FC<ProductCartUIProps> = ({
                     "Authorization": `Bearer ${getCookie("jwt")}`,
                 }
             });
-            console.log(orderResponse);
+            const orderNumber = orderResponse.data.data.orderNumber;
             // ✅ 네이버페이 결제 요청 (주문 ID 포함)
             const paymentResponse = await axios.post(`${API_BASE_URL}/payment/naverpay/cart`, {
+                orderNumber,
                 items: selectedItems.map((item) => ({
                     productId: item.id,
                     name: item.name,
