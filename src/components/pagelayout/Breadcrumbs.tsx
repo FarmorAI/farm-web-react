@@ -5,6 +5,8 @@ const Breadcrumbs: React.FC = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
+
+  
   const matchedMenu = menuData
     .flatMap((menu) =>
       menu.links.map((link) => ({ ...link, parent: menu.name }))
@@ -19,6 +21,9 @@ const Breadcrumbs: React.FC = () => {
   const authBreadcrumb = authPaths[currentPath];
 
   const profilePath = currentPath === "/auth/profile" ? { label: "마이페이지" } : null;
+
+  const cartBreadcrumb = currentPath === "/product/cart" ? { label: "장바구니" } : null; // ✅ 추가
+
 
   return (
     <nav className="bg-gray-100">
@@ -68,6 +73,15 @@ const Breadcrumbs: React.FC = () => {
               <span className="text-gray-400">&gt;</span>
               <span className="text-custom font-medium">
                 {profilePath.label}
+              </span>
+            </>
+          )}
+          {/* 장바구니 경로 ✅ 추가 */}
+          {cartBreadcrumb && (
+            <>
+              <span className="text-gray-400">&gt;</span>
+              <span className="text-custom font-medium">
+                {cartBreadcrumb.label}
               </span>
             </>
           )}

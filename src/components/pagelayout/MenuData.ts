@@ -41,7 +41,7 @@ export const menuData = [
     ],
   },
   {
-    name : "딸기 마켓",
+    name : "사과 마켓",
     path : "/product",
     links : [
       { to : "/product/list", label : "상품 목록" },

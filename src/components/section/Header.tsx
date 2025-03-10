@@ -42,8 +42,8 @@ const Header: React.FC = () => {
             <div className="flex items-center  px-5">
               <Link to ="/">
               <img
-                className="h-14 w-auto  "
-                src="/assets/images/logo/headerlogo.png"
+                className="h-11 w-auto  "
+                src="/assets/images/logo/applepick.png"
                 alt="Berrypick"
               />
               </Link>
@@ -88,7 +88,7 @@ const Header: React.FC = () => {
                 {user ? (
                     <div className="flex items-center space-x-6">
                         {/* 장바구니 아이콘 */}
-                        <Link to="/cart" className="relative text-gray-700 hover:text-red-500">
+                        <Link to="/product/cart" className="relative text-gray-700 hover:text-red-500">
                             <FaShoppingCart size={28} />
                         </Link>
 
