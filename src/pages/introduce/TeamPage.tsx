@@ -81,7 +81,7 @@ const Team = () => {
           FarmorAI 팀을 소개합니다
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          FarmorAI는 딸기를 좋아하는 사람들이 모여 더 나은 미래를 만들어가는 팀입니다.
+          FarmorAI는 사과를 좋아하는 사람들이 모여 더 나은 미래를 만들어가는 팀입니다.
         </p>
       </div>
 
