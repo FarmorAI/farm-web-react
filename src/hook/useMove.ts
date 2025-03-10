@@ -35,9 +35,10 @@ const useMove = () => {
         }).toString();
 
         setRefresh((prev) => !prev);
-        navigate(`/contents/${basePath}?${queryStr}`);
+        navigate(`/${basePath !== "support" ? 
+            `contents/${basePath}`:`${basePath}/list`}?${queryStr}`
+        );
     };
-
 
     const moveToListSupport = (pageParam?: { page?: number; size?: number }) => {
         const pageNum = pageParam?.page !== undefined ? pageParam.page : page;  // 기본값을 현재 페이지로 유지

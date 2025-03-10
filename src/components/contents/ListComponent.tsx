@@ -20,8 +20,7 @@ const isSupport = (item: Board | Notice | Support): item is Support =>
   "inquiryId" in item;
 
 const ListComponent = ({ type }: { type: "board" | "notice" | "support" }) => {
-  const { moveToWrite, moveToList, moveToRead, page, size, refresh } =
-    useMove();
+  const { moveToWrite, moveToList, moveToRead, page, size, refresh } = useMove();
   const { data, isLoggedIn } = useFetchList<
     BoardListResponse | NoticeListResponse | SupportListResponse
   >({ type: type as "board" | "notice" | "support", page, size, refresh });
