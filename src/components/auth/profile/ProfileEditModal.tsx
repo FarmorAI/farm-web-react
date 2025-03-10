@@ -8,10 +8,10 @@ interface ProfileEditModalProps {
     phone: string;
     address: string;
   };
-  isOpen: boolean;  // ✅ 모달 열림 여부
+  isOpen: boolean; // ✅ 모달 열림 여부
   onClose: () => void;
   onProfileUpdate: () => void;
-  isNicknameChecked: boolean;  // ✅ 추가됨
+  isNicknameChecked: boolean; // ✅ 추가됨
   isNicknameAvailable: boolean | null;
   handleCheckNickname: () => Promise<void>;
   handleUpdateProfile: () => Promise<void>;
@@ -26,7 +26,9 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   const [nickname, setNickname] = useState(userInfo.nickname);
   const [phone, setPhone] = useState(userInfo.phone);
   const [address, setAddress] = useState(userInfo.address);
-  const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean | null>(null);
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState<
+    boolean | null
+  >(null);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false); // ✅ 저장 버튼 비활성화 관리
 
@@ -60,16 +62,18 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
   // ✅ 회원정보 수정 함수
   const handleUpdateProfile = async () => {
-    if (!isNicknameChecked) {
+    // ✅ 수정된 부분: 닉네임 변경 여부 확인
+    const isNicknameChanged = nickname !== userInfo.nickname;
+    if (isNicknameChanged && !isNicknameChecked) {
       alert("닉네임 중복 확인을 먼저 해주세요.");
       return;
     }
-    if (isNicknameAvailable === false) {
+    if (isNicknameChanged && isNicknameAvailable === false) {
       alert("이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해주세요.");
       return;
     }
 
-    setIsUpdating(true); // ✅ 저장 버튼 비활성화
+    setIsUpdating(true);
 
     try {
       const success = await updateUserProfile(userInfo.memberId, {
@@ -95,6 +99,14 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
   if (!isOpen) return null; // ✅ 모달이 닫혀있으면 렌더링 안 함
 
+  // ✅ 수정된 부분: 닉네임 변경 여부 확인 변수 추가
+  const isNicknameChanged = nickname !== userInfo.nickname;
+  // ✅ 수정된 부분: 저장 버튼 활성화 조건 동적 설정
+  const isSaveDisabled =
+    isUpdating ||
+    (isNicknameChanged &&
+      (!isNicknameChecked || isNicknameAvailable === false));
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -118,7 +130,9 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <button
               onClick={handleCheckNickname}
               className={`w-24 px-2 py-2 h-10 rounded-lg text-white ${
-                isUpdating ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                isUpdating
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
               }`}
               disabled={isUpdating}
             >
@@ -126,10 +140,14 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             </button>
           </div>
           {isNicknameAvailable === false && (
-            <p className="text-red-500 text-sm mt-1">이미 사용 중인 닉네임입니다.</p>
+            <p className="text-red-500 text-sm mt-1">
+              이미 사용 중인 닉네임입니다.
+            </p>
           )}
           {isNicknameAvailable === true && isNicknameChecked && (
-            <p className="text-green-500 text-sm mt-1">사용 가능한 닉네임입니다.</p>
+            <p className="text-green-500 text-sm mt-1">
+              사용 가능한 닉네임입니다.
+            </p>
           )}
         </div>
 
@@ -168,7 +186,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           </button>
           <button
             onClick={handleUpdateProfile}
-            disabled={!isNicknameChecked || isNicknameAvailable === false || isUpdating}
+            disabled={isSaveDisabled}
             className={`px-4 py-2 rounded-lg text-white ${
               !isNicknameChecked || isNicknameAvailable === false || isUpdating
                 ? "bg-gray-400 cursor-not-allowed"

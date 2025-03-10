@@ -1,4 +1,3 @@
-// pages/auth/ProfilePage.tsx
 import SubscriptionCard from "../../components/auth/profile/SubscriptionCard";
 import ProfileCard from "../../components/auth/profile/ProfileCard";
 import ProfileEditModal from "../../components/auth/profile/ProfileEditModal";

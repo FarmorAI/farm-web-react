@@ -42,8 +42,8 @@ const Header: React.FC = () => {
             <div className="flex items-center  px-5">
               <Link to ="/">
               <img
-                className="h-14 w-auto  "
-                src="/assets/images/logo/headerlogo.png"
+                className="h-11 w-auto  "
+                src="/assets/images/logo/applepick.png"
                 alt="Berrypick"
               />
               </Link>
