@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
+// @ts-ignore
 import "swiper/css";
+// @ts-ignore
 import "swiper/css/navigation";
 import { fetchTechInfo } from "../../api/infoApi.ts";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -55,7 +57,7 @@ const TechDisplay:React.FC<TechDisplayProps> = ({query}) => {
             </div>
 
             {/* 슬라이드 컨테이너 */}
-            <div className="p-4 border-b border-gray-200" style={{ fontFamily: "GowunDodum-Regular" }}>
+            <div className="p-4 border-b border-gray-200 bg-white rounded-b-lg" style={{ fontFamily: "GowunDodum-Regular" }}>
                 <Swiper
                     modules={[Navigation, Autoplay]}
                     spaceBetween={20}

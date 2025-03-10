@@ -87,7 +87,7 @@ const WeatherDisplay: React.FC = () => {
     if (!weatherData) return <p>📭 날씨 정보가 없습니다.</p>;
 
     const today = Object.entries(weatherData)[0]; // 오늘 날짜 데이터
-    const todayWeather = today[1] as Record<string, any>;
+    const todayWeather = today[1] as Record<string, never>;
     const upcomingDays = Object.entries(weatherData).slice(1, 5); // 앞으로 4일간의 데이터
 
     return (
@@ -116,7 +116,7 @@ const WeatherDisplay: React.FC = () => {
             {/* 앞으로 4일간의 날씨 */}
             <div className="grid grid-cols-4 gap-2 mt-4">
                 {upcomingDays.map(([date, details]) => {
-                    const weatherDetails = details as Record<string, any>;
+                    const weatherDetails = details as Record<string, never>;
                     const skyStatus = Number(weatherDetails["기타 정보"]?.["하늘상태"] ?? 1);
                     return (
                         <div key={date}
