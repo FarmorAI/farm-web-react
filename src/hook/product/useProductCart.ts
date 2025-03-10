@@ -22,6 +22,7 @@ export const useProductCart = () => {
       const cartItems = response.data.data.map((item) => ({
         id: item.cartItemId,
         name: item.pname,
+        productId: item.productId,
         option: "",
         price: item.price,
         quantity: item.quantity,

@@ -43,7 +43,8 @@ export interface ApiResponse<T> {
 // 프론트엔드에서 사용할 CartItemType
 export interface CartItemType {
   id: number; // cartItemId로 매핑
-  name: string; // pname으로 매핑
+  productId: number;
+  pname: string; // pname으로 매핑
   option: string; // 백엔드에서 제공되지 않으므로 임시로 빈 문자열
   price: number;
   quantity: number;

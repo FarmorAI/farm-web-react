@@ -5,9 +5,9 @@ import { checkNickname, updateUserProfile } from "../../api/memberApi";
 import { getCookie } from "../../util/cookieUtill.ts";
 import { API_BASE_URL } from "../../api/memberApi.ts";
 
-export const useProfile = () => {
+export const  useProfile = () => {
   const { data: userInfo = null, isLoading, error, refetch } = useGetUserInfoQuery();
-
+  const [memberId, setMemberId] = useState<number | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [nickname, setNickname] = useState("");
   const [phone, setPhone] = useState("");
@@ -27,6 +27,7 @@ export const useProfile = () => {
   
   useEffect(() => {
     if (userInfo) {
+      setMemberId(userInfo.memberId);
       setProfileImage(userInfo.imageUrl || null);
       setNickname(userInfo.nickname || "");
       setPhone(userInfo.phone || "");
@@ -101,6 +102,7 @@ export const useProfile = () => {
   };
 
   return {
+    memberId,
     userInfo,
     profileImage,
     nickname,
