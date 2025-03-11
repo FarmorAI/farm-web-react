@@ -60,7 +60,7 @@ const TechDisplay:React.FC<TechDisplayProps> = ({query}) => {
             <div className="p-4 border-b border-gray-200 bg-white rounded-b-lg" style={{ fontFamily: "GowunDodum-Regular" }}>
                 <Swiper
                     modules={[Navigation, Autoplay]}
-                    spaceBetween={20}
+                    spaceBetween={10}
                     slidesPerView={4}
                     navigation={{ nextEl: ".tech-swiper-button-next", prevEl: ".tech-swiper-button-prev" }}
                     autoplay={{ delay: 3000, disableOnInteraction: false }}

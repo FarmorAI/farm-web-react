@@ -82,7 +82,13 @@ const WeatherDisplay: React.FC = () => {
         return `${parseInt(month, 10)}월 ${parseInt(day, 10)}일`;
     };
 
-    if (loading) return <p>🌎 위치 정보를 가져오는 중...</p>;
+    if (loading) return (
+        <div className="d-flex justify-content-center align-items-center" style={{ height: "100%" }}>
+            <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    );
     if (error) return <p>❌ {error}</p>;
     if (!weatherData) return <p>📭 날씨 정보가 없습니다.</p>;
 
