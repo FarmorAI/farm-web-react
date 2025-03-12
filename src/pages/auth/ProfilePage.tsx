@@ -7,8 +7,8 @@ import MyBoards from "../../components/auth/profile/MyBoard";
 import InquiryHistory from "../../components/auth/profile/InquiryHistory";
 import RecentAnalysisRecords from "../../components/auth/profile/RecentAnalysisRecords.tsx.tsx";
 import PurchaseHistory from "../../components/auth/profile/PurchasedHistory.tsx";
-// 구매한 상품 타입 정의
 
+// 구매한 상품 타입 정의
 const ProfilePage = () => {
     const {
         memberId,
@@ -26,6 +26,7 @@ const ProfilePage = () => {
         error,
         refetch,
     } = useProfile();
+    
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     if (isLoading) return <p className="text-center text-gray-600">로딩 중...</p>;
     if (error)
