@@ -153,7 +153,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
         {/* 휴대폰 번호 입력 */}
         <div className="mb-4">
-          <label className="block text-gray-700">휴대폰 번호</label>
+          <label className="block text-gray-700">연락처</label>
           <input
             type="text"
             value={phone}

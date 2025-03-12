@@ -9,6 +9,7 @@ import { RootState } from "../../redux/store";
 import { logoutUser, setUser } from "../../redux/slices/authslices";
 import { getCookie, removeCookie } from "../../util/cookieUtill";
 import { FaShoppingCart } from "react-icons/fa";
+import applepick from "/assets/images/logo/applepick.png";
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -51,7 +52,7 @@ const Header: React.FC = () => {
               <Link to="/">
                 <img
                   className="h-11 w-auto max-w-[150px] object-contain"
-                  src="/assets/images/logo/applepick.png"
+                  src={applepick}
                   alt="Berrypick"
                 />
               </Link>
