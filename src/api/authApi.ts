@@ -24,6 +24,16 @@ export interface Getinfo {
   createdAt: string
 }
 
+export interface GetSubs {
+  paymentId: number
+  amount: number
+  token: string
+  createdAt: string
+  paymentMethod: string
+  status: string
+  planName: string
+  daysDiff: number
+}
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -31,8 +41,9 @@ export const authApi = createApi({
     baseUrl: API_BASE_URL,
     credentials: "include", // 쿠키 전송 허용
   }),
-  tagTypes: ["User"],
+  tagTypes: ["User", "SubsInfo"],
   endpoints: (builder) => ({
+    // 로그인
     login: builder.mutation<{ data: { token: string; user: UserResponse } }, { email: string; password: string }>({
       query: ({ email, password }) => ({
         url: "/login",
@@ -70,9 +81,17 @@ export const authApi = createApi({
       }),
       providesTags: ["User"],
     }),
+
+    // 구독정보
+    getSubsInfo: builder.query<GetSubs, void>({
+      query: () => ({
+        url: "/payment/subsInfo",
+        method: "GET",
+        headers: { Authorization: `Bearer ${getCookie("jwt")}` }
+      }),
+      providesTags: ["SubsInfo"]  // 구독 정보 변경 시 업데이트 가능하도록 태그 설정
+    })
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useGetUserInfoQuery } = authApi;
-
-  
+export const { useLoginMutation, useLogoutMutation, useGetUserInfoQuery, useGetSubsInfoQuery } = authApi;
