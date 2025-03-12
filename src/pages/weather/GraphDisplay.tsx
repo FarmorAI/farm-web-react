@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { ResponsiveLine } from "@nivo/line";
-import { fetchDistributionData } from "../../api/graphApi";
+// import React, { useEffect, useState } from "react";
+// import { ResponsiveLine } from "@nivo/line";
+// import { fetchDistributionData } from "../../api/graphApi";
 
 // ✅ 데이터 타입 정의
-interface DistributionData {
-    grade: number;
-    mu: number;
-    std: number;
-    x: number[];
-    y: number[];
-}
-
-// ✅ 등급별 색상 매핑
-const gradeColors: Record<number, string> = {
-    0: "blue", // 보통
-    1: "orange", // 상
-    2: "green", // 특
-};
+// interface DistributionData {
+//     grade: number;
+//     mu: number;
+//     std: number;
+//     x: number[];
+//     y: number[];
+// }
+//
+// // ✅ 등급별 색상 매핑
+// const gradeColors: Record<number, string> = {
+//     0: "blue", // 보통
+//     1: "orange", // 상
+//     2: "green", // 특
+// };
 
 const GraphDisplay: React.FC = () => {
+    return <div>Graph Display</div>;
     // const [data, setData] = useState<any[]>([]);
 
     // useEffect(() => {

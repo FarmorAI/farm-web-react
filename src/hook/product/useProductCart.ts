@@ -28,6 +28,7 @@ export const useProductCart = () => {
         quantity: item.quantity,
         imageUrl: item.imageUrl,
       }));
+      // @ts-ignore
       setCart(cartItems);
       setSelectedItems(cartItems.map((item) => item.id));
     } catch (error) {
