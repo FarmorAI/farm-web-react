@@ -33,7 +33,7 @@ export const menuData = [
     ],
   },
   {
-    name: "구독 및 결제",
+    name: "구독",
     path: "/payment",
     links: [
       { to: "/payment", label: "구독상품" },

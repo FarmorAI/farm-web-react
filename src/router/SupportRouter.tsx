@@ -31,5 +31,5 @@ export const supportRoutes: RouteObject[] = [
         <SupportDetailPage />
       </Suspense>
     ),
-  }
+  },
 ];

@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
             {/* ✅ 수정된 부분: 로고 스타일 조정 */}
             <img
               className="h-8 w-auto"
-              src="/public/assets/images/logo/applepick.png"
+              src="/assets/images/logo/applepick.png"
               alt="Berrypick"
             />
             {/* ✅ 수정된 부분: 회사명 추가 */}
@@ -28,23 +28,23 @@ const Footer: React.FC = () => {
           {/* 중앙: 링크들 */}
           {/* ✅ 수정된 부분: 링크를 한 줄로 표시, 구분선(|) 추가 */}
           <div className="text-sm">
-            <Link to="/about" className="hover:text-blue-400 transition duration-300">
+            <Link to="/about" className="text-gray-600 hover:text-blue-400 transition duration-300">
               FarmorAI소개
             </Link>
             <span className="mx-2">|</span>
-            <Link to="/privacy" className="hover:text-blue-400 transition duration-300">
+            <Link to="/privacy" className="text-gray-600 hover:text-blue-400 transition duration-300">
               개인정보처리방침
             </Link>
             <span className="mx-2">|</span>
-            <Link to="/terms" className="hover:text-blue-400 transition duration-300">
+            <Link to="/terms" className="text-gray-600 hover:text-blue-400 transition duration-300">
               이용약관
             </Link>
             <span className="mx-2">|</span>
-            <Link to="/sitemap" className="hover:text-blue-400 transition duration-300">
+            <Link to="/sitemap" className="text-gray-600 hover:text-blue-400 transition duration-300">
               사이트맵
             </Link>
             <span className="mx-2">|</span>
-            <Link to="/careers" className="hover:text-blue-400 transition duration-300">
+            <Link to="/careers" className="text-gray-600 hover:text-blue-400 transition duration-300">
               채용안내(인재채용)
             </Link>
           </div>
