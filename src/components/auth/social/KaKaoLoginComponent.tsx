@@ -7,7 +7,7 @@ const KaKaoLoginComponent = () => {
   return (
     <div className="flex justify-center">
       <Link to={link}>
-        <img src="/public/assets/images/auth/kakao.png" alt="Kakao" />
+        <img src="/assets/images/auth/kakao.png" alt="Kakao" />
       </Link>
     </div>
   );

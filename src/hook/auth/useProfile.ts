@@ -14,7 +14,17 @@ export const  useProfile = () => {
   const [address, setAddress] = useState("");
   const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean | null>(null);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [ jwtToken , setJwtToken ] = useState(getCookie("jwt"));
+  
+  useEffect(() => {
+    setJwtToken(getCookie("jwt")); // ✅ JWT 변경 시 상태 업데이트
+  }, []); // 🔥 최초 실행 시 한 번만 실행
+  
+  useEffect(() => {
+    refetch();
+  }, [jwtToken, refetch]); // ✅ jwt 값이 변경되면 refetch 실행
 
+  
   useEffect(() => {
     if (userInfo) {
       setMemberId(userInfo.memberId);
@@ -24,6 +34,8 @@ export const  useProfile = () => {
       setAddress(userInfo.address || "");
     }
   }, [userInfo]);
+  
+
 
   // ✅ 닉네임 중복 확인
   const handleCheckNickname = async () => {

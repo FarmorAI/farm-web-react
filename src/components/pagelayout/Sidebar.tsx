@@ -10,15 +10,15 @@ const Sidebar: FC = () => {
   const currentMenu = menuData.find((menu) => location.pathname.startsWith(menu.path));
 
   return (
-  <aside className="w-64 bg-white border border-gray-500 rounded-lg overflow-hidden ml-20 my-3">
-    {/* 헤더 (아이콘 + 텍스트) */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-700 p-4 flex items-center text-white">
+    <aside className="w-64 bg-white border border-gray-300 rounded-lg overflow-hidden ml-20 my-3 shadow-sm">
+      {/* ✅ 수정된 부분: 헤더 배경을 초록색 그라데이션으로 변경 */}
+      <div className="bg-gradient-to-r from-green-500 to-green-700 p-4 flex items-center text-white">
         <FaFileAlt className="text-2xl mr-2" />
         <span className="text-lg font-semibold">{currentMenu?.name || "메뉴"}</span>
       </div>
 
       {/* 메뉴 리스트 */}
-      <nav className="p-2 ">
+      <nav className="p-2">
         {currentMenu && (
           <div>
             {currentMenu.links.map(({ to, label }) => (
@@ -26,13 +26,13 @@ const Sidebar: FC = () => {
                 key={to}
                 to={to}
                 className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg shadow-md my-3 border-2 transition ${
-                  location.pathname === to 
-                    ? "border-blue-600 text-blue-600 bg-white"  // 선택된 메뉴: 파란색 테두리 + 파란색 글씨
-                    : "border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600"
-                } transition`}
+                  location.pathname === to
+                    ? "border-green-600 text-green-600 bg-gray-50" // ✅ 수정된 부분: 선택된 메뉴 색상 초록색으로 변경
+                    : "border-gray-200 text-gray-700 hover:border-green-400 hover:text-green-600" // ✅ 수정된 부분: 호버 및 기본 색상 조정
+                }`}
               >
                 <span className="ml-3">{label}</span>
-              </Link> 
+              </Link>
             ))}
           </div>
         )}

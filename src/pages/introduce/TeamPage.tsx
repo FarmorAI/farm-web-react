@@ -6,25 +6,25 @@ const teamMembers = [
     name: "오준명",
     role: "풀스택 엔지니어",
     description: "농업 기술 혁신과 지속 가능한 발전을 위한 비전을 제시합니다.",
-    img: "/public/assets/images/member/준명.png",
+    img: "/assets/images/member/준명.png",
   },
   {
     name: "김도훈",
     role: "풀스택 엔지니어",
     description: "프론트 1등공신",
-    img: "/public/assets/images/member/도훈.png",
+    img: "/assets/images/member/도훈.png",
   },
   {
     name: "김종범",
     role: "풀스택 엔지니어",
     description: "스마트팜 시스템 개발과 데이터 분석을 담당합니다.",
-    img: "/public/assets/images/member/종범.png",
+    img: "/assets/images/member/종범.png",
   },
   {
     name: "이다혜",
     role: "풀스택 엔지니어",
     description: "사용자 중심의 직관적인 인터페이스를 디자인합니다.",
-    img: "/public/assets/images/member/다혜.png",
+    img: "/assets/images/member/다혜.png",
   },
 ];
 
@@ -81,7 +81,7 @@ const Team = () => {
           FarmorAI 팀을 소개합니다
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          FarmorAI는 딸기를 좋아하는 사람들이 모여 더 나은 미래를 만들어가는 팀입니다.
+          FarmorAI는 사과를 좋아하는 사람들이 모여 더 나은 미래를 만들어가는 팀입니다.
         </p>
       </div>
 

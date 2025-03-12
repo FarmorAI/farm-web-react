@@ -26,7 +26,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         {/* 로고 */}
         <div className="text-center mb-2">
           <img
-            src={"/public/assets/images/logo/headerlogo.png"}
+            src={"/assets/images/logo/applepick.png"}
             alt="로고"
             className="mb-3 ml-3"
             style={{ height: "100px" }}

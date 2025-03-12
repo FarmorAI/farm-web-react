@@ -54,7 +54,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               <span className="font-medium">{userInfo?.nickname || "알 수 없음"}</span>
             </div>
             <div className="flex items-center">
-              <span className="w-24 text-gray-600">휴대폰 번호:</span>
+              <span className="w-24 text-gray-600">연락처:</span>
               <span className="font-medium">{userInfo?.phone || "알 수 없음"}</span>
             </div>
             <div className="flex items-center">
