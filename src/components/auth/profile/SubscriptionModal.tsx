@@ -1,7 +1,6 @@
 import React from 'react'
 import { GetSubs } from '../../../api/authApi';
 import { handlePaymentCancel } from '../../../api/paymentApi';
-import { PaymentResult } from '../../../model/subscription';
 import premium from '/assets/images/subs/gold_premium.png';
 import basic from '/assets/images/subs/apple_basic.png';
 
@@ -11,18 +10,6 @@ interface SubscriptionModalProps {
 }
 
 const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ setIsModalOpen, paymentResult }) => {
-   const cancelParam: PaymentResult = paymentResult ? {
-      subsPlan: paymentResult.planName,
-      subsPrice: String(paymentResult.amount),
-      resultCode: paymentResult.token,
-      paymentId: String(paymentResult.paymentId)
-   } : {
-      subsPlan: "N/A",
-      subsPrice: "N/A",
-      resultCode: "N/A",
-      paymentId: "N/A"
-   };
-
    return (
       <div
          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
@@ -36,7 +23,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ setIsModalOpen, p
                <div className="mx-auto p-5 max-w-3xl rounded-lg shadow-md">
                   <div className="space-y-4">
                      <h5 className="text-lg font-semibold">구독 관리</h5>
-                     <p className="text-gray-700">구독을 취소하거나 변경할 수 있습니다.</p>
+                     <p className="text-gray-400">구독을 취소할 수 있습니다.</p>
                      <div className="grid grid-cols-2 gap-8">
                         <div>
                            <p className="mt-3 mb-1">주문번호</p>
@@ -74,7 +61,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ setIsModalOpen, p
                   <div className="border-t border-gray-200 my-3"></div>
                   <div className="flex justify-center gap-4">
                      <button className="px-6 py-2 bg-gray-400 text-white rounded-md hover:bg-green-700 transition-colors"
-                        onClick={() => handlePaymentCancel(cancelParam)}>
+                        onClick={() => handlePaymentCancel(paymentResult.token)}>
                            결제취소
                      </button>
                      <button onClick={() => setIsModalOpen(false)}

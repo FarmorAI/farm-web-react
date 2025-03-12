@@ -24,5 +24,5 @@ export interface PaymentResult {
    subsPlan: string | null
    subsPrice: string | null
    resultCode: string | null
-   paymentId: string | null
+   token: string | null
 }
