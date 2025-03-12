@@ -26,7 +26,7 @@ export const supportRoutes: RouteObject[] = [
     ),
   },
   {
-    path: "contents/support/:id", // ✅ 동적 라우팅 추가 (공지사항 상세보기)
+    path: "/support/:id", // ✅ 동적 라우팅 추가 (고객문의 상세보기)
     element: (
       <Suspense fallback={<div>Loading...</div>}>
         <SupportDetailPage />

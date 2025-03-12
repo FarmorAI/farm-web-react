@@ -35,9 +35,10 @@ const useMove = () => {
         }).toString();
 
         setRefresh((prev) => !prev);
-        navigate(`/contents/${basePath}?${queryStr}`);
+        navigate(`/${basePath !== "support" ? 
+            `contents/${basePath}`:`${basePath}/list`}?${queryStr}`
+        );
     };
-
 
     const moveToListSupport = (pageParam?: { page?: number; size?: number }) => {
         const pageNum = pageParam?.page !== undefined ? pageParam.page : page;  // 기본값을 현재 페이지로 유지
@@ -57,8 +58,12 @@ const useMove = () => {
         navigate(`/contents/${basePath}/modify/${num}?${queryDefault}`);
     };
 
-    const moveToRead = (num: number) => {
-        navigate(`/contents/${basePath}/${num}?${queryDefault}`);
+    const moveToRead = (num: number, type: string) => {
+        if (type !== "support") {
+            navigate(`/contents/${basePath}/${num}?${queryDefault}`);
+        } else {
+            navigate(`/${basePath}/${num}?${queryDefault}`);
+        }
     };
 
     // ✅ 글쓰기 이동 함수 추가
