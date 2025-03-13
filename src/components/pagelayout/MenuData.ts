@@ -12,8 +12,9 @@ export const menuData = [
     path: "/ai",
     links: [
       { to: "/ai/uploadform", label: "이미지 업로드" },
-      { to: "/ai/uploadresult", label: "분석결과 현황" },
       { to: "/ai/aiuploadlist", label: "분석결과 목록" },
+      { to: "/ai/uploadresult", label: "분석결과 현황(준비중)" },
+
     ],
   },
   {
@@ -36,8 +37,7 @@ export const menuData = [
     name: "구독",
     path: "/payment",
     links: [
-      { to: "/payment", label: "구독상품" },
-      { to: "/payment/result", label: "결제확인" },
+      { to: "/payment", label: "구독상품" }
     ],
   },
   {
