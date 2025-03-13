@@ -1,26 +1,24 @@
-export interface ProductForm{
-    name: string;
-    variety: string;
-    price: number;
-    stock: number;
-    description: string;
-    imageUrl: File | null;
-    previewUrl: string,
+export interface ProductForm {
+  name: string;
+  variety: string;
+  price: number;
+  stock: number;
+  description: string;
+  imageUrl: File | null;
+  previewUrl: string;
 }
 
-export interface ProductDto{
-    productId: number;
-    name: string;
-    variety: string;
-    price: number;
-    stock: number;
-    description: string;
-    imageUrl: string;
-    category: string | null;
-
+export interface ProductDto {
+  productId: number;
+  name: string;
+  variety: string;
+  price: number;
+  stock: number;
+  description: string;
+  imageUrl: string;
+  category: string | null;
+  id: number
 }
-
-
 
 // 백엔드 응답 구조 인터페이스 정의
 export interface CartItemDto {
@@ -44,6 +42,7 @@ export interface ApiResponse<T> {
 export interface CartItemType {
   id: number; // cartItemId로 매핑
   productId: number;
+  name: string;
   pname: string; // pname으로 매핑
   option: string; // 백엔드에서 제공되지 않으므로 임시로 빈 문자열
   price: number;
