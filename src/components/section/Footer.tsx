@@ -28,24 +28,20 @@ const Footer: React.FC = () => {
           {/* 중앙: 링크들 */}
           {/* ✅ 수정된 부분: 링크를 한 줄로 표시, 구분선(|) 추가 */}
           <div className="text-sm">
-            <Link to="/about" className="text-gray-600 hover:text-blue-400 transition duration-300">
+            <Link to="/introduce/project" className="text-gray-600 hover:text-blue-400 transition duration-300">
               FarmorAI소개
             </Link>
             <span className="mx-2">|</span>
-            <Link to="/privacy" className="text-gray-600 hover:text-blue-400 transition duration-300">
-              개인정보처리방침
+            <Link to="/ai/aiuploadlist" className="text-gray-600 hover:text-blue-400 transition duration-300">
+              데이터 분석
             </Link>
             <span className="mx-2">|</span>
-            <Link to="/terms" className="text-gray-600 hover:text-blue-400 transition duration-300">
-              이용약관
+            <Link to="/contents/notice" className="text-gray-600 hover:text-blue-400 transition duration-300">
+              공지사항
             </Link>
             <span className="mx-2">|</span>
-            <Link to="/sitemap" className="text-gray-600 hover:text-blue-400 transition duration-300">
-              사이트맵
-            </Link>
-            <span className="mx-2">|</span>
-            <Link to="/careers" className="text-gray-600 hover:text-blue-400 transition duration-300">
-              채용안내(인재채용)
+            <Link to="/support" className="text-gray-600 hover:text-blue-400 transition duration-300">
+              고객문의
             </Link>
           </div>
         </div>
