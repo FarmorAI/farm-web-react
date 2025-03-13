@@ -54,7 +54,7 @@ const AIUploadPage: React.FC = () => {
         // 401 에러와 같은 특정 에러 코드 처리
         if (error.response) {
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          error.response.data.error === 'Unauthorized' ? alert("로그인이 필요합니다.") : alert("Premium 전용 기능 입니다.")
+          error.response.data.error === 'Unauthorized' ? alert("로그인이 필요합니다.") : alert("구독 전용 서비스 입니다.")
         } 
       } else { alert("업로드 중 오류 발생") }
     } finally {
