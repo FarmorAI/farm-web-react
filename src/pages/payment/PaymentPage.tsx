@@ -17,12 +17,12 @@ const PaymentPage = () => {
       {
          title: 'Basic',
          price: 1000,
-         features: ['기본 리포트 제공', '스마트팜 관련 정보 제공', '이벤트 참여 가능']
+         features: ['기본 리포트 제공', 'AI서비스 제공', '이벤트 참여 가능']
       },
       {
          title: 'Premium',
          price: 2000,
-         features: ['상세 리포트 제공', '스마트팜 관련 정보 및 AI서비스 제공', '이벤트 참여 가능']
+         features: ['Basic 서비스 포함', 'AI서비스 리스트 제공', '최신 서비스 이용 해택']
       }
    ];
 
@@ -59,8 +59,8 @@ const PaymentPage = () => {
 
    return (
       <div className="container my-5" style={{ maxWidth: '800px' }}>
-         <p className="text-center mb-2 fw-bold text-2xl">스마트팜 멤버십 구독</p>
-         <p className="text-center mb-5 text-lg">지속 가능한 농업을 위한 합리적 선택</p>
+         <p className="text-center mb-2 fw-bold text-2xl">ApplePick 멤버십 구독</p>
+         <p className="text-center mb-5 text-lg">최고의 사과를 위한 합리적 선택</p>
          
          <div className="row g-4 mb-5">
             {subsList.map((plan, index) => (

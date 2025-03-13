@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { GetSubs } from "../../../api/authApi";
 import { handlePaymentCancel } from "../../../api/paymentApi";
-import { PaymentResult } from "../../../model/subscription";
 import premium from "/assets/images/subs/gold_premium.png";
 import basic from "/assets/images/subs/apple_basic.png";
 
@@ -30,20 +29,6 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
       document.body.style.overflow = "auto";
     };
   }, []);
-
-  const cancelParam: PaymentResult = paymentResult
-    ? {
-        subsPlan: paymentResult.planName,
-        subsPrice: String(paymentResult.amount),
-        resultCode: paymentResult.token,
-        paymentId: String(paymentResult.paymentId),
-      }
-    : {
-        subsPlan: "N/A",
-        subsPrice: "N/A",
-        resultCode: "N/A",
-        paymentId: "N/A",
-      };
 
   return (
     <div
@@ -104,7 +89,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <div className="flex justify-center gap-4">
               <button
                 className="px-6 py-2 bg-gray-400 text-white rounded-md hover:bg-green-700 transition-colors"
-                onClick={() => handlePaymentCancel(cancelParam)}
+                onClick={() => handlePaymentCancel(paymentResult.token)}
               >
                 결제취소
               </button>
