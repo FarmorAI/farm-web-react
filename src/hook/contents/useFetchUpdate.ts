@@ -2,59 +2,62 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { getNoticeById, updateNotice } from "../../api/noticeApi";
+import { getBoardById, updateBoard } from "../../api/boardApi";
 import { WriteFormData } from "../../model/contents";
 
-const useFetchUpdate = () => {
+const useFetchUpdate = (title: string) => {
   const { id } = useParams<{ id?: string }>();
-  const noticeId = id ? parseInt(id, 10) : undefined;
-  // getValues 추가
+  const contentId = id ? parseInt(id, 10) : undefined;
+
   const { register, handleSubmit, setValue, getValues } = useForm<WriteFormData>();
-  const [content, setContent] = useState<string>(""); // 내용 상태
+  const [content, setContent] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const [initialData, setInitialData] = useState<{ title: string; content: string } | null>(null);
 
-  // 기존 공지사항 데이터를 가져와서 초기화
+  // title을 기반으로 type 결정
+  const type = title === "공지사항 수정" ? "notice" : "board";
+
+  // API 호출 함수 선택
+  const getContentById = type === "notice" ? getNoticeById : getBoardById;
+  const updateContent = type === "notice" ? updateNotice : updateBoard;
+
   useEffect(() => {
-    if (!noticeId) return;
+    if (!contentId) return;
 
     (async () => {
-      const notice = await getNoticeById(noticeId);
-      if (notice) {
-        setValue("title", notice.title ?? ""); // 제목 설정
-        setContent(notice.content ?? "");         // 내용 상태 설정
+      const data = await getContentById(contentId);
+      if (data) {
+        setValue("title", data.title ?? "");
+        setContent(data.content ?? "");
         setInitialData({
-          title: notice.title ?? "",
-          content: notice.content ?? "",
+          title: data.title ?? "",
+          content: data.content ?? "",
         });
       }
     })();
-  }, [noticeId, setValue]);
+  }, [contentId, setValue]);
 
-  // 공지사항 수정 요청
   const onSubmit = async (data: WriteFormData) => {
-    if (!noticeId) return;
+    if (!contentId) return;
     setIsSubmitting(true);
 
     try {
-      // useForm과 content 상태 동기화
       setValue("content", content);
-      // getValues로 최신 content 값 가져오기
       const updatedContent = getValues("content");
-      console.log("✅ 최신 content 값:", updatedContent);
-      console.log(updatedContent)
-      const isSuccess = await updateNotice(noticeId, {
+
+      const isSuccess = await updateContent(contentId, {
         title: data.title,
         content: updatedContent,
       });
 
       if (isSuccess) {
-        navigate(`/contents/notice/${noticeId}`);
+        navigate(`/contents/${type}/${contentId}`);
       } else {
-        alert("공지사항 수정 실패");
+        alert(`${type === "notice" ? "공지사항" : "게시판"} 수정 실패`);
       }
     } catch (error) {
-      console.error("공지사항 수정 오류:", error);
+      console.error(`${type === "notice" ? "공지사항" : "게시판"} 수정 오류:`, error);
       alert("오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
@@ -69,7 +72,7 @@ const useFetchUpdate = () => {
     setContent,
     isSubmitting,
     navigate,
-    isEdit: true, // 수정 모드 활성화
+    isEdit: true,
     initialData,
   };
 };

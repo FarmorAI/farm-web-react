@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PageLayout from "../../components/pagelayout/PageLayout";
-import SupportForm from "./SupportForm";
+import SupportForm from "../../components/support/SupportForm";
 import SupportPrivacy from "./SupportPrivacy";
 
 /**

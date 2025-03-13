@@ -101,3 +101,20 @@ export const updateUserProfile = async (memberId: number, updateInfo: {
     return false;
   }
 };
+
+
+// ✅ 회원 삭제 API
+export const deleteMember = async (memberId: number): Promise<boolean> => {
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/member/auth/${memberId}`, {
+      headers: {
+        Authorization: `Bearer ${getCookie("jwt")}`,
+      },
+    });
+
+    return response.status === 204; // No Content 응답이면 성공
+  } catch (error) {
+    console.error("회원 탈퇴 오류:", error);
+    return false;
+  }
+};

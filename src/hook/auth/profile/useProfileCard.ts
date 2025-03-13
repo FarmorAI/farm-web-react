@@ -1,30 +1,36 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useGetUserInfoQuery } from "../../api/authApi";
-import { checkNickname, updateUserProfile } from "../../api/memberApi";
-import { getCookie } from "../../util/cookieUtill.ts";
-import { API_BASE_URL } from "../../api/memberApi.ts";
+import { useGetUserInfoQuery } from "../../../api/authApi.ts";
+import { checkNickname, updateUserProfile } from "../../../api/memberApi.ts";
+import { getCookie } from "../../../util/cookieUtill.ts";
+import { API_BASE_URL } from "../../../api/memberApi.ts";
 
-export const  useProfile = () => {
-  const { data: userInfo = null, isLoading, error, refetch } = useGetUserInfoQuery();
+export const useProfileCard = () => {
+  const {
+    data: userInfo = null,
+    isLoading,
+    error,
+    refetch,
+  } = useGetUserInfoQuery();
   const [memberId, setMemberId] = useState<number | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [nickname, setNickname] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean | null>(null);
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState<
+    boolean | null
+  >(null);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-  const [ jwtToken , setJwtToken ] = useState(getCookie("jwt"));
-  
+  const [jwtToken, setJwtToken] = useState(getCookie("jwt"));
+
   useEffect(() => {
     setJwtToken(getCookie("jwt")); // ✅ JWT 변경 시 상태 업데이트
   }, []); // 🔥 최초 실행 시 한 번만 실행
-  
+
   useEffect(() => {
     refetch();
   }, [jwtToken, refetch]); // ✅ jwt 값이 변경되면 refetch 실행
 
-  
   useEffect(() => {
     if (userInfo) {
       setMemberId(userInfo.memberId);
@@ -34,8 +40,6 @@ export const  useProfile = () => {
       setAddress(userInfo.address || "");
     }
   }, [userInfo]);
-  
-
 
   // ✅ 닉네임 중복 확인
   const handleCheckNickname = async () => {
@@ -75,7 +79,9 @@ export const  useProfile = () => {
   };
 
   // ✅ 프로필 이미지 변경
-  const handleProfileImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -83,12 +89,16 @@ export const  useProfile = () => {
     formData.append("profileImage", file);
 
     try {
-      const response = await axios.put(`${API_BASE_URL}/member/auth/upload-profile`, formData, {
-        headers: {
-          "Authorization": `Bearer ${getCookie("jwt")}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.put(
+        `${API_BASE_URL}/member/auth/upload-profile`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${getCookie("jwt")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.status === 200) {
         console.log("Uploaded Image URL:", response.data.imageUrl);
