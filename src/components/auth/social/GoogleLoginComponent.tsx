@@ -7,7 +7,7 @@ const GoogleLoginComponent = () => {
   return (
     <div className="flex justify-center">
       <Link to={link}>
-        <img src="/public/assets/images/auth/google.png" alt="google" />
+        <img src="/assets/images/auth/google.png" alt="google" />
       </Link>
     </div>
   );

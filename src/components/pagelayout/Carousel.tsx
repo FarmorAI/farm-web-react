@@ -1,12 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-// @ts-ignore
-import 'swiper/css';
-// @ts-ignore
-import 'swiper/css/navigation';
-// @ts-ignore
-import 'swiper/css/pagination';
 
 interface Slide {
     image: string;
@@ -20,7 +14,7 @@ interface CarouselProps {
 
 const Carousel: React.FC<CarouselProps> = ({ slides }) => {
     return (
-        <div className="w-full max-w-[100vw] h-[600px] md:h-[600px] lg:h-[800px] relative">
+        <div className="w-full max-w-[400vw] h-[400px] md:h-[400px] lg:h-[400px] relative">
             <Swiper
                 modules={[Autoplay, Navigation, Pagination]}
                 autoplay={{ delay: 6000, disableOnInteraction: false }}

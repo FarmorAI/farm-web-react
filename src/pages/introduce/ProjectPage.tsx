@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
 const heroSlides = [
-  "/public/assets/images/introduce/apple1.jpg",
-  "/public/assets/images/introduce/apple2.png",
-  "/public/assets/images/introduce/apple3.jpg",
+  "/assets/images/introduce/apple1.jpg",
+  "/assets/images/introduce/apple2.png",
+  "/assets/images/introduce/apple3.jpg",
 ];
 
 const ProjectPage: React.FC = () => {
@@ -62,7 +62,7 @@ const ProjectPage: React.FC = () => {
         <p className="mt-4 text-lg text-gray-600">AI 기술을 활용한 스마트한 사과 재배 시스템</p>
         <div className="mt-10 flex flex-col sm:flex-row items-center gap-12">
           <img
-            src="/public/assets/images/introduce/사과ai분석.png"
+            src="/assets/images/introduce/사과ai분석.png"
             alt="사과ai분석"
             className="rounded-lg shadow-lg w-2/4 sm:w-1/3 ml-40"
             />

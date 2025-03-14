@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { fetchWeather, WeatherResponse } from "../../api/weatherApi.ts";
-import clearIcon from "../../../public/assets/images/clear.png";
-import cloudyIcon from "../../../public/assets/images/cloudy.png";
-import overcastIcon from "../../../public/assets/images/overcast.png";
+import clearIcon from "/assets/images/clear.png";
+import cloudyIcon from "/assets/images/cloudy.png";
+import overcastIcon from "/assets/images/overcast.png";
 
 const WeatherDisplay: React.FC = () => {
     const style = document.createElement("style");
@@ -126,7 +126,7 @@ const WeatherDisplay: React.FC = () => {
                     const skyStatus = Number(weatherDetails["기타 정보"]?.["하늘상태"] ?? 1);
                     return (
                         <div key={date}
-                             className="bg-gray-100 p-3 rounded-lg text-center transition duration-300 hover:bg-blue-100">
+                            className="bg-gray-100 p-3 rounded-lg text-center transition duration-300 hover:bg-blue-100">
                             <h1 className="text-md font-semibold">{formatDate(date)}</h1>
                             <img src={getWeatherIcon(skyStatus)} alt="Weather Icon" className="w-12 h-12 mx-auto my-1"/>
                             <p className="text-md font-bold">{weatherDetails?.["기타 정보"]["오늘 기온"] ?? "N/A"}°C</p>

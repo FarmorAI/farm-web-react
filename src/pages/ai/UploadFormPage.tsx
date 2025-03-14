@@ -3,8 +3,8 @@ import axios from "axios";
 import PageLayout from "../../components/pagelayout/PageLayout";
 import FileUploader from "../../components/ai/uploadform/FileUploader";
 import ProcessingSteps from "../../components/ai/uploadform/Step";
-import RatingSection from "../../components/ai/uploadform/RatingSection";
 import { API_BASE_URL } from "../../api/memberApi"
+import { getCookie } from "../../util/cookieUtill";
 
 interface QualityMetrics { 
   [key: string]: number 
@@ -21,18 +21,14 @@ const AIUploadPage: React.FC = () => {
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [qualityMetrics, setQualityMetrics] = useState<QualityMetrics>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
   // 파일 업로드 Handle
   const handleUpload = async (files: File[]) => {
     // 파일 검증
     if (!files.length) {
-      setError("업로드 파일이 없습니다.")
+      alert("업로드 파일이 없습니다.")
       return;
-    } else {
-      setIsLoading(true)  // 업로드 진행 중이면 true 설정
-      setError(null)
-    }
+    } else { setIsLoading(true) }
 
     // formData에 이미지 Append
     const formData = new FormData();
@@ -41,18 +37,26 @@ const AIUploadPage: React.FC = () => {
     // 서버에 요청
     try {
       const response = await axios.post(`${API_BASE_URL}/upload`, formData,
-        { headers: {"Content-Type": "multipart/form-data"} }
+        {headers: {
+          Authorization: `Bearer ${getCookie("jwt")}`,
+          "Content-Type": "multipart/form-data"
+        }}
       );
 
       if (response.data) {
         setProcessedImage(response.data.image_url);
-        setQualityMetrics(response.data.quality_metrics.quality || {});
+        setQualityMetrics(response.data.quality || {});
       } else if (response.data.error) {
-        setError(response.data.error);
+        alert(response.data.error);
       }
     } catch (error) {
-      console.error("파일 업로드 오류:", error);
-      setError("업로드 중 오류 발생, 다시 시도해주세요!")
+      if (axios.isAxiosError(error)) {
+        // 401 에러와 같은 특정 에러 코드 처리
+        if (error.response) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          error.response.data.error === 'Unauthorized' ? alert("로그인이 필요합니다.") : alert("구독 전용 서비스 입니다.")
+        } 
+      } else { alert("업로드 중 오류 발생") }
     } finally {
       setIsLoading(false);  // 업로드 종료되면 true 설정
     }
@@ -68,13 +72,6 @@ const AIUploadPage: React.FC = () => {
     <PageLayout title="이미지 업로드" activeItem="이미지 업로드">
       <div className="flex flex-col items-center text-center w-full">
         <FileUploader onUpload={handleUpload} onViewResults={handleViewResults} isLoading={isLoading}/>
-        {/* 에러 발생 시, 활성화 */}
-        {error && (
-          <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md">
-            {error}
-          </div>
-        )}
-
         {/* 정상 작동 시, 활성화 */}
         {processedImage && (
           <>
@@ -87,10 +84,9 @@ const AIUploadPage: React.FC = () => {
                 </div>
               ))}
             </div>
-            <ProcessingSteps />
-            <RatingSection />
           </>
         )}
+        <ProcessingSteps />
       </div>
     </PageLayout>
   );

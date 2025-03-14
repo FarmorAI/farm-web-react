@@ -71,11 +71,11 @@ export const boardRoutes: RouteObject[] = [
     ),
   },
   {
-    path: "contents/board/update/:id", // ✅ 동적 라우팅 추가 (게시판 수정)
+    path: "contents/board/update/:id", // ✅ 동적 라우팅 추가 (공지사항 수정)
     element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <BoardUpdatePage />
-        </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <BoardUpdatePage />
+      </Suspense>
     ),
-  }
+  },
 ];

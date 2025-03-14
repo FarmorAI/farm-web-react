@@ -13,6 +13,7 @@ const ProductCartPage = () => {
     handleQuantityChange,
     handleDelete,
     handleDeleteSelected,
+    handlePaymentNaver, // 추가
   } = useProductCart();
 
   return (
@@ -27,6 +28,7 @@ const ProductCartPage = () => {
       handleQuantityChange={handleQuantityChange}
       handleDelete={handleDelete}
       handleDeleteSelected={handleDeleteSelected}
+      handlePaymentNaver={handlePaymentNaver} // 추가
     />
   );
 };

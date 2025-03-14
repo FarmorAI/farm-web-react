@@ -1,5 +1,5 @@
 import axios from "axios";
-import { InsertBoard, Board, BoardListResponse } from "../model/contents";
+import { Board, BoardListResponse, InsertBoard } from "../model/contents";
 import { API_BASE_URL } from "./memberApi";
 import { getCookie } from "../util/cookieUtill";
 
@@ -11,7 +11,7 @@ export const getBoardList = async (pageParam: {
   try {
     const response = await axios.get<BoardListResponse[]>(
       `${API_BASE_URL}/board/list`,
-      { params: { page, size} }
+      { params: { page, size } }
     );
     return response.data;
   } catch (error) {
@@ -33,25 +33,29 @@ export const getBoardById = async (id: number): Promise<Board | null> => {
 interface BoardInsertData {
   title: string;
   content: string;
+  files?: FileList | null;
 }
 
+// 게시글 등록 (파일 포함 가능)
 export const insertBoard = async (
   boardData: BoardInsertData,
   token: string
 ): Promise<InsertBoard | null> => {
   try {
-    // 요청 보내기
+    // 올바른 요청 형식
     const response = await axios.post<InsertBoard>(
-        `${API_BASE_URL}/board`,
-        boardData, {
-      headers: {
-        Authorization: `Bearer ${token}`, // JWT 토큰 추가
-        "Content-Type": "application/json",
-      },
-    });
+      `${API_BASE_URL}/board`,
+      boardData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // JWT 추가
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
-    console.error("게시글 등록 실패:", error);
+    console.error("게시판 등록 실패:", error);
     return null;
   }
 };

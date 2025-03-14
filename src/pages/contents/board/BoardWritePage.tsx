@@ -31,13 +31,13 @@ const BoardWritePage = () => {
 
       const response = await insertBoard(boardData, token);
       if (response) {
-        alert("공지사항이 등록되었습니다.");
+        alert("게시판이 등록되었습니다.");
         navigate("/contents/board"); // 공지사항 목록으로 이동
       } else {
-        alert("공지사항 등록 실패");
+        alert("게시판 등록 실패");
       }
     } catch (error) {
-      console.error("공지사항 등록 오류:", error);
+      console.error("게시판 등록 오류:", error);
       alert("오류가 발생했습니다.");
     }
   };
