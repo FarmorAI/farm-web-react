@@ -5,6 +5,7 @@ import { RouteObject } from "react-router-dom";
 const BoardList = lazy(() => import("../pages/contents/board/BoardListPage"));
 const BoardWritePage = lazy(() => import("../pages/contents/board/BoardWritePage")); // ✅ 게시판 작성 페이지 추가
 const BoardDetail = lazy(() => import("../pages/contents/board/BoardDetailPage")); // ✅ 상세 페이지 추가
+const BoardUpdatePage = lazy(() => import("../pages/contents/board/BoardUpdatePage"));
 
 const NoticeList = lazy(() => import("../pages/contents/notice/NoticeListPage"));
 const NoticeDetail = lazy(() => import("../pages/contents/notice/NoticeDetailPage")); // ✅ 상세 페이지 추가
@@ -67,6 +68,14 @@ export const boardRoutes: RouteObject[] = [
       <Suspense fallback={<div>Loading...</div>}>
         <BoardWritePage />
       </Suspense>
+    ),
+  },
+  {
+    path: "contents/board/update/:id", // ✅ 동적 라우팅 추가 (게시판 수정)
+    element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <BoardUpdatePage />
+        </Suspense>
     ),
   }
 ];

@@ -1,6 +1,7 @@
 import useDetail from "../../hook/contents/useFetchDetail";
 import PageLayout from "../pagelayout/PageLayout";
 import { useParams, useNavigate } from "react-router-dom";
+import CommentList from "./CommentList.tsx";
 
 interface DetailComponentProps {
   type: "board" | "notice" | "support";
@@ -11,7 +12,6 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ type }) => {
   const parsedId = id ? parseInt(id, 10) : undefined;
   const navigate = useNavigate();
   const { data, isLoading, deleteItem } = useDetail({ type, id: parsedId ?? 0 });
-
   // id가 없을 경우 예외 처리
   if (!parsedId) {
     return <div>잘못된 접근입니다.</div>;
@@ -67,6 +67,9 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ type }) => {
             뒤로가기
           </button>
         </div>
+      </div>
+      <div className="max-w-7xl mx-auto mt-4">
+        <CommentList boardId={parsedId}/>
       </div>
     </PageLayout>
   );

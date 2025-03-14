@@ -2,6 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getNaverAccessToken, getNaverMemberWithAccessToken } from "../../api/socialApi";
 import useFetchSocialLogin from "../../hook/auth/useFetchSocialLogin"; // ✅ 새로 만든 훅
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const NaverRedirectPage = () => {
     const [searchParams] = useSearchParams();
@@ -33,12 +34,14 @@ const NaverRedirectPage = () => {
     }, [code, navigate, handleSocialLogin]);
 
     return (
-        <div>
-            <h2>Naver Login Redirect</h2>
-            <p>Code: {code}</p>
-            <p>로그인 처리 중입니다...</p>
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+            <div className="text-center">
+                <div className="spinner-border text-primary" style={{ width: '5rem', height: '5rem' }} role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+                <p>로그인 처리 중입니다...</p>
+            </div>
         </div>
     );
 };
-
 export default NaverRedirectPage;
