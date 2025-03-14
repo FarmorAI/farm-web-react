@@ -45,8 +45,6 @@ const CommentList: React.FC<CommentListProps> = ({ boardId }) => {
                     newMap.delete(parentId);
                     return newMap;
                 });
-                setModalMessage("답글이 성공적으로 등록되었습니다.");
-                setShowModal(true);
             } else {
                 setModalMessage("답글을 등록할 수 없습니다.");
                 setShowModal(true);
