@@ -13,6 +13,8 @@ dist-ssr
 *.local
 .env
 build
+dockerfile
+.dockerignore
 
 # Editor directories and files
 .vscode/*
