@@ -1,0 +1,11 @@
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f9fafb;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+

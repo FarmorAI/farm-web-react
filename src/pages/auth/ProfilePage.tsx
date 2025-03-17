@@ -9,6 +9,8 @@ import RecentAnalysisRecords from "../../components/auth/profile/RecentAnalysisR
 import { usePurchaseHistory } from "../../hook/auth/profile/usePurchaseHistory.ts";
 import PurchaseHistoryUI from "../../components/auth/profile/PurchasedHistory.tsx";
 
+
+
 const ProfilePage = () => {
   const {
     memberId,
