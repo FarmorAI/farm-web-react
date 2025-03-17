@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 .env
+.env.production
+Dockerfile
 build
 
 # Editor directories and files
