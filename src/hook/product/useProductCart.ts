@@ -29,6 +29,7 @@ export const useProductCart = () => {
         imageUrl: item.imageUrl,
         pname: "",
       }));
+      // @ts-ignore
       setCart(cartItems);
       setSelectedItems(cartItems.map((item) => item.id));
     } catch (error) {
