@@ -85,8 +85,7 @@ const ProductCart: React.FC<ProductCartUIProps> = ({
             }
 
             // ✅ 네이버페이 결제 페이지로 이동
-            const reserveUrl = `https://test-m.pay.naver.com/payments/${reserveId}`;
-            window.location.href = reserveUrl;
+            window.location.href = `https://test-m.pay.naver.com/payments/${reserveId}`;
 
         } catch (error) {
             console.error("네이버페이 결제 오류:", error);
