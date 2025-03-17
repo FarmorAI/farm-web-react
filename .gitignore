@@ -26,3 +26,6 @@ build
 *.njsproj
 *.sln
 *.sw?
+
+Dockerfile
+.dockerignore

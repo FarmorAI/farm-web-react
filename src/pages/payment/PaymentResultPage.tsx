@@ -3,6 +3,8 @@ import { PaymentResult } from '../../model/subscription'
 import { useSearchParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { handlePaymentCancel } from '../../api/paymentApi'
+import premium from '/assets/images/subs/gold_premium.png';
+import basic from '/assets/images/subs/apple_basic.png';
 
 const PaymentResultPage: React.FC = () => {
    const [searchParams] = useSearchParams()
@@ -14,7 +16,7 @@ const PaymentResultPage: React.FC = () => {
       subsPlan: searchParams.get("subsPlan"),
       subsPrice: searchParams.get("subsPrice"),
       resultCode: searchParams.get("resultCode"),
-      paymentId: searchParams.get("paymentId")
+      token: searchParams.get("paymentId")
    })
 
    return (
@@ -32,7 +34,7 @@ const PaymentResultPage: React.FC = () => {
                <div className="grid grid-cols-2 gap-8">
                   <div>
                      <p className="mt-3 mb-1">주문번호</p>
-                     <strong>{paymentResult.paymentId}</strong>
+                     <strong>{paymentResult.token}</strong>
                      <p className="mt-3 mb-1">결제수단</p>
                      <strong>네이버페이</strong>
                   </div>
@@ -51,7 +53,7 @@ const PaymentResultPage: React.FC = () => {
                <h5 className="text-lg font-semibold">구독 상품</h5>
                <div className="flex items-center gap-6">
                   <div className="w-24">
-                     <img src="https://via.placeholder.com/100" className="rounded-lg w-full" alt="상품 이미지" />
+                     <img src={paymentResult.subsPlan == 'Basic' ? basic:premium} className="rounded-lg w-full" alt="상품 이미지" />
                   </div>
                   <div className="flex-1">
                      <p className="font-semibold">{paymentResult.subsPlan} 구독</p>
@@ -72,7 +74,7 @@ const PaymentResultPage: React.FC = () => {
                   </button>
                </Link>
                <button className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors" 
-                  onClick={() => handlePaymentCancel(paymentResult)}>결제취소
+                  onClick={() => handlePaymentCancel(String(paymentResult.token))}>결제취소
                </button>
             </div>
          </div>

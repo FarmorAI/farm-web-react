@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Board, BoardListResponse } from "../model/contents";
+import { Board, BoardListResponse, InsertBoard } from "../model/contents";
 import { API_BASE_URL } from "./memberApi";
 import { getCookie } from "../util/cookieUtill";
 
@@ -40,38 +40,22 @@ interface BoardInsertData {
 export const insertBoard = async (
   boardData: BoardInsertData,
   token: string
-): Promise<{ result: string; uploadedFiles?: string[] } | null> => {
+): Promise<InsertBoard | null> => {
   try {
-    // FormData 객체 생성
-    const formData = new FormData();
-
-    // board JSON을 String으로 변환 후 추가
-    formData.append(
-      "board",
-      JSON.stringify({ title: boardData.title, content: boardData.content })
+    // 올바른 요청 형식
+    const response = await axios.post<InsertBoard>(
+      `${API_BASE_URL}/board`,
+      boardData, 
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // JWT 추가
+          "Content-Type": "application/json",
+        },
+      }
     );
-
-    // 파일이 있을 경우 추가
-    if (boardData.files) {
-      Array.from(boardData.files).forEach((file) => {
-        formData.append("files", file);
-      });
-    }
-
-    // 요청 보내기 (multipart/form-data)
-    const response = await axios.post<{
-      result: string;
-      uploadedFiles?: string[];
-    }>(`${API_BASE_URL}/board`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`, // JWT 토큰 추가
-        "Content-Type": "multipart/form-data", // ⬅️ multipart/form-data로 변경
-      },
-    });
-
     return response.data;
   } catch (error) {
-    console.error("게시글 등록 실패:", error);
+    console.error("게시판 등록 실패:", error);
     return null;
   }
 };

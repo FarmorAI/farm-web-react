@@ -1,50 +1,126 @@
-# React + TypeScript + Vite
+# **FarmorAI 프로젝트 - 프론트엔드 (React + Vite + TypeScript)**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## **프로젝트 일정**
+- **프로젝트 시작일:** 2024년 2월 5일  
+- **예정 종료일:** 2024년 3월 27일  
+- **진행 상태:** 개발 진행 중 (`develop` 브랜치 기준)  
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## **프로젝트 목표**
+FarmorAI는 **스마트 농업을 위한 AI 기반 분석 및 자동화 플랫폼**으로, 농작물 생육 데이터, 환경 데이터, 기상 데이터를 활용하여 정밀 농업을 지원합니다.  
+프론트엔드 시스템은 **사용자 친화적인 UI/UX를 제공하며, 다양한 기능을 React 기반으로 개발**하여 백엔드와 원활하게 연동되는 **확장성 높은 웹 애플리케이션**을 구축하는 것이 목표입니다.
 
-## Expanding the ESLint configuration
+### **주요 목표**
+1. **스마트 농업을 위한 웹 대시보드 구축**  
+   - 농작물 생육 정보, 토양 데이터, 기상 데이터 등을 시각화  
+   - AI 분석 데이터를 효과적으로 표현하는 인터페이스 개발  
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+2. **사용자 중심의 웹 애플리케이션 개발**  
+   - 직관적인 UI/UX 디자인을 적용한 사용자 인터페이스 제공  
+   - 반응형 디자인을 적용하여 PC 및 모바일에서 최적화  
 
-- Configure the top-level `parserOptions` property like this:
+3. **안정적이고 보안이 강화된 프론트엔드 구축**  
+   - 네이버, 카카오, 구글 소셜 로그인 지원  
+   - JWT 기반 인증 시스템 연동  
+   - Redux Toolkit을 활용한 전역 상태 관리  
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+4. **클라우드 기반 배포 및 DevOps 환경 구축**  
+   - AWS S3 및 CloudFront를 활용한 정적 웹 사이트 배포  
+   - CI/CD 자동화 (GitHub Actions 활용)  
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+5. **상품 판매 및 결제 시스템 구현**  
+   - 네이버 페이 결제 API 연동  
+   - 장바구니 및 상품 구독 시스템 개발  
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+6. **웹 성능 최적화 및 코드 스플리팅 적용**  
+   - React Router 기반 라우트 분리 및 **레이지 로딩 (Lazy Loading) 적용**  
+   - **React Query 및 Redux Toolkit(RTK) 사용하여 상태 관리 최적화**  
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+---
+
+## **개발 진행 일정**
+| 기간 | 주요 개발 내용 |
+|------|----------------|
+| **2025.02 - 2025.02** | 프로젝트 기획 및 요구사항 분석 |
+| **2025.02 - 2025.02** | UI/UX 디자인 및 화면 구성 설계 |
+| **2025.02 - 2025.02** | 인증 시스템 및 소셜 로그인 연동 |
+| **2025.03 - 2025.03** | 대시보드 및 데이터 시각화 기능 개발 |
+| **2025.03 - 2025.03** | 결제 및 상품 구독 시스템 구현 |
+| **2025.03 - 2025.03** | 웹 성능 최적화 및 코드 스플리팅 적용 |
+| **2025.03 - 2025.03** | 테스트 및 최종 배포 |
+
+---
+
+## **버전 정보 및 기술 스택**
+### **1️⃣ 버전 정보**
+- **React Version**: **18.3.1**
+- **Vite Version**: **6.1.0**
+- **TypeScript Version**: **5.7.2**
+- **Redux Toolkit Version**: **2.5.1**
+- **React Query Version**: **5.67.2**
+- **React Router Dom Version**: **7.2.0**
+
+### **2️⃣ 주요 기술 스택**
+| 기능 | 기술 |
+|------|------|
+| **프론트엔드 프레임워크** | React (TypeScript) + Vite |
+| **상태 관리** | Redux Toolkit (RTK), React Query |
+| **UI 라이브러리** | Tailwind CSS, Bootstrap, ShadCN, Styled-Components |
+| **비동기 통신** | Axios, React Query |
+| **데이터 시각화** | Chart.js, Recharts, Nivo, ECharts |
+| **라우팅 및 성능 최적화** | React Router, Lazy Loading (React.lazy & Suspense) |
+| **배포 및 인프라** | AWS S3, CloudFront |
+| **CI/CD 자동화** | GitHub Actions |
+| **인증 및 보안** | JWT, OAuth2 (네이버, 카카오, 구글) |
+| **결제 시스템** | 네이버 페이 API |
+
+---
+
+## **개발 도구 (Tools)**
+| 도구 | 설명 |
+|------|------|
+| **VS Code** | 주 개발 환경 (React + TypeScript) |
+| **IntelliJ IDEA** | 대체 IDE 및 코드 분석 지원 |
+| **GitHub Actions** | CI/CD 자동화 |
+| **Postman** | API 테스트 및 요청 관리 |
+| **Figma** | UI/UX 디자인 및 프로토타이핑 |
+
+---
+
+## **주요 기능**
+### **대시보드 및 데이터 시각화**
+- **농작물 생육 데이터 시각화**  
+- **기상 데이터 및 분석 결과 제공**  
+- **AI 기반 생육 패턴 및 질병 예측 결과 표시**  
+
+### **인증 및 보안**
+- **JWT 기반 사용자 인증 및 보안**  
+- **네이버, 카카오, 구글 소셜 로그인 지원**  
+- **Redux Toolkit 기반 인증 상태 관리 (Auth Slice 적용)**  
+
+### **결제 및 상품 판매 기능**
+- **네이버 페이 결제 API 연동**  
+- **상품 판매 및 장바구니 기능 제공**  
+- **구독 서비스를 통한 AI 분석 기능 체험**  
+
+### **웹 성능 최적화 및 코드 스플리팅**
+- **React Router를 활용한 페이지 분리 및 라우팅 최적화**  
+- **Lazy Loading (React.lazy & Suspense) 적용**하여 웹 페이지 로딩 속도 개선  
+- **React Query 및 Redux Toolkit을 통한 최적화된 상태 관리**  
+- **Auth Slice를 활용한 전역 사용자 상태 관리 및 인증 연동**  
+
+### **반응형 UI 및 최적화**
+- **모바일 및 PC 환경에서 최적화된 UX 제공**  
+- **다크 모드 및 사용자 설정 기능 추가**  
+
+---
+
+## **프로젝트에서 TypeScript 사용 시 장점들**
+- **정적 타입 검사**: 컴파일 단계에서 타입 오류를 방지하여 코드 안정성을 높임  
+- **자동 완성 및 코드 가이드**: IDE에서 더욱 강력한 자동 완성 기능 제공  
+- **가독성과 유지보수성 향상**: 타입 명시를 통해 코드의 의도를 명확하게 표현 가능  
+- **대규모 프로젝트에서 유용**: 협업 및 확장성에 강점을 가짐  
+- **ES6+ 기능 지원**: 최신 JavaScript 기능을 지원하며, 컴파일 시 브라우저 호환성을 유지  
+
+---

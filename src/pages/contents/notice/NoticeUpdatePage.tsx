@@ -3,7 +3,8 @@ import useFetchUpdate from "../../../hook/contents/useFetchUpdate";
 import WriteForm from "../../../components/contents/WriteForm";
 
 const NoticeUpdatePage = () => {
-  const { register, handleSubmit, onSubmit, content, setContent, isSubmitting, navigate, initialData } = useFetchUpdate();
+  const title = "공지사항 수정";
+  const { register, handleSubmit, onSubmit, content, setContent, isSubmitting, navigate, initialData } = useFetchUpdate(title);
 
   return (
     <PageLayout title="공지사항 수정" activeItem="공지사항">

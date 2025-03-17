@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ReactNode } from "react";
 import { checkNickname, updateUserProfile } from "../../../api/memberApi";
 
 interface ProfileEditModalProps {
@@ -31,6 +31,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   >(null);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false); // ✅ 저장 버튼 비활성화 관리
+  const [phoneError, setPhoneError] = useState<string | ReactNode>(null);
 
   // ✅ 모달이 열릴 때 userInfo 값으로 초기화
   useEffect(() => {
@@ -40,8 +41,11 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
       setAddress(userInfo.address);
       setIsNicknameAvailable(null);
       setIsNicknameChecked(false);
+      setPhoneError(null); // ✅ 연락처 오류 초기화
     }
   }, [isOpen, userInfo]);
+
+  
 
   // ✅ 닉네임 중복 확인 함수
   const handleCheckNickname = async () => {
@@ -60,6 +64,29 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     }
   };
 
+  // ✅ 연락처 유효성 검사 함수
+  const validatePhone = (phoneValue: string): boolean => {
+    const phoneRegex = /^010-\d{4}-\d{4}$/;
+    return phoneRegex.test(phoneValue);
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPhone = e.target.value;
+    setPhone(newPhone);
+  
+    if (newPhone && !validatePhone(newPhone)) {
+      setPhoneError(
+        <>
+          <p>연락처는 010-XXXX-XXXX 형식이어야 합니다.</p>
+          <p className="text-gray-500">(예: 010-1234-5678)</p>
+        </>
+      );
+    } else {
+      setPhoneError(null);
+    }
+  };
+  
+
   // ✅ 회원정보 수정 함수
   const handleUpdateProfile = async () => {
     // ✅ 수정된 부분: 닉네임 변경 여부 확인
@@ -70,6 +97,12 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     }
     if (isNicknameChanged && isNicknameAvailable === false) {
       alert("이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해주세요.");
+      return;
+    }
+
+    // ✅ 추가: 연락처 유효성 검사
+    if (phone && !validatePhone(phone)) {
+      alert("연락처 형식이 올바르지 않습니다. 010-XXXX-XXXX 형식을 지켜주세요.");
       return;
     }
 
@@ -101,11 +134,13 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
   // ✅ 수정된 부분: 닉네임 변경 여부 확인 변수 추가
   const isNicknameChanged = nickname !== userInfo.nickname;
-  // ✅ 수정된 부분: 저장 버튼 활성화 조건 동적 설정
-  const isSaveDisabled =
+  // ✅ 수정된 부분: 저장 버튼 활성화 조건 동적 설정 (연락처 유효성 추가)
+  const isSaveDisabled: boolean = !!(
     isUpdating ||
     (isNicknameChanged &&
-      (!isNicknameChecked || isNicknameAvailable === false));
+      (!isNicknameChecked || isNicknameAvailable === false)) ||
+    (phone && phoneError !== null)
+  );
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -157,10 +192,14 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           <input
             type="text"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={handlePhoneChange} // ✅ 변경: 실시간 유효성 검사 적용
             className="w-full p-2 border rounded-lg"
             disabled={isUpdating}
+            placeholder="예: 010-1234-5678"
           />
+          {phoneError && (
+            <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+          )} {/* ✅ 연락처 유효성 오류 메시지 표시 */}
         </div>
 
         {/* 주소 입력 */}
@@ -188,7 +227,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             onClick={handleUpdateProfile}
             disabled={isSaveDisabled}
             className={`px-4 py-2 rounded-lg text-white ${
-              !isNicknameChecked || isNicknameAvailable === false || isUpdating
+              isSaveDisabled
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700"
             }`}
