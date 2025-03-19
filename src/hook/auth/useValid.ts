@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FormType } from "../../components/auth/register/RegisterForm";
+import { FormType } from "../../components/auth/register/constants";
 
 export const useValid = (
   form: FormType,

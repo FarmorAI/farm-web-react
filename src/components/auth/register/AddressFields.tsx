@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FormType } from "./RegisterForm"; // FormType 임포트
+import { FormType } from "./constants";
 
 declare global {
   interface Window {
