@@ -26,7 +26,7 @@ export const usePurchaseHistory = (memberId?: number | null) => {
   const [selectedStatus, setSelectedStatus] = useState<string>("전체");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // API 호출 함수 (useCallback 적용)
+  // ✅ API 호출 함수 (useCallback 적용)
   const fetchUserOrders = useCallback(async (id: number) => {
     try {
       const response = await axios.get(`${API_BASE_URL}/order/member/${id}`, {
@@ -40,7 +40,7 @@ export const usePurchaseHistory = (memberId?: number | null) => {
     }
   }, []);
 
-  // 주문 데이터 로드 (memberId 변경 시에만 실행)
+  // ✅ 주문 데이터 로드 (memberId 변경 시 실행)
   useEffect(() => {
     if (!memberId) return;
     const loadOrders = async () => {
@@ -50,21 +50,25 @@ export const usePurchaseHistory = (memberId?: number | null) => {
     loadOrders();
   }, [memberId, fetchUserOrders]);
 
-  // 상태 매핑
-  const statusMap: { [key: string]: string } = {
-    PENDING: "입금대기",
-    PAID: "결제완료",
-    SHIPPED: "배송중",
-    DELIVERED: "배송완료",
-    CANCELLED: "주문취소",
-  };
+  // ✅ 상태 매핑 (useMemo 최적화)
+  const statusMap = useMemo(
+    () => ({
+      PENDING: "입금대기",
+      PAID: "결제완료",
+      SHIPPED: "배송중",
+      DELIVERED: "배송완료",
+      CANCELLED: "주문취소",
+    }),
+    []
+  );
 
-  // 상태 라벨 변환 (useCallback 적용)
-  const getStatusLabel = useCallback((status: string): string => {
-    return statusMap[status] || "미정";
-  }, []);
+  // ✅ 상태 라벨 변환 (TypeScript 오류 해결)
+  const getStatusLabel = useCallback(
+    (status: string): string => statusMap[status as keyof typeof statusMap] || "미정",
+    [statusMap]
+  );
 
-  // 상태별 색상 (useCallback 적용)
+  // ✅ 상태별 색상 설정 (useCallback 적용)
   const getStatusColor = useCallback((status: string) => {
     switch (status) {
       case "PAID":
@@ -80,36 +84,28 @@ export const usePurchaseHistory = (memberId?: number | null) => {
     }
   }, []);
 
-  // 필터링된 주문 목록 (useMemo 적용)
+  // ✅ 필터링된 주문 목록 (useMemo 적용)
   const filteredOrders = useMemo(() => {
     return orders.filter((order) => {
       const matchesSearch =
-        (order.orderNumber?.includes(searchQuery) ?? false) ||
-        (order.orderItems?.some((item) => item.pname?.includes(searchQuery)) ?? false);
+        order.orderNumber?.includes(searchQuery) ||
+        order.orderItems?.some((item) => item.pname?.includes(searchQuery));
 
+      // ✅ `Object.keys(statusMap)` 대신 `Object.entries`를 사용하여 비교
       const matchesStatus =
         selectedStatus === "전체" ||
-        order.status === Object.keys(statusMap).find((key) => statusMap[key] === selectedStatus);
+        Object.entries(statusMap).some(([key, value]) => key === order.status && value === selectedStatus);
 
       return matchesSearch && matchesStatus;
     });
-  }, [orders, searchQuery, selectedStatus]);
-
-  // set 함수 메모이제이션
-  const memoizedSetSelectedStatus = useCallback((status: string) => {
-    setSelectedStatus(status);
-  }, []);
-
-  const memoizedSetSearchQuery = useCallback((query: string) => {
-    setSearchQuery(query);
-  }, []);
+  }, [orders, searchQuery, selectedStatus, statusMap]); // ✅ statusMap을 의존성에서 제거
 
   return {
     orders: filteredOrders,
     selectedStatus,
-    setSelectedStatus: memoizedSetSelectedStatus,
+    setSelectedStatus, // ✅ 불필요한 useCallback 제거
     searchQuery,
-    setSearchQuery: memoizedSetSearchQuery,
+    setSearchQuery, // ✅ 불필요한 useCallback 제거
     getStatusLabel,
     getStatusColor,
   };

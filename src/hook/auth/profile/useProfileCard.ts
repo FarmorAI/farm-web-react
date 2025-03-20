@@ -30,7 +30,7 @@ export const useProfileCardModal = () => {
     if (jwtToken) {
       refetch();
     }
-  }, [jwtToken]); // ✅ JWT 변경 시에만 refetch 실행
+  }, [jwtToken, refetch]); // ✅ JWT 변경 시에만 refetch 실행
 
   useEffect(() => {
     if (userInfo) {
