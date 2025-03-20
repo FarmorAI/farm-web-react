@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import OrderStatusCounts from "./OrderStatusCounts"; // 상태별 주문 수 표시 컴포넌트
+import { memo } from "react";
 
 interface OrderItemType {
   orderDetailId: number;
@@ -22,15 +23,15 @@ interface OrderType {
 
 interface PurchaseHistoryProps {
   orders: OrderType[];
-  selectedStatus: string;
-  setSelectedStatus: React.Dispatch<React.SetStateAction<string>>;
+  selectedStatus: string; // 문자열 타입으로 확정
+  setSelectedStatus: (status: string) => void; // 상태 업데이트 함수
   searchQuery: string;
-  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  setSearchQuery: (query: string) => void;
   getStatusLabel: (status: string) => string;
   getStatusColor: (status: string) => string;
 }
 
-// ✅ 상태 이름 매핑 (UI에서 보여지는 이름 <-> 실제 order.status 값 + 색상 추가)
+// 상태 이름 매핑 (UI에서 보여지는 이름 <-> 실제 order.status 값 + 색상 추가)
 const statusMapping: Record<string, { label: string; color: string }> = {
   PENDING: { label: "입금대기", color: "bg-yellow-200 text-yellow-800" },
   PAID: { label: "결제완료", color: "bg-green-200 text-green-800" },
@@ -39,36 +40,56 @@ const statusMapping: Record<string, { label: string; color: string }> = {
   CANCELLED: { label: "주문취소", color: "bg-red-200 text-red-800" },
 };
 
-const PurchaseHistoryUI: React.FC<PurchaseHistoryProps> = ({
-  orders,
-  selectedStatus,
-  setSelectedStatus,
-  searchQuery,
-  setSearchQuery,
-  getStatusLabel,
-  getStatusColor,
-}) => {
-  const statusLabelToKey = Object.fromEntries(
-    Object.entries(statusMapping).map(([key, value]) => [value.label, key])
+const PurchaseHistoryUI: React.FC<PurchaseHistoryProps> = ({ orders }) => {
+  const [selectedStatus, setSelectedStatus] = useState<string>("전체");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const statusLabelToKey = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(statusMapping).map(([key, value]) => [value.label, key])
+      ),
+    []
   );
 
-  // ✅ 상태 필터링 + 검색 적용
-  const filteredOrders = orders.filter((order) => {
-    const matchesStatus =
-      selectedStatus === "전체" ||
-      order.status === statusLabelToKey[selectedStatus];
-    const matchesSearch =
-      searchQuery.trim() === "" ||
-      order.orderNumber.includes(searchQuery) ||
-      order.orderItems.some((item) => item.pname.includes(searchQuery));
-    return matchesStatus && matchesSearch;
-  });
+  // 상태 라벨 변환
+  const getStatusLabel = useCallback((status: string): string => {
+    return statusMapping[status]?.label || "미정";
+  }, []);
+
+  // 상태별 색상
+  const getStatusColor = useCallback((status: string): string => {
+    return statusMapping[status]?.color || "bg-gray-200 text-gray-800";
+  }, []);
+
+  // 상태 필터링 + 검색 적용
+  const filteredOrders = useMemo(() => {
+    return orders.filter((order) => {
+      const matchesStatus =
+        selectedStatus === "전체" ||
+        order.status === statusLabelToKey[selectedStatus];
+      const matchesSearch =
+        searchQuery.trim() === "" ||
+        order.orderNumber.includes(searchQuery) ||
+        order.orderItems.some((item) => item.pname.includes(searchQuery));
+      return matchesStatus && matchesSearch;
+    });
+  }, [orders, selectedStatus, searchQuery, statusLabelToKey]);
+
+  // 상태 변경 핸들러
+  const handleStatusChange = useCallback((status: string) => {
+    setSelectedStatus(status);
+  }, []);
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  }, []);
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <h2 className="text-lg font-medium">📦 주문/배송조회 (최근 6개월)</h2>
 
-      {/* ✅ 상태별 주문 수 카운트 */}
+      {/* 상태별 주문 수 카운트 */}
       <OrderStatusCounts orders={orders} />
 
       {/* 검색창 */}
@@ -78,30 +99,28 @@ const PurchaseHistoryUI: React.FC<PurchaseHistoryProps> = ({
           placeholder="주문번호 또는 상품명 검색"
           className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleSearchChange}
         />
       </div>
 
-      {/* ✅ 주문 상태 필터 */}
+      {/* 주문 상태 필터 */}
       <div className="flex flex-wrap gap-2 mt-4">
-        {["전체", ...Object.values(statusMapping).map((s) => s.label)].map(
-          (status) => (
-            <button
-              key={status}
-              className={`px-4 py-2 text-sm rounded-lg ${
-                selectedStatus === status
-                  ? "bg-blue-500 text-white"
-                  : "border border-gray-300"
-              }`}
-              onClick={() => setSelectedStatus(status)}
-            >
-              {status}
-            </button>
-          )
-        )}
+        {["전체", ...Object.values(statusMapping).map((s) => s.label)].map((status) => (
+          <button
+            key={status}
+            className={`px-4 py-2 text-sm rounded-lg ${
+              selectedStatus === status
+                ? "bg-blue-500 text-white"
+                : "border border-gray-300"
+            }`}
+            onClick={() => handleStatusChange(status)}
+          >
+            {status}
+          </button>
+        ))}
       </div>
 
-      {/* ✅ 주문 목록 */}
+      {/* 주문 목록 */}
       <div className="mt-6 space-y-6">
         {filteredOrders.length > 0 ? (
           filteredOrders.map((order) => (
@@ -127,12 +146,10 @@ const PurchaseHistoryUI: React.FC<PurchaseHistoryProps> = ({
                 </div>
               </div>
 
-              {/* ✅ 주문 상태 */}
+              {/* 주문 상태 */}
               <p className="text-gray-500 text-sm mb-3">
                 <span
-                  className={`px-3 py-1 rounded-full ${getStatusColor(
-                    order.status
-                  )}`}
+                  className={`px-3 py-1 rounded-full ${getStatusColor(order.status)}`}
                 >
                   {getStatusLabel(order.status)}
                 </span>
@@ -179,4 +196,4 @@ const PurchaseHistoryUI: React.FC<PurchaseHistoryProps> = ({
   );
 };
 
-export default PurchaseHistoryUI;
+export default memo(PurchaseHistoryUI);
