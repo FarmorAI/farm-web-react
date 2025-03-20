@@ -24,6 +24,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "dotenv": "^16.4.7",
     "echarts": "^5.6.0",
+    "echarts-for-react": "^3.0.3",
     "echarts-liquidfill": "^3.1.0",
     "env": "^0.0.2",
     "framer-motion": "^12.4.1",

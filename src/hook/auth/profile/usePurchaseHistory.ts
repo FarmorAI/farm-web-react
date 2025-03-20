@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../../api/memberApi";
 import { getCookie } from "../../../util/cookieUtill";
@@ -26,43 +26,50 @@ export const usePurchaseHistory = (memberId?: number | null) => {
   const [selectedStatus, setSelectedStatus] = useState<string>("전체");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // API 호출 함수
-  const fetchUserOrders = async (id: number) => {
+  // ✅ API 호출 함수 (useCallback 적용)
+  const fetchUserOrders = useCallback(async (id: number) => {
     try {
       const response = await axios.get(`${API_BASE_URL}/order/member/${id}`, {
         headers: { Authorization: `Bearer ${getCookie("jwt")}` },
-      })
+      });
       console.log("API 응답:", response.data);
       return response.data.data || [];
     } catch (error) {
       console.error("❌ 주문 내역 조회 실패:", error);
       return [];
     }
-  };
+  }, []);
 
-  // 주문 데이터 로드
+  // ✅ 주문 데이터 로드 (memberId 변경 시 실행)
   useEffect(() => {
+    if (!memberId) return;
     const loadOrders = async () => {
-      const data = await fetchUserOrders(memberId || 0);
+      const data = await fetchUserOrders(memberId);
       setOrders(data);
     };
     loadOrders();
-  }, [memberId]);
+  }, [memberId, fetchUserOrders]);
 
-  // 상태 매핑
-  const statusMap: { [key: string]: string } = {
-    PENDING: "입금대기",
-    PAID: "결제완료",
-    SHIPPED: "배송중",
-    DELIVERED: "배송완료",
-    CANCELLED: "주문취소",
-  };
+  // ✅ 상태 매핑 (useMemo 최적화)
+  const statusMap = useMemo(
+    () => ({
+      PENDING: "입금대기",
+      PAID: "결제완료",
+      SHIPPED: "배송중",
+      DELIVERED: "배송완료",
+      CANCELLED: "주문취소",
+    }),
+    []
+  );
 
-  // 상태 라벨 변환
-  const getStatusLabel = (status: string): string => statusMap[status] || "미정";
+  // ✅ 상태 라벨 변환 (TypeScript 오류 해결)
+  const getStatusLabel = useCallback(
+    (status: string): string => statusMap[status as keyof typeof statusMap] || "미정",
+    [statusMap]
+  );
 
-  // 상태별 색상
-  const getStatusColor = (status: string) => {
+  // ✅ 상태별 색상 설정 (useCallback 적용)
+  const getStatusColor = useCallback((status: string) => {
     switch (status) {
       case "PAID":
         return "bg-green-100 text-green-700";
@@ -75,27 +82,30 @@ export const usePurchaseHistory = (memberId?: number | null) => {
       default:
         return "bg-yellow-100 text-yellow-700";
     }
-  };
+  }, []);
 
-  // 필터링된 주문 목록
-  const filteredOrders = orders.filter((order) => {
-    const matchesSearch =
-      (order.orderNumber?.includes(searchQuery) ?? false) ||
-      (order.orderItems?.some((item) => item.pname?.includes(searchQuery)) ?? false);
+  // ✅ 필터링된 주문 목록 (useMemo 적용)
+  const filteredOrders = useMemo(() => {
+    return orders.filter((order) => {
+      const matchesSearch =
+        order.orderNumber?.includes(searchQuery) ||
+        order.orderItems?.some((item) => item.pname?.includes(searchQuery));
 
-    const matchesStatus =
-      selectedStatus === "전체" ||
-      order.status === Object.keys(statusMap).find((key) => statusMap[key] === selectedStatus);
+      // ✅ `Object.keys(statusMap)` 대신 `Object.entries`를 사용하여 비교
+      const matchesStatus =
+        selectedStatus === "전체" ||
+        Object.entries(statusMap).some(([key, value]) => key === order.status && value === selectedStatus);
 
-    return matchesSearch && matchesStatus;
-  });
+      return matchesSearch && matchesStatus;
+    });
+  }, [orders, searchQuery, selectedStatus, statusMap]); // ✅ statusMap을 의존성에서 제거
 
   return {
     orders: filteredOrders,
     selectedStatus,
-    setSelectedStatus,
+    setSelectedStatus, // ✅ 불필요한 useCallback 제거
     searchQuery,
-    setSearchQuery,
+    setSearchQuery, // ✅ 불필요한 useCallback 제거
     getStatusLabel,
     getStatusColor,
   };
