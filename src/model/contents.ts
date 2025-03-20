@@ -2,13 +2,13 @@ import { UseFormRegister, UseFormHandleSubmit} from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export interface Notice {
-  noticeId: number;
-  title: string;
-  content?: string; // 선택적 필드
-  views: number;
-  createdAt: string;
-  updatedAt: string;
-  writer: string;
+    noticeId: number;
+    title: string;
+    content?: string; // 선택적 필드
+    views: number;
+    createdAt: string;
+    updatedAt: string;
+    writer: string;
 }
 
 export type InsertNotice = Pick<Notice, "noticeId" | "title">;

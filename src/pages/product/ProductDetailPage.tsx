@@ -11,6 +11,7 @@ const ProductDetailPage = () => {
     showSuccessAlert,
     handleOptionChange,
     handleAddToCart,
+    handlePayment
   } = useProductDetail();
 
   return (
@@ -23,6 +24,7 @@ const ProductDetailPage = () => {
       showSuccessAlert={showSuccessAlert}
       handleOptionChange={handleOptionChange}
       handleAddToCart={handleAddToCart}
+      handlePayment={handlePayment}
     />
   );
 };
