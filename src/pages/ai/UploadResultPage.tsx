@@ -1,13 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import './Upload.css';
 import PageLayout from '../../components/pagelayout/PageLayout';
 import { EChartsOption } from 'echarts';
+import { useParams } from 'react-router-dom';
+import { AiListResponse, handleAiGetById } from '../../api/aiApi';
 
 
 const App: React.FC = () => {
+  const [aiInfo, setAiInfo] = useState<AiListResponse>();
+  const { aiResultId } = useParams();
+
+  // AI 분석 결과 데이터 가져오기
+  useEffect(() => {    
+    const getAiInfo = async () => {
+      try {
+        const response = await handleAiGetById(parseInt(aiResultId ? aiResultId : '0'))
+        console.log(response)
+        setAiInfo(response)
+      } catch (error) {
+        alert(error)
+      }
+    }
+    getAiInfo()
+  }, [aiResultId]);
+
+
   // 색상 분포에서 빨간색 퍼센트
   const redPercentage = 70;
+
   // 숙성도 상태 퍼센트
   const ripenessPercentage = 75;
 
@@ -28,7 +49,7 @@ const App: React.FC = () => {
   };
 
   // 품질 등급에 따라 설명 텍스트 생성
-  const qualityDescription = `품질 지수 ${qualityScore}점은 ${getQualityGrade(qualityScore)} 사과를 의미합니다.`;
+  const qualityDescription = `품질 등급 ${qualityScore}점은 ${getQualityGrade(qualityScore)} 사과를 의미합니다.`;
 
   // 예상 시장 가치 계산
   const getMarketValue = (grade: string): number => {
@@ -91,20 +112,24 @@ const App: React.FC = () => {
         label: {
           show: true,
           position: 'center',
-          formatter: '{c}%',
+          formatter: '{b}',
           fontSize: 48,
-          color: '#28C76F',
+          color: '{c}',
           fontWeight: 'bold',
           fontFamily: 'Noto Sans KR',
         },
         labelLine: { show: false },
         data: [
-          { value: qualityScore, name: '품질', itemStyle: { color: '#28C76F' } },
-          { value: 100 - qualityScore, name: '', itemStyle: { color: '#E0E0E0' } },
+          { value: aiInfo?.rateS, name: '특', itemStyle: { color: '#ED0000' } },
+          { value: aiInfo?.rateA, name: '상', itemStyle: { color: '#FF4848' } },
+          { value: aiInfo?.rateB, name: '보통', itemStyle: { color: '#FF9090' } },
         ],
       },
     ],
   };
+  const currentQuality = Math.max(aiInfo?.rateS || 0, aiInfo?.rateA || 0, aiInfo?.rateB || 0);
+  const currentQualityName = currentQuality === aiInfo?.rateS ? '특' : currentQuality === aiInfo?.rateA ? '상' : '보통';
+
   useEffect(() => {
     const handleResize = () => {
       const qualityGauge = document.getElementById('qualityGauge')?.getElementsByClassName('echarts-for-react')[0] as HTMLElement | undefined;
@@ -125,7 +150,7 @@ const App: React.FC = () => {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '40px' }}>
             <div style={{ width: '100%', maxWidth: '448px', marginBottom: '24px' }}>
               <img
-                src="https://creatie.ai/ai/api/search-image?query=A photorealistic high-quality red apple on a pure white background, showing perfect texture and natural lighting, professional product photography style&width=400&height=400&orientation=squarish&flag=75c2223a-c0f5-4db1-ab82-7a29fde29a9e&flag=b226e182-aaff-4005-ad58-6eec5cbf4056&flag=e55038e1-3c3f-4ff1-8aed-016298f9aebb&flag=7c325e00-f0c3-4215-b894-9cf3f1f09370&flag=3b36e576-b2b7-4fb2-96bb-59c8031bf5a3&flag=e9248e07-150a-45f4-a704-6d5586bb0e3b&flag=dd11f212-0f03-49f7-bfb4-39e163a4425d&flag=b7f8e6e8-4603-4d12-88c5-0a36919f0360"
+                src={aiInfo?.imageUrl}
                 alt="사과 이미지"
                 style={{ width: '100%', height: 'auto', borderRadius: '8px', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)', objectFit: 'contain' }}
               />
@@ -142,7 +167,7 @@ const App: React.FC = () => {
                 </div>
                 <div>
                   <p style={{ color: '#6b7280', fontSize: '12px' }}>품질</p>
-                  <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#2563eb' }}>{getQualityGrade(qualityScore)}</p>
+                  <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#2563eb' }}>{currentQualityName}</p>
                 </div>
               </div>
             </div>
@@ -164,10 +189,10 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* 우측: 품질 지수 */}
+            {/* 우측: 품질 등급 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', padding: '24px', border: '1px solid #e5e7eb' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1f2937' }}>품질 지수</h3>
+                <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1f2937' }}>품질 등급</h3>
                 <div id="qualityGauge">
                   <ReactECharts option={circularProgressOption} style={{ height: '300px', width: '100%' }} />
                 </div>
