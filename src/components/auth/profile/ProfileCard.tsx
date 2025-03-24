@@ -68,14 +68,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               <span className="font-medium">{userInfo?.phone || "알 수 없음"}</span>
             </div>
             <div className="flex items-center">
+              <span className="w-24 text-gray-600">주소:</span>
+              <span className="font-medium">{userInfo?.address || "알 수 없음"}</span>
+            </div>
+            <div className="flex items-center">
               <span className="w-24 text-gray-600">가입일:</span>
               <span className="font-medium">
                 {userInfo?.createdAt ? new Date(userInfo.createdAt).toLocaleDateString() : "알 수 없음"}
               </span>
-            </div>
-            <div className="flex items-center">
-              <span className="w-24 text-gray-600">주소:</span>
-              <span className="font-medium">{userInfo?.address || "알 수 없음"}</span>
             </div>
           </div>
         </div>
