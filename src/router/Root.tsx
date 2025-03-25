@@ -43,7 +43,7 @@ const Root = createBrowserRouter([
                       <InfoDisplay />
                   </div>
                   <div className="mt-6">
-                    <TechDisplay query={"사과"}/>np
+                    <TechDisplay query={"사과"}/>
                       <GraphWithDescription />
                   </div>
               </div>
