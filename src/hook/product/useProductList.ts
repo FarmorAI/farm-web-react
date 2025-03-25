@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ProductDto } from "../../model/product";
 import { API_BASE_URL } from "../../api/memberApi";
+import { getCookie } from "../../util/cookieUtill";
 
 const useProductList = () => {
   const [products, setProducts] = useState<ProductDto[]>([]);
@@ -10,7 +11,11 @@ const useProductList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/product/list`);
+      const response = await axios.get(`${API_BASE_URL}/product/list`, {
+        headers: { 
+          "Authorization": `Bearer ${getCookie("jwt")}`
+        }
+      });
       setProducts(response.data);
     } catch (error) {
       console.error("상품 목록 불러오기 실패:", error);

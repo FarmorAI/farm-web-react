@@ -52,8 +52,15 @@ const PaymentPage = () => {
 
       try {
          await handlePaymentNaver(selectedPlan, selectedPrice);
-      } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {  // unknown 대신 any로 변경하여 간결하게 처리
          console.error("결제요청 오류: ", error);
+         const status = error?.response?.status ?? error?.status;  // Axios와 Fetch 대응
+         if (status === 403) {
+            alert("권한이 없습니다. (로그인 여부를 확인해주세요.)");
+            return;
+         }
+         alert("결제 요청 중 오류가 발생했습니다.");
       }
    }
 
