@@ -11,7 +11,7 @@ interface ProductCartUIProps {
   handleQuantityChange: (id: number, amount: number) => void;
   handleDelete: (id: number) => void;
   handleDeleteSelected: () => void;
-  handlePaymentNaver: (selectedItems: CartItemType[]) => Promise<void>; // 추가
+  handlePaymentNaver: () => Promise<void>; // 수정
 }
 
 const ProductCart: React.FC<ProductCartUIProps> = ({
@@ -27,9 +27,12 @@ const ProductCart: React.FC<ProductCartUIProps> = ({
   handleDeleteSelected,
   handlePaymentNaver,
 }) => {
+  // ✅ 각 상품의 총 가격 (상품 가격 × 수량)
   const getItemTotal = (item: CartItemType) => item.price * item.quantity;
-  const getShippingFee = (item: CartItemType) => (getItemTotal(item) >= 30000 ? 0 : 3000);
-  const selectedCartItems = cart.filter((item) => selectedItems.includes(item.id));
+
+  // ✅ 개별 상품 기준으로 배송비 적용 (3만 원 이상 무료, 미만 3천 원)
+  const getShippingFee = (item: CartItemType) =>
+    getItemTotal(item) >= 30000 ? 0 : 3000;
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
@@ -46,12 +49,24 @@ const ProductCart: React.FC<ProductCartUIProps> = ({
                   className="h-4 w-4 text-custom border-gray-300 rounded"
                 />
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">상품 정보</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">수량</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">상품금액</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">합계</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">배송비</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">삭제</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                상품 정보
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                수량
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                상품금액
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                합계
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                배송비
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                삭제
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -66,7 +81,11 @@ const ProductCart: React.FC<ProductCartUIProps> = ({
                   />
                 </td>
                 <td className="px-6 py-4 flex items-center">
-                  <img className="h-20 w-20 object-cover" src={item.imageUrl} alt={item.name} />
+                  <img
+                    className="h-20 w-20 object-cover"
+                    src={item.imageUrl}
+                    alt={item.name}
+                  />
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-900">{item.name}</p>
                     <p className="text-sm text-gray-500">{item.option}</p>
@@ -102,13 +121,17 @@ const ProductCart: React.FC<ProductCartUIProps> = ({
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">
                   {getShippingFee(item) === 0 ? (
-                    <span className="text-green-500 font-semibold">✅ 무료배송 적용</span>
+                    <span className="text-green-500 font-semibold">
+                      ✅ 무료배송 적용
+                    </span>
                   ) : (
                     <>
                       <span className="text-red-500 font-semibold">
                         {getShippingFee(item).toLocaleString()}원
                       </span>
-                      <p className="text-xs text-gray-500 mt-1">🚚 30,000원 이상 무료배송</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        🚚 30,000원 이상 무료배송
+                      </p>
                     </>
                   )}
                 </td>
@@ -138,7 +161,9 @@ const ProductCart: React.FC<ProductCartUIProps> = ({
         <div className="flex justify-center items-center">
           <div className="flex space-x-12">
             <div>
-              <p className="text-base text-gray-500">총 {selectedItems.length} 개의 상품금액</p>
+              <p className="text-base text-gray-500">
+                총 {selectedItems.length} 개의 상품금액
+              </p>
               <p className="mt-2 text-2xl font-semibold text-gray-900">
                 {totalPrice.toLocaleString()}원
               </p>
@@ -149,7 +174,9 @@ const ProductCart: React.FC<ProductCartUIProps> = ({
             <div>
               <p className="text-base text-gray-500">배송비</p>
               <p className="mt-2 text-2xl font-semibold text-gray-900">
-                {totalShippingFee === 0 ? "무료" : `${totalShippingFee.toLocaleString()}원`}
+                {totalShippingFee === 0
+                  ? "무료"
+                  : `${totalShippingFee.toLocaleString()}원`}
               </p>
             </div>
             <div className="flex items-center">
@@ -168,14 +195,14 @@ const ProductCart: React.FC<ProductCartUIProps> = ({
         <button
           className="px-6 py-3 bg-gray-400 text-white rounded-lg hover:bg-gray-500 mr-4"
           disabled={selectedItems.length === 0}
-          onClick={() => handlePaymentNaver(selectedCartItems)} // 훅에서 받은 함수 사용
+          onClick={handlePaymentNaver} // 인자 제거
         >
           선택 상품 주문
         </button>
         <button
           className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           disabled={cart.length === 0}
-          onClick={() => handlePaymentNaver(selectedCartItems)} // 훅에서 받은 함수 사용
+          onClick={handlePaymentNaver} // 인자 제거
         >
           전체 상품 주문
         </button>

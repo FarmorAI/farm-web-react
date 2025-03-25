@@ -1,429 +1,258 @@
-import React, { useEffect, useRef } from 'react';
-import * as echarts from 'echarts';
+import React, { useEffect, useState } from 'react';
+import ReactECharts from 'echarts-for-react';
+import './Upload.css';
+import PageLayout from '../../components/pagelayout/PageLayout';
+import { EChartsOption } from 'echarts';
+import { useParams } from 'react-router-dom';
+import { AiListResponse, handleAiGetById } from '../../api/aiApi';
 
-// 타입 정의
-interface StrawberryAnalysis {
-    growthStatus: { maturity: number }; // 0~1 (0~100%)
-    healthStatus: { good: number, moderate: number, bad: number }; // 비율
-    quality: { colorUniformity: number, size: number, defectFree: number }; // 0~100
-    maturityDistribution: { red: number, intermediate: number, green: number }; // 비율
-}
 
-const UploadResultPage: React.FC = () => {
-    const dummyData: StrawberryAnalysis = {
-        growthStatus: { maturity: 0.7 }, // 70%
-        healthStatus: { good: 75, moderate: 15, bad: 10 }, // 비율
-        quality: { colorUniformity: 90, size: 85, defectFree: 95 }, // 0~100
-        maturityDistribution: { red: 60, intermediate: 30, green: 10 } // 비율
+const App: React.FC = () => {
+  const [aiInfo, setAiInfo] = useState<AiListResponse>();
+  const { aiResultId } = useParams();
+
+  // AI 분석 결과 데이터 가져오기
+  useEffect(() => {    
+    const getAiInfo = async () => {
+      try {
+        const response = await handleAiGetById(parseInt(aiResultId ? aiResultId : '0'))
+        console.log(response)
+        setAiInfo(response)
+      } catch (error) {
+        alert(error)
+      }
+    }
+    getAiInfo()
+  }, [aiResultId]);
+
+
+  // 색상 분포에서 빨간색 퍼센트
+  const redPercentage = 70;
+
+  // 숙성도 상태 퍼센트
+  const ripenessPercentage = 75;
+
+  // 품질 지수 계산 (빨간색 퍼센트 + 숙성도 퍼센트) / 2
+  const qualityScore = Math.round((redPercentage + ripenessPercentage) / 2);
+
+  // 품질 등급 계산 함수
+  const getQualityGrade = (score: number): string => {
+    if (score >= 80 && score <= 100) {
+      return '최상급';
+    } else if (score >= 60 && score < 80) {
+      return '상급';
+    } else if (score >= 40 && score < 60) {
+      return '중급';
+    } else {
+      return '하급';
+    }
+  };
+
+  // 품질 등급에 따라 설명 텍스트 생성
+  const qualityDescription = `품질 등급 ${qualityScore}점은 ${getQualityGrade(qualityScore)} 사과를 의미합니다.`;
+
+  // 예상 시장 가치 계산
+  const getMarketValue = (grade: string): number => {
+    switch (grade) {
+      case '최상급':
+        return 3000;
+      case '상급':
+        return 2000;
+      case '중급':
+        return 1500;
+      case '하급':
+        return 1000;
+      default:
+        return 0;
+    }
+  };
+
+  const marketValue = getMarketValue(getQualityGrade(qualityScore));
+
+  // 품질 지수용 원형 프로그레스 옵션
+  const colorPieOption: EChartsOption  = {
+    animation: false,
+    tooltip: { trigger: 'item' },
+    series: [
+      {
+        name: '색상 분포',
+        type: 'pie',
+        radius: ['45%', '65%'],
+        avoidLabelOverlap: true,
+        label: {
+          show: true,
+          position: 'outside',
+          formatter: '{b}: {c}%',
+          fontSize: 14,
+          color: '#333',
+          fontFamily: 'Noto Sans KR',
+        },
+        labelLine: {
+          length: 15,
+          length2: 30,
+          smooth: true,
+        },
+        itemStyle: { borderRadius: 5, borderColor: '#fff', borderWidth: 2 },
+        data: [
+          { value: 70, name: '빨강', itemStyle: { color: '#FF6B6B' } },
+          { value: 20, name: '갈색', itemStyle: { color: '#8B4513' } },
+          { value: 10, name: '초록', itemStyle: { color: '#82C91E' } },
+        ],
+      },
+    ],
+  };
+  
+  const circularProgressOption: EChartsOption = {
+    animation: false,
+    series: [
+      {
+        type: 'pie',
+        radius: ['65%', '85%'],
+        silent: true,
+        label: {
+          show: true,
+          position: 'center',
+          formatter: '{b}',
+          fontSize: 48,
+          color: '{c}',
+          fontWeight: 'bold',
+          fontFamily: 'Noto Sans KR',
+        },
+        labelLine: { show: false },
+        data: [
+          { value: aiInfo?.rateS, name: '특', itemStyle: { color: '#ED0000' } },
+          { value: aiInfo?.rateA, name: '상', itemStyle: { color: '#FF4848' } },
+          { value: aiInfo?.rateB, name: '보통', itemStyle: { color: '#FF9090' } },
+        ],
+      },
+    ],
+  };
+  const currentQuality = Math.max(aiInfo?.rateS || 0, aiInfo?.rateA || 0, aiInfo?.rateB || 0);
+  const currentQualityName = currentQuality === aiInfo?.rateS ? '특' : currentQuality === aiInfo?.rateA ? '상' : '보통';
+
+  useEffect(() => {
+    const handleResize = () => {
+      const qualityGauge = document.getElementById('qualityGauge')?.getElementsByClassName('echarts-for-react')[0] as HTMLElement | undefined;
+      const colorPie = document.getElementById('colorPie')?.getElementsByClassName('echarts-for-react')[0] as HTMLElement | undefined;
+      if (qualityGauge) qualityGauge.style.height = '300px';
+      if (colorPie) colorPie.style.height = '300px';
     };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-    const growthChartRef = useRef<HTMLDivElement>(null);
-    const healthChartRef = useRef<HTMLDivElement>(null);
-    const qualityChartRef = useRef<HTMLDivElement>(null);
-    const maturityPieChartRef = useRef<HTMLDivElement>(null);
-    const qualityBarChartRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        // SVG 정의 (딸기 모양 마스크)
-        const svgMask = `
-            <svg style="position: absolute; width: 0; height: 0;">
-                <defs>
-                    <mask id="strawberry-shape">
-                        <path fill="#fff" d="M100,20 C80,10 120,10 100,30 C70,40 50,70 60,100 C70,130 130,130 140,100 C150,70 130,40 100,30 Z M80,10 H120 V20 H80 Z" />
-                    </mask>
-                </defs>
-            </svg>
-        `;
-        document.body.insertAdjacentHTML('beforeend', svgMask);
-
-        // CSS 스타일
-        const styles = `
-            .strawberry { background-color: #FF5A5F; }
-            .leaf-green { color: #34C759; }
-            .text-strawberry { color: #FF5A5F; }
-            .transition-shadow { transition: box-shadow 0.3s ease, transform 0.3s ease; }
-            .hover/:shadow-lg:hover { 
-                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
-                transform: translateY(-5px);
-            }
-
-            .glass-card {
-                background: rgba(255, 255, 255, 0.9);
-                backdrop-filter: blur(10px);
-                border-radius: 20px;
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-            }
-
-            #growthChart { position: relative; }
-            .strawberry-mask { 
-                position: absolute; 
-                top: 50%; 
-                left: 50%; 
-                transform: translate(-50%, -50%); 
-                width: 220px; 
-                height: 220px; 
-                -webkit-mask: url(#strawberry-shape); 
-                mask: url(#strawberry-shape); 
-                overflow: hidden; 
-                z-index: 10; 
-                animation: pulse 2s infinite ease-in-out;
-            }
-
-            @keyframes pulse {
-                0% { transform: translate(-50%, -50%) scale(1); }
-                50% { transform: translate(-50%, -50%) scale(1.05); }
-                100% { transform: translate(-50%, -50%) scale(1); }
-            }
-
-            .animate-slide-up {
-                animation: slideUp 0.5s ease-out;
-            }
-
-            @keyframes slideUp {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-
-            .chart-title {
-                font-size: 1.25rem;
-                font-weight: 600;
-                color: #2d3748;
-                text-align: center;
-                margin-bottom: 1rem;
-            }
-
-            .chart-container {
-                position: relative;
-                overflow: hidden;
-                border-radius: 15px;
-            }
-
-            .chart-container:hover .chart-title {
-                color: #FF5A5F;
-            }
-
-            .progress-container {
-                position: relative;
-                width: 100%;
-                height: 20px;
-                background: #edf2f7;
-                border-radius: 10px;
-                overflow: hidden;
-            }
-
-            .progress-bar {
-                height: 100%;
-                background: linear-gradient(45deg, #FF5A5F, #FF8A8F);
-                border-radius: 10px;
-                transition: width 0.3s ease;
-            }
-
-            .progress-label {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                color: #fff;
-                font-size: 0.9rem;
-                font-weight: 600;
-            }
-        `;
-        const styleElement = document.createElement('style');
-        styleElement.textContent = styles;
-        document.head.appendChild(styleElement);
-
-        // 차트 초기화
-        let growthChart: echarts.ECharts | null = null;
-        let healthChart: echarts.ECharts | null = null;
-        let qualityChart: echarts.ECharts | null = null;
-        let maturityPieChart: echarts.ECharts | null = null;
-        let qualityBarChart: echarts.ECharts | null = null;
-
-        if (growthChartRef.current) {
-            growthChart = echarts.init(growthChartRef.current);
-            growthChart.setOption({
-                series: [{
-                    type: 'liquidFill',
-                    data: [dummyData.growthStatus.maturity],
-                    radius: '90%',
-                    color: ['#FF5A5F', '#FF8A8F'],
-                    backgroundStyle: { color: 'transparent' },
-                    outline: { show: false },
-                    label: { 
-                        fontSize: 28, 
-                        color: '#FF5A5F', 
-                        formatter: '숙성도\n{value|' + (dummyData.growthStatus.maturity * 100) + '%}',
-                        rich: { value: { fontSize: 32, fontWeight: 'bold' } },
-                        position: 'center'
-                    },
-                    animationDuration: 2000,
-                    animationEasing: 'elasticOut'
-                }],
-                animation: true
-            });
-        }
-
-        if (healthChartRef.current) {
-            healthChart = echarts.init(healthChartRef.current);
-            healthChart.setOption({
-                series: [{
-                    type: 'pie',
-                    radius: ['40%', '70%'],
-                    data: [
-                        { value: dummyData.healthStatus.good, name: '양호', itemStyle: { color: '#FF5A5F' } },
-                        { value: dummyData.healthStatus.moderate, name: '보통', itemStyle: { color: '#FFB3B3' } },
-                        { value: dummyData.healthStatus.bad, name: '위험', itemStyle: { color: '#FFD9D9' } }
-                    ],
-                    label: { 
-                        show: true, 
-                        position: 'outside', 
-                        formatter: '{b}\n{d}%',
-                        fontSize: 12,
-                        color: '#4a5568'
-                    },
-                    animationDuration: 1500,
-                    animationEasing: 'cubicOut'
-                }]
-            });
-        }
-
-        if (qualityChartRef.current) {
-            qualityChart = echarts.init(qualityChartRef.current);
-            qualityChart.setOption({
-                radar: {
-                    indicator: [
-                        { name: '색상 균일성', max: 100 },
-                        { name: '크기', max: 100 },
-                        { name: '결함 없음', max: 100 }
-                    ],
-                    radius: 80,
-                    shape: 'circle',
-                    splitArea: { show: false },
-                    axisLine: { 
-                        lineStyle: { 
-                            color: '#a0aec0', // 더 선명한 회색으로 변경
-                            width: 2          // 선 두께 증가
-                        } 
-                    },
-                    splitLine: { 
-                        lineStyle: { 
-                            color: '#a0aec0', // 더 선명한 회색으로 변경
-                            width: 1          // 선 두께 미세 조정
-                        } 
-                    },
-                    name: {
-                        formatter: '{value}',
-                        textStyle: {
-                            color: '#1a202c', // 더 선명한 검정색
-                            fontSize: 18,     // 폰트 크기 증가
-                            fontWeight: 'bold',
-                            padding: [0, 0, 15, 0] // 아래로 더 큰 패딩 추가
-                        }
-                    }
-                },
-                series: [{
-                    type: 'radar',
-                    data: [{ value: [dummyData.quality.colorUniformity, dummyData.quality.size, dummyData.quality.defectFree], name: '품질', itemStyle: { color: '#FF5A5F' } }],
-                    areaStyle: { 
-                        opacity: 0.6,    // 투명도 약간 증가로 더 두드러지게
-                        color: '#FF5A5F' 
-                    },
-                    lineStyle: { 
-                        width: 3,        // 선 두께 증가
-                        color: '#FF5A5F' 
-                    },
-                    animationDuration: 2000,
-                    animationEasing: 'elasticOut',
-                    label: {
-                        show: true,
-                        formatter: function(params: any) {
-                            return params.value[params.seriesIndex] + '%'; // 데이터 값 표시
-                        },
-                        position: 'outside', // 레이블을 차트 외부로 이동
-                        fontSize: 16,        // 데이터 레이블 크기 더 증가
-                        color: '#1a202c',
-                        distance: 15,        // 레이블과 차트 간 간격 더 넓게
-                        backgroundColor: 'rgba(255, 255, 255, 0.8)', // 레이블 배경 추가
-                        borderRadius: 5,     // 레이블 둥근 모서리
-                        padding: [5, 10]     // 레이블 패딩 추가
-                    }
-                }],
-                tooltip: { 
-                    trigger: 'item', 
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)', 
-                    textStyle: { color: '#2d3748' },
-                    formatter: '{b}: {c}%'
-                },
-                backgroundColor: 'transparent' // 차트 배경 투명 유지
-            });
-        }
-
-        if (maturityPieChartRef.current) {
-            maturityPieChart = echarts.init(maturityPieChartRef.current);
-            maturityPieChart.setOption({
-                series: [{
-                    type: 'pie',
-                    radius: ['40%', '70%'],
-                    data: [
-                        { value: dummyData.maturityDistribution.red, name: '빨간색', itemStyle: { color: '#FF5A5F' } },
-                        { value: dummyData.maturityDistribution.intermediate, name: '중간', itemStyle: { color: '#FFB3B3' } },
-                        { value: dummyData.maturityDistribution.green, name: '녹색', itemStyle: { color: '#A5D6A7' } }
-                    ],
-                    label: { 
-                        show: true, 
-                        position: 'outside', 
-                        formatter: '{b}\n{d}%',
-                        fontSize: 12,
-                        color: '#4a5568'
-                    },
-                    animationDuration: 1500,
-                    animationEasing: 'cubicOut'
-                }],
-                tooltip: { trigger: 'item', backgroundColor: 'rgba(255, 255, 255, 0.9)', textStyle: { color: '#2d3748' } }
-            });
-        }
-
-        if (qualityBarChartRef.current) {
-            qualityBarChart = echarts.init(qualityBarChartRef.current);
-            qualityBarChart.setOption({
-                xAxis: { 
-                    type: 'category', 
-                    data: ['색상 균일도', '크기', '결함 없음'],
-                    axisLabel: { color: '#4a5568' },
-                    axisLine: { lineStyle: { color: '#e2e8f0' } }
-                },
-                yAxis: { 
-                    type: 'value', 
-                    max: 100,
-                    axisLabel: { color: '#4a5568' },
-                    axisLine: { lineStyle: { color: '#e2e8f0' } },
-                    splitLine: { lineStyle: { color: '#e2e8f0' } }
-                },
-                series: [{
-                    type: 'bar',
-                    data: [dummyData.quality.colorUniformity, dummyData.quality.size, dummyData.quality.defectFree],
-                    itemStyle: { 
-                        color: '#FF5A5F',
-                        borderRadius: [10, 10, 0, 0]
-                    },
-                    barWidth: '40%',
-                    animationDuration: 1500,
-                    animationEasing: 'elasticOut'
-                }],
-                tooltip: { trigger: 'axis', backgroundColor: 'rgba(255, 255, 255, 0.9)', textStyle: { color: '#2d3748' } }
-            });
-        }
-
-        // 리사이징 처리
-        const resizeObserver = new ResizeObserver(() => {
-            [growthChart, healthChart, qualityChart, maturityPieChart, qualityBarChart].forEach(chart => {
-                if (chart) chart.resize();
-            });
-        });
-
-        const observeRefs = [
-            growthChartRef, healthChartRef, qualityChartRef,
-            maturityPieChartRef, qualityBarChartRef
-        ];
-        observeRefs.forEach(ref => {
-            if (ref.current) resizeObserver.observe(ref.current);
-        });
-
-        // 클린업
-        return () => {
-            [growthChart, healthChart, qualityChart, maturityPieChart, qualityBarChart].forEach(chart => {
-                if (chart) chart.dispose();
-            });
-            resizeObserver.disconnect();
-        };
-    }, []);
-
-    return (
-        <div className="min-h-screen bg-gray-50">
-            <nav className="bg-white shadow-md p-4 flex justify-between items-center rounded-b-2xl animate-slide-up">
-                <div className="flex items-center">
-                    <img src="https://ai-public.creatie.ai/gen_page/logo_placeholder.png" alt="로고" className="h-10 w-auto transition-transform duration-300 hover:scale-105" />
-                    <h1 className="ml-4 text-2xl font-bold text-gray-900 transition-colors duration-300 hover:text-strawberry">Farmorai - 딸기 분석</h1>
+  return (  
+    <PageLayout title="분석결과 현황" activeItem="분석결과 현황">
+      <div style={{ maxWidth: '1152px', margin: '0 auto', padding: '32px' }}>
+        <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)', padding: '24px' }}>
+          {/* 상단: 이미지와 기본 정보 */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '40px' }}>
+            <div style={{ width: '100%', maxWidth: '448px', marginBottom: '24px' }}>
+              <img
+                src={aiInfo?.imageUrl}
+                alt="사과 이미지"
+                style={{ width: '100%', height: 'auto', borderRadius: '8px', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)', objectFit: 'contain' }}
+              />
+            </div>
+            <div style={{ backgroundColor: '#eff6ff', borderRadius: '8px', padding: '24px', width: '100%', maxWidth: '832px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px', textAlign: 'center' }}>
+                <div>
+                  <p style={{ color: '#6b7280', fontSize: '12px' }}>분석된 사과</p>
+                  <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#2563eb' }}>1개</p>
                 </div>
-                <button className="strawberry text-white px-5 py-2 rounded-full flex items-center transition-all duration-300 hover:bg-opacity-90 hover:scale-105">
-                    <i className="fas fa-download mr-2"></i> 데이터 내보내기
-                </button>
-            </nav>
-            <main className="max-w-7xl mx-auto px-4 py-8">
-                <div className="bg-white glass-card p-6 mb-8 animate-slide-up">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">딸기 이미지 업로드</h3>
-                    <input type="file" accept="image/*" id="imageUpload" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:strawberry file:text-white hover:file:bg-opacity-90 file:transition-all file:duration-300" />
-                    <img id="preview" className="mt-4 rounded-lg w-full h-64 object-cover hidden shadow-md transition-opacity duration-300" alt="딸기 미리보기" />
+                <div>
+                  <p style={{ color: '#6b7280', fontSize: '12px' }}>숙성도</p>
+                  <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#2563eb' }}>{ripenessPercentage}%</p>
                 </div>
-                <div className="bg-white glass-card p-6 mb-8 relative animate-slide-up">
-                    <h3 className="chart-title">생육 상태</h3>
-                    <div ref={growthChartRef} className="h-64 relative"></div>
-                    <div className="strawberry-mask">
-                        <div id="growthChartOverlay" className="h-full w-full"></div>
-                    </div>
-                    <p className="text-center text-gray-600 mt-2 transition-colors duration-300 hover:text-strawberry">크기: 중간 | 색상: 70% 빨강 | 형태: 균일</p>
-                    <p className="text-center text-xs text-gray-400 mt-1">사진 기반 추정</p>
+                <div>
+                  <p style={{ color: '#6b7280', fontSize: '12px' }}>품질</p>
+                  <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#2563eb' }}>{currentQualityName}</p>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                    <div className="bg-white glass-card p-6 animate-slide-up">
-                        <h3 className="chart-title">건강 상태</h3>
-                        <div ref={healthChartRef} className="h-64"></div>
-                        <p className="text-center text-gray-600 mt-2 transition-colors duration-300 hover:text-strawberry">잎: 건강 | 표면: 작은 반점 (초기 곰팡이병 가능성 60%)</p>
-                        <p className="text-center text-xs text-gray-400 mt-1">사진 기반 추정</p>
-                    </div>
-                    <div className="bg-white glass-card p-6 animate-slide-up">
-                        <h3 className="chart-title">품질 등급</h3>
-                        <div ref={qualityChartRef} className="h-64"></div>
-                        <p className="text-center text-gray-600 mt-2 transition-colors duration-300 hover:text-strawberry">A급 (색상 90% 균일, 결함 없음)</p>
-                        <p className="text-center text-xs text-gray-400 mt-1">사진 기반 추정</p>
-                    </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 하단: 분석 결과 */}
+          <div className="analysis-grid">
+            {/* 좌측: 색상 분포 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', padding: '24px', border: '1px solid #e5e7eb' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1f2937' }}>색상 분포</h3>
+                <div id="colorPie">
+                  <ReactECharts option={colorPieOption} style={{ height: '300px', width: '100%' }} />
                 </div>
-                <div className="bg-white glass-card p-6 mb-8 animate-slide-up">
-                    <h3 className="chart-title">수확 시기 예측</h3>
-                    <div className="progress-container">
-                        <div className="progress-bar" style={{ width: '70%' }}></div>
-                        <span className="progress-label">70% (약 10일 후 최적 수확, 3월 15일)</span>
-                    </div>
-                    <p className="text-center text-xs text-gray-400 mt-1">사진 기반 추정</p>
+                <p style={{ textAlign: 'center', fontSize: '12px', color: '#6b7280', marginTop: '8px' }}>최상급 색상</p>
+                <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '16px', textAlign: 'center' }}>
+                  붉은색이 {redPercentage}%로 우수한 착색도를 보여주며, 이는 최적의 수확 시기임을 나타냅니다.
+                </p>
+              </div>
+            </div>
+
+            {/* 우측: 품질 등급 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', padding: '24px', border: '1px solid #e5e7eb' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1f2937' }}>품질 등급</h3>
+                <div id="qualityGauge">
+                  <ReactECharts option={circularProgressOption} style={{ height: '300px', width: '100%' }} />
                 </div>
-                <div className="bg-white glass-card p-6 mb-8 animate-slide-up">
-                    <h3 className="chart-title">딸기 성숙도 분포</h3>
-                    <div ref={maturityPieChartRef} className="h-64"></div>
-                    <p className="text-center text-gray-600 mt-2 transition-colors duration-300 hover:text-strawberry">빨간색 60%, 중간 30%, 녹색 10%</p>
-                    <p className="text-center text-xs text-gray-400 mt-1">사진 기반 추정</p>
-                </div>
-                <div className="bg-white glass-card p-6 mb-8 animate-slide-up">
-                    <h3 className="chart-title">품질 점수 비교</h3>
-                    <div ref={qualityBarChartRef} className="h-64"></div>
-                    <p className="text-center text-gray-600 mt-2 transition-colors duration-300 hover:text-strawberry">색상 90, 크기 85, 결함 95</p>
-                    <p className="text-center text-xs text-gray-400 mt-1">사진 기반 추정</p>
-                </div>
-                <div className="bg-white glass-card p-6 mb-8 animate-slide-up">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">AI 분석 결과</h3>
-                    <p className="text-gray-700">현재 작물의 생육 상태가 <span className="font-semibold text-strawberry animate-pulse">매우 양호</span>합니다. 잎의 색상과 크기가 정상 범위 내에 있으며, 병해충의 징후는 발견되지 않았습니다.</p>
-                    <p className="text-xs text-gray-400 mt-2">사진 기반 분석 결과</p>
-                </div>
-                <div className="bg-white glass-card p-6 animate-slide-up">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">추천 관리 방안</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="bg-[#FFF5E6] rounded-lg p-4 flex items-center shadow-sm hover:shadow-lg transition-shadow duration-300 transform hover:scale-105">
-                            <i className="fas fa-tint text-strawberry text-xl mr-3 animate-bounce"></i>
-                            <p className="text-gray-800"><span className="font-semibold text-strawberry">주 2회</span> 관수 실시</p>
-                        </div>
-                        <div className="bg-[#FFF5E6] rounded-lg p-4 flex items-center shadow-sm hover:shadow-lg transition-shadow duration-300 transform hover:scale-105">
-                            <i className="fas fa-leaf text-leaf-green text-xl mr-3 animate-pulse"></i>
-                            <p className="text-gray-800">질소 비료 <span className="font-semibold text-strawberry">20% 감량</span></p>
-                        </div>
-                        <div className="bg-[#FFF5E6] rounded-lg p-4 flex items-center shadow-sm hover:shadow-lg transition-shadow duration-300 transform hover:scale-105">
-                            <i className="fas fa-sun text-strawberry text-xl mr-3 animate-spin-slow"></i>
-                            <p className="text-gray-800"><span className="font-semibold text-strawberry">차광막</span> 조절</p>
-                        </div>
-                    </div>
-                    <p className="text-xs text-gray-400 mt-2">사진 기반 분석 결과</p>
-                </div>
-            </main>
+                <p style={{ textAlign: 'center', fontSize: '12px', color: '#6b7280', marginTop: '8px' }}>{getQualityGrade(qualityScore)} 품질</p>
+                <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '16px', textAlign: 'center' }}>
+                  {qualityDescription}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 숙성도 상태 (가로로 쭉) */}
+          <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', padding: '24px', border: '1px solid #e5e7eb', marginTop: '32px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1f2937' }}>숙성도 상태</h3>
+            <div style={{ paddingTop: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: '500', color: '#6b7280' }}>숙성도</span>
+                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#d97706' }}>{ripenessPercentage}%</span>
+              </div>
+              <div style={{ width: '100%', backgroundColor: '#e5e7eb', borderRadius: '9999px', height: '16px', overflow: 'hidden' }}>
+                <div style={{ backgroundColor: '#f59e0b', height: '16px', width: `${ripenessPercentage}%`, transition: 'width 0.5s ease-in-out' }} />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
+                <span>미숙</span>
+                <span>적정</span>
+                <span>과숙</span>
+              </div>
+            </div>
+            <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '16px' }}>
+              사과의 숙성도는 {ripenessPercentage}%로, 품질등급 {getQualityGrade(qualityScore)}에 해당하는 최적의 상태입니다. 이는 수확하기 가장 좋은 시기임을 의미합니다.
+            </p>
+          </div>
+
+          {/* 최종 진단 결과 */}
+          <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', padding: '24px', border: '1px solid #e5e7eb', marginTop: '32px' }}>
+            <h3 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '16px', color: '#1f2937' }}>최종 진단 결과</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', backgroundColor: '#eff6ff', borderRadius: '8px' }}>
+                <span style={{ fontWeight: '500', color: '#374151' }}>전체 품질 등급</span>
+                <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#2563eb' }}>{getQualityGrade(qualityScore)} (프리미엄)</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', backgroundColor: '#ecfdf5', borderRadius: '8px' }}>
+                <span style={{ fontWeight: '500', color: '#374151' }}>수확 적정 시기</span>
+                <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#16a34a' }}>최적기</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', backgroundColor: '#fefcbf', borderRadius: '8px' }}>
+                <span style={{ fontWeight: '500', color: '#374151' }}>예상 시장 가치</span>
+                <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#f59e0b' }}>{marketValue}원/개</span>
+              </div>
+              <div style={{ marginTop: '16px', padding: '16px', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
+                <p style={{ fontSize: '12px', color: '#374151' }}>
+                  종합 의견: 이 사과는 최적의 숙성도와 우수한 품질을 보여주고 있어 {getQualityGrade(qualityScore)} 판매가 가능합니다. 색상 분포와 크기가 이상적이며, 즉시 수확하여 유통하는 것을 추천합니다.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-    );
+      </div>
+    </PageLayout>
+  );
 };
 
-export default UploadResultPage;
+export default App;

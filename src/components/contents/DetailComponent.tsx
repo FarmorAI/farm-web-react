@@ -1,3 +1,4 @@
+import { useAuth } from "../../hook/auth/useAuth";
 import useDetail from "../../hook/contents/useFetchDetail";
 import PageLayout from "../pagelayout/PageLayout";
 import { useParams, useNavigate } from "react-router-dom";
@@ -7,16 +8,20 @@ interface DetailComponentProps {
   type: "board" | "notice" | "support";
   id: number;
 }
+
 const DetailComponent: React.FC<DetailComponentProps> = ({ type }) => {
   const { id } = useParams<{ id: string }>(); // URL에서 id 가져오기
   const parsedId = id ? parseInt(id, 10) : undefined;
   const navigate = useNavigate();
   const { data, isLoading, deleteItem } = useDetail({ type, id: parsedId ?? 0 });
+
+  // ✅ Redux에서 현재 로그인한 사용자 정보 가져오기
+  const { nickname: currentUserNickname } = useAuth();
+
   // id가 없을 경우 예외 처리
   if (!parsedId) {
     return <div>잘못된 접근입니다.</div>;
   }
-
 
   if (isLoading) {
     return <div className="text-center py-10 text-gray-500">데이터를 불러오는 중...</div>;
@@ -26,8 +31,9 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ type }) => {
     return <div className="text-center py-10 text-gray-500">데이터를 찾을 수 없습니다.</div>;
   }
 
+  // ✅ 현재 로그인한 사용자와 작성자가 같은지 확인
+  const isOwner = currentUserNickname === data.writer;
 
-  
   return (
     <PageLayout title="상세 페이지" activeItem={type}>
       <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg">
@@ -38,6 +44,13 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ type }) => {
               <td className="px-4 py-2">{type === "board" ? "게시판" : type === "notice" ? "공지사항" : "고객문의"}</td>
               <td className="bg-gray-100 px-4 py-2 font-semibold">등록일</td>
               <td className="px-4 py-2">{new Date(data.createdAt).toLocaleString()}</td>
+            </tr>
+            {/* ✅ 작성자 추가 */}
+            <tr className="border-b">
+              <td className="bg-gray-100 px-4 py-2 font-semibold">작성자</td>
+              <td className="px-4 py-2" colSpan={3}>
+                {data.writer ? data.writer : "알 수 없음"} {/* 닉네임이 없을 경우 예외처리 */}
+              </td>
             </tr>
             <tr className="border-b">
               <td className="bg-gray-100 px-4 py-2 font-semibold">제목</td>
@@ -56,14 +69,31 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ type }) => {
             </tr>
           </tbody>
         </table>
+
+        {/* ✅ 작성자만 수정 및 삭제 버튼을 볼 수 있도록 설정 */}
+        {isOwner && (
+          <div className="flex justify-end mt-6 space-x-4">
+            <button
+              className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+              onClick={() => navigate(`/contents/${type}/update/${parsedId}`)} // ✅ 경로 변경
+            >
+              수정
+            </button>
+            <button
+              onClick={deleteItem}
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              삭제
+            </button>
+          </div>
+        )}
+
+        {/* ✅ 뒤로가기 버튼은 모든 사용자에게 노출 */}
         <div className="flex justify-end mt-6 space-x-4">
-          {/* ✅ 수정 버튼을 클릭하면 올바른 수정 페이지로 이동 */}
           <button
-            className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
-            onClick={() => navigate(`/contents/${type}/update/${parsedId}`)} // ✅ 경로 변경
-          >수정</button>
-          <button onClick={deleteItem} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">삭제</button>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => navigate(-1)}>
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={() => navigate(-1)}
+          >
             뒤로가기
           </button>
         </div>

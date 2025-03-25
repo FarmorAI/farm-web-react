@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { getNoticeById, updateNotice } from "../../api/noticeApi";
@@ -18,9 +18,15 @@ const useFetchUpdate = (title: string) => {
   // title을 기반으로 type 결정
   const type = title === "공지사항 수정" ? "notice" : "board";
 
-  // API 호출 함수 선택
-  const getContentById = type === "notice" ? getNoticeById : getBoardById;
-  const updateContent = type === "notice" ? updateNotice : updateBoard;
+  // API 호출 함수 선택 (useMemo로 메모이제이션)
+  const getContentById = useMemo(
+    () => (type === "notice" ? getNoticeById : getBoardById),
+    [type]
+  );
+  const updateContent = useMemo(
+    () => (type === "notice" ? updateNotice : updateBoard),
+    [type]
+  );
 
   useEffect(() => {
     if (!contentId) return;
@@ -36,7 +42,7 @@ const useFetchUpdate = (title: string) => {
         });
       }
     })();
-  }, [contentId, setValue]);
+  }, [contentId, setValue, getContentById]); // getContentById 추가
 
   const onSubmit = async (data: WriteFormData) => {
     if (!contentId) return;

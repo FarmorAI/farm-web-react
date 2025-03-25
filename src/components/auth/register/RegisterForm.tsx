@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   checkEmail,
   checkNickname,
@@ -9,22 +9,7 @@ import { InputField } from "./InputField";
 import { AddressFields } from "./AddressFields";
 import { TermsAgreement } from "./TermsAgreement";
 import { useNavigate } from "react-router-dom";
-
-export const initState = {
-  email: "",
-  password: "",
-  confirmPassword: "",
-  name: "",
-  nickname: "",
-  birthdate: "",
-  phone: "",
-  postcode: "",
-  address: "",
-  extraAddress: "",
-  detailAddress: "",
-};
-
-export type FormType = typeof initState;
+import { initState } from "./constants";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -46,7 +31,6 @@ const Register: React.FC = () => {
     marketing: false,
   });
 
-  // 수정된 훅 호출 (추가된 인자 2개 포함)
   const { validMessage, isValid } = useValid(
     formData,
     isEmailChecked,
@@ -55,56 +39,48 @@ const Register: React.FC = () => {
     isNicknameAvailable
   );
 
-  const handleEmailCheck = async () => {
+  const handleEmailCheck = useCallback(async () => {
     if (!isValid.email) {
       alert("유효한 이메일 형식을 입력해주세요.");
       return;
     }
     setIsLoading(true);
     try {
-      const isDuplicate = await checkEmail(formData.email); // API에서 가져온 값 (true: 중복, false: 사용 가능)
+      const isDuplicate = await checkEmail(formData.email);
       console.log("API 응답 (중복 여부):", isDuplicate);
-
-      // 상태 업데이트 (true면 중복된 이메일, false면 사용 가능)
-      setIsEmailAvailable(isDuplicate); // 반전하여 사용 가능 여부 저장
-      setIsEmailChecked(false); // 중복 확인 완료 상태 업데이트
+      setIsEmailAvailable(isDuplicate);
+      setIsEmailChecked(false);
     } catch (error) {
       console.error("이메일 확인 중 오류 발생:", error);
       alert("이메일 확인 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [formData.email, isValid.email]);
 
-  const handleNicknameCheck = async () => {
-    // if (!isValid.nickname) {
-    //   alert("유효한 닉네임 형식을 입력해주세요.");
-    //   return;
-    // }
+  const handleNicknameCheck = useCallback(async () => {
     setIsLoading(true);
     try {
-      const isDuplicate = await checkNickname(formData.nickname); // API에서 가져온 값 (true: 중복, false: 사용 가능)
+      const isDuplicate = await checkNickname(formData.nickname);
       console.log("API 응답 (닉네임 중복 여부):", isDuplicate);
-
-      // 상태 업데이트 (true면 중복된 닉네임, false면 사용 가능)
       setIsNicknameAvailable(!isDuplicate);
-      setIsNicknameChecked(false); // 중복 확인 완료 상태 업데이트
+      setIsNicknameChecked(false);
     } catch (error) {
       console.error("닉네임 확인 중 오류 발생:", error);
       alert("닉네임 확인 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [formData.nickname]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (name === "email") setIsEmailChecked(false);
     if (name === "nickname") setIsNicknameChecked(false);
-  };
+  }, []);
 
-  const handleAgreeAllChange = () => {
+  const handleAgreeAllChange = useCallback(() => {
     const newAgreeAll = !agreeAll;
     setAgreeAll(newAgreeAll);
     setCheckedTerms({
@@ -113,81 +89,90 @@ const Register: React.FC = () => {
       privacy: newAgreeAll,
       marketing: newAgreeAll,
     });
-  };
+  }, [agreeAll]);
 
-  const handleIndividualChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setCheckedTerms((prev) => {
-      const newCheckedTerms = { ...prev, [name]: checked };
-      setAgreeAll(Object.values(newCheckedTerms).every(Boolean));
-      return newCheckedTerms;
-    });
-  };
+  const handleIndividualChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, checked } = e.target;
+      setCheckedTerms((prev) => {
+        const newCheckedTerms = { ...prev, [name]: checked };
+        setAgreeAll(Object.values(newCheckedTerms).every(Boolean));
+        return newCheckedTerms;
+      });
+    },
+    []
+  );
 
-  // 현재 유효성 검사 결과를 콘솔에 출력하여 확인
-  console.log("isValid 상태:", isValid);
-  console.log("isEmailChecked 상태:", isEmailChecked);
-  console.log("isNicknameChecked 상태:", isNicknameChecked);
-  console.log("isEmailAvailable 상태:", isEmailAvailable);
-  console.log("isNicknameAvailable 상태:", isNicknameAvailable);
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      !isValid.email ||
-      !isValid.password ||
-      !isValid.confirmPassword ||
-      !isValid.nickname
-    ) {
-      alert("입력값을 확인해주세요.");
-      return;
-    }
-    if (isEmailChecked || isNicknameChecked) {
-      alert("이메일과 닉네임 중복 확인을 해주세요.");
-      return;
-    }
-    if (!isEmailAvailable || !isNicknameAvailable) {
-      alert("사용 가능한 이메일과 닉네임을 선택해주세요.");
-      return;
-    }
-    if (!checkedTerms.age || !checkedTerms.terms || !checkedTerms.privacy) {
-      alert("필수 약관에 동의해야 회원가입이 가능합니다.");
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const userData = {
-        email: formData.email,
-        password: formData.password,
-        nickname: formData.nickname,
-        phone: formData.phone,
-        name: formData.name,
-        address:
-          `${formData.address} ${formData.extraAddress} ${formData.detailAddress}`.trim(),
-        birthDate: formData.birthdate,
-      };
-      const success = await registerUser(userData);
-      if (success) {
-        alert("회원가입이 완료되었습니다.");
-        setFormData(initState);
-        navigate("/auth/login");
-      } else {
-        alert("회원가입에 실패했습니다.");
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (
+        !isValid.email ||
+        !isValid.password ||
+        !isValid.confirmPassword ||
+        !isValid.nickname
+      ) {
+        alert("입력값을 확인해주세요.");
+        return;
       }
-    } catch (error) {
-      console.error("회원가입 중 오류 발생:", error);
-      alert("회원가입 중 오류가 발생했습니다.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      if (isEmailChecked || isNicknameChecked) {
+        alert("이메일과 닉네임 중복 확인을 해주세요.");
+        return;
+      }
+      if (!isEmailAvailable || !isNicknameAvailable) {
+        alert("사용 가능한 이메일과 닉네임을 선택해주세요.");
+        return;
+      }
+      if (!checkedTerms.age || !checkedTerms.terms || !checkedTerms.privacy) {
+        alert("필수 약관에 동의해야 회원가입이 가능합니다.");
+        return;
+      }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+      setIsLoading(true);
+      try {
+        const userData = {
+          email: formData.email,
+          password: formData.password,
+          nickname: formData.nickname,
+          phone: formData.phone,
+          name: formData.name,
+          address: `${formData.address} ${formData.extraAddress} ${formData.detailAddress}`.trim(),
+          birthDate: formData.birthdate,
+        };
+        const success = await registerUser(userData);
+        if (success) {
+          alert("회원가입이 완료되었습니다.");
+          setFormData(initState);
+          navigate("/auth/login");
+        } else {
+          alert("회원가입에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("회원가입 중 오류 발생:", error);
+        alert("회원가입 중 오류가 발생했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      isValid,
+      isEmailChecked,
+      isNicknameChecked,
+      isEmailAvailable,
+      isNicknameAvailable,
+      checkedTerms,
+      formData,
+      navigate,
+    ]
+  );
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // 🚀 엔터 입력 방지
+      e.preventDefault();
     }
-  };
+  }, []);
 
+  // Rest of the component remains the same
   return (
     <div className="bg-gray min-h-screen">
       <div className="max-w-8xl mx-auto px-4 py-12">

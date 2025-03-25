@@ -2,17 +2,17 @@ import { useRef, useState } from "react";
 import { CloudUpload, FileText } from "lucide-react";
 
 interface FileUploaderProps {
-  onUpload: (files: File[], name: string) => Promise<void>; // 비동기 처리 반영
-  onViewResults: () => void;
+  onUpload: (files: File[], name: string) => void;
+  onViewResults: () => void; // 분석 결과 보기 버튼 클릭 이벤트
   isLoading: boolean;
 }
 
-const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, onViewResults, isLoading }) => {
+const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, onViewResults }) => {
   const uploadRef = useRef<HTMLInputElement | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [fileName, setFileName] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false); // AI 분석 중인지 여부
+  const [fileName, setFileName] = useState(""); // 사용자가 입력하는 파일 이름
 
   const handleFileChange = () => {
     if (uploadRef.current?.files) {
@@ -31,10 +31,10 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, onViewResults, is
   const handleRemoveImage = () => {
     setFiles([]);
     setImagePreview(null);
-    setFileName("");
+    setFileName(""); // 파일 제거 시 이름도 초기화
   };
 
-  const handleUploadClick = async () => {
+  const handleUploadClick = () => {
     if (files.length === 0) {
       alert("파일을 선택해주세요!");
       return;
@@ -44,26 +44,21 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, onViewResults, is
       return;
     }
 
-    setIsProcessing(true);
-    try {
-      await onUpload(files, fileName); // 비동기 호출
-    } catch (error) {
-      console.error("로그인이 필요합니다", error);
-      setIsProcessing(false); // 에러 발생 시 처리 중 상태 해제
-      return;
-    }
+    setIsProcessing(true); // AI 분석 화면으로 변경
+    onUpload(files, fileName);
   };
 
   const handleReset = () => {
     setFiles([]);
     setImagePreview(null);
     setIsProcessing(false);
-    setFileName("");
+    setFileName(""); // 초기화
   };
 
   return (
     <div className="flex flex-col items-center">
-      {isProcessing && !isLoading ? (
+      {/* AI 분석 결과 화면 */}
+      {isProcessing ? (
         <div className="w-full max-w-xl p-6 bg-blue-400 text-white rounded-lg text-center">
           <h2 className="text-2xl font-bold">완료</h2>
           <p className="mt-2">작업이 완료되었습니다. 결과물을 확인하세요.</p>
@@ -85,6 +80,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, onViewResults, is
         </div>
       ) : (
         <>
+          {/* 파일 업로드 박스 */}
           <div
             className="w-full mx-10 p-20 border-2 border-dashed border-gray-300 rounded-lg bg-white text-center cursor-pointer flex flex-col items-center justify-center relative"
             onClick={() => uploadRef.current?.click()}
@@ -126,6 +122,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, onViewResults, is
             />
           </div>
 
+          {/* 파일 이름 입력 필드 */}
           <input
             type="text"
             placeholder="파일 이름을 입력하세요"
@@ -134,12 +131,13 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, onViewResults, is
             className="mt-4 px-4 py-2 border border-gray-300 rounded-md w-full max-w-md text-center"
           />
 
+          {/* 업로드 버튼 */}
           <button
             onClick={handleUploadClick}
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-400"
-            disabled={files.length === 0 || !fileName.trim() || isLoading}
+            disabled={files.length === 0 || !fileName.trim()}
           >
-            {isLoading ? "처리 중..." : "파일 업로드 및 AI 분석"}
+            파일 업로드 및 AI 분석
           </button>
         </>
       )}

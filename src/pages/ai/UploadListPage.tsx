@@ -1,19 +1,25 @@
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import PageLayout from "../../components/pagelayout/PageLayout";
 import { AiListResponse, handleAiList } from "../../api/aiApi";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const UploadListPage = () => {
   const [aiResults, setAiResults] = useState<AiListResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAiResults = async () => {
       try {
         const data = await handleAiList();
         console.log(data)
-        setAiResults(data);
+        if (data.length === 0) {
+          setErrorMsg("데이터가 없습니다"); // ✅ 데이터가 비어있을 경우 메시지 출력
+        } else {
+          setAiResults(data);
+        }
       } catch (error) {
         if (axios.isAxiosError(error)) {
           // 401 에러와 같은 특정 에러 코드 처리
@@ -46,7 +52,7 @@ const UploadListPage = () => {
             <div key={index} className="col-md-3 mb-3">
               <div
                 className="card"
-                onClick={() => window.location.href = `/ai/detail/${result.aiResultId}`}
+                onClick={() => navigate(`/ai/uploadresult/${result.aiResultId}`)}
                 style={{ cursor: 'pointer', transition: 'transform 0.2s ease-in-out' }}
               >
                 <div className="card-body">
