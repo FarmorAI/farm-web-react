@@ -39,11 +39,11 @@ const Root = createBrowserRouter([
                   <Banner />
                   <div className="flex gap-4 p-6 justify-center">
                       <WeatherDisplay />
-                      <BlogDisplay query={"사과"} />
+                      <BlogDisplay query={"사과+재배|사과+농사"} />
                       <InfoDisplay />
                   </div>
                   <div className="mt-6">
-                    <TechDisplay query={"사과"}/>
+                    <TechDisplay query={"사과"}/>np
                       <GraphWithDescription />
                   </div>
               </div>
