@@ -45,7 +45,7 @@ export const insertBoard = async (
     // 올바른 요청 형식
     const response = await axios.post<InsertBoard>(
       `${API_BASE_URL}/board`,
-      boardData, 
+      boardData,
       {
         headers: {
           Authorization: `Bearer ${token}`, // JWT 추가

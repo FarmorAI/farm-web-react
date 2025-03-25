@@ -54,7 +54,6 @@ const naverRedirectUri: string = import.meta.env.VITE_NAVER_REDIRECT_URI || "htt
 const naverAuthUrl = "https://nid.naver.com/oauth2.0/authorize";
 
 // 네이버 소셜 로그인 인가코드 URL 생성
-// state 값은 CSRF 방지를 위해 임의의 문자열을 사용 (실제 환경에서는 동적으로 생성할 것을 권장)
 export const getNaverAuthUrl = () => {
     return `${naverAuthUrl}?client_id=${naverClientId}&redirect_uri=${naverRedirectUri}&response_type=code`;
 };
@@ -62,8 +61,8 @@ export const getNaverAuthUrl = () => {
 // 네이버 엑세스 토큰 요청
 export const getNaverAccessToken = async (code: string): Promise<string | null> => {
     try {
-        // 백엔드의 토큰 발급 엔드포인트 호출 (예: /api/member/social/naver/token)
-        const res = await axios.get(`${import.meta.env.VITE_SPRING_API_URL}/api/member/social/naver/token`, {
+        // 백엔드의 토큰 발급 엔드포인트 호출
+        const res = await axios.get(`${API_BASE_URL}/member/social/naver/token`, {
             params: { code },
         });
         return res.data.access_token;
@@ -74,14 +73,24 @@ export const getNaverAccessToken = async (code: string): Promise<string | null> 
 };
 
 
-// 네이버 엑세스 토큰으로 백엔드에서 회원정보 요청
+// 네이버 엑세스 토큰으로 백엔드에서 회원정보 요청 + jwt 저장
 export const getNaverMemberWithAccessToken = async (accessToken: string) => {
-    const headers = {
-        "Authorization": `Bearer ${accessToken}`,
-        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-    };
     try {
-        const res = await axios.post(`${API_BASE_URL}/member/social/naver`, {}, { headers });
+        const res = await axios.post(`${API_BASE_URL}/member/social/naver`, {}, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+            }
+        });
+
+        // 🔹 백엔드 응답 헤더에서 JWT 토큰 가져오기
+        const jwtToken = res.headers["authorization"]; // Authorization 헤더 가져오기
+        if (jwtToken) {
+            localStorage.setItem("jwt", jwtToken); // 🔹 JWT 저장 (로그인 유지)
+        } else {
+            console.warn("JWT 토큰이 응답 헤더에 없습니다.");
+        }
+
         return res.data;
     } catch (error) {
         console.error("Error getting Naver member info:", error);
