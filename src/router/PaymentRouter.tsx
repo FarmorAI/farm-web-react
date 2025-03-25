@@ -27,9 +27,9 @@ export const paymentRoutes: RouteObject[] = [
    {
       path: "cart/payment/result",
       element: (
-          <Suspense fallback={<div>Loading...</div>}>
-             <CartResultPage/>
-          </Suspense>
+         <Suspense fallback={<div>Loading...</div>}>
+            <CartResultPage/>
+         </Suspense>
       )
    }
 
