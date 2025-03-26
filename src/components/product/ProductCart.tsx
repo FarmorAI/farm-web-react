@@ -14,6 +14,7 @@ interface ProductCartUIProps {
     handleQuantityChange: (id: number, amount: number) => void;
     handleDelete: (id: number) => void;
     handleDeleteSelected: () => void;
+    handlePaymentNaver: (selectedItems: CartItemType[]) => Promise<void>;
 }
 
 const ProductCart: React.FC<ProductCartUIProps> = ({

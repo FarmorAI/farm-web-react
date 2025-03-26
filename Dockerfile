@@ -1,4 +1,4 @@
-# 1️⃣ Node.js 기반 빌드 단계
+# 1️⃣ Node.js 기반 Vite 빌드 단계
 FROM node:18 AS build
 
 WORKDIR /app
@@ -10,11 +10,11 @@ RUN npm run build
 # 2️⃣ Nginx로 정적 파일 서빙
 FROM nginx:alpine
 
-# ✅ Nginx 설정 파일 복사 (conf.d/default.conf 사용)
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+# ✅ 올바른 Nginx 설정 파일 복사
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
-# ✅ 빌드된 React 앱을 Nginx 기본 서비스 디렉토리에 복사
-COPY --from=build /app/build /usr/share/nginx/html
+# ✅ Vite 빌드 결과를 Nginx 기본 서비스 디렉토리에 복사
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # 3️⃣ Nginx 포트 설정
 EXPOSE 80
