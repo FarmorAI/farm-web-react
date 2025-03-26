@@ -17,7 +17,7 @@ export const aiRoutes: RouteObject[] = [
     ),
   },
   {
-    path: "ai/uploadresult",
+    path: "ai/uploadresult/:aiResultId",
     element: (
       <Suspense fallback={<div>Loading...</div>}>
         <UploadResultPage />

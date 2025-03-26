@@ -52,7 +52,7 @@ const UploadListPage = () => {
             <div key={index} className="col-md-3 mb-3">
               <div
                 className="card"
-                onClick={() => navigate(`/ai/detail/${result.aiResultId}`)}
+                onClick={() => navigate(`/ai/uploadresult/${result.aiResultId}`)}
                 style={{ cursor: 'pointer', transition: 'transform 0.2s ease-in-out' }}
               >
                 <div className="card-body">

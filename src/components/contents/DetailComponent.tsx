@@ -2,6 +2,7 @@ import { useAuth } from "../../hook/auth/useAuth";
 import useDetail from "../../hook/contents/useFetchDetail";
 import PageLayout from "../pagelayout/PageLayout";
 import { useParams, useNavigate } from "react-router-dom";
+import CommentList from "./CommentList.tsx";
 
 interface DetailComponentProps {
   type: "board" | "notice" | "support";
@@ -68,7 +69,7 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ type }) => {
             </tr>
           </tbody>
         </table>
-        
+
         {/* ✅ 작성자만 수정 및 삭제 버튼을 볼 수 있도록 설정 */}
         {isOwner && (
           <div className="flex justify-end mt-6 space-x-4">
@@ -96,6 +97,9 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ type }) => {
             뒤로가기
           </button>
         </div>
+      </div>
+      <div className="max-w-7xl mx-auto mt-4">
+        <CommentList boardId={parsedId}/>
       </div>
     </PageLayout>
   );

@@ -57,28 +57,31 @@ const TechDisplay:React.FC<TechDisplayProps> = ({query}) => {
             </div>
 
             {/* 슬라이드 컨테이너 */}
-            <div className="p-4 border-b border-gray-200" style={{ fontFamily: "GowunDodum-Regular" }}>
+            <div className="p-4 border-b border-gray-200 bg-white rounded-b-lg" style={{ fontFamily: "GowunDodum-Regular" }}>
                 <Swiper
                     modules={[Navigation, Autoplay]}
-                    spaceBetween={20}
+                    spaceBetween={10}
                     slidesPerView={4}
                     navigation={{ nextEl: ".tech-swiper-button-next", prevEl: ".tech-swiper-button-prev" }}
                     autoplay={{ delay: 3000, disableOnInteraction: false }}
                 >
                     {techInfo.map((item, index) => (
                         <SwiperSlide key={index}>
-                            <div className="rounded-lg overflow-hidden h-72 flex flex-col border border-gray-200 transition-transform duration-300 ease-in-out hover:scale-105" style={{ fontFamily: "GowunDodum-Regular" }}>
-                                <img src={item.thumbnailUrl} alt={item.title} className="w-full h-48 object-cover" />
-                                <a
-                                    href={`https://www.nongsaro.go.kr/portal/ps/psv/psvr/psvre/curationDtl.ps?menuId=PS03352&srchCurationNo=${item.contentId}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="block p-3 text-sm font-semibold text-center text-gray-900 hover:text-green-700 break-words overflow-wrap break-word"
-                                    style={{ wordBreak: "keep-all", whiteSpace: "normal", lineHeight: "1.4", maxWidth: "90%" }}
-                                >
-                                    {item.title}
-                                </a>
-                            </div>
+                            <a
+                                href={`https://www.nongsaro.go.kr/portal/ps/psv/psvr/psvre/curationDtl.ps?menuId=PS03352&srchCurationNo=${item.contentId}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block"
+                            >
+                                <div className="rounded-lg overflow-hidden h-72 flex flex-col border border-gray-200 transition-transform duration-300 ease-in-out hover:scale-105" style={{ fontFamily: "GowunDodum-Regular" }}>
+                                    <img src={item.thumbnailUrl} alt={item.title} className="w-full h-48 object-cover" />
+                                    <div className="block p-3 text-sm font-semibold text-center text-gray-900 hover:text-green-700 break-words overflow-wrap break-word"
+                                         style={{ wordBreak: "keep-all", whiteSpace: "normal", lineHeight: "1.4", maxWidth: "90%" }}
+                                    >
+                                        {item.title}
+                                    </div>
+                                </div>
+                            </a>
                         </SwiperSlide>
                     ))}
                 </Swiper>
