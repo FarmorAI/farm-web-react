@@ -1,17 +1,17 @@
 import { CartItemType } from "../../model/product";
 
 interface ProductCartUIProps {
-  cart: CartItemType[];
-  selectedItems: number[];
-  totalPrice: number;
-  totalShippingFee: number;
-  finalPrice: number;
-  handleSelectAll: (checked: boolean) => void;
-  handleSelectItem: (id: number) => void;
-  handleQuantityChange: (id: number, amount: number) => void;
-  handleDelete: (id: number) => void;
-  handleDeleteSelected: () => void;
-  handlePaymentNaver: () => Promise<void>; // 수정
+    cart: CartItemType[];
+    selectedItems: number[];
+    totalPrice: number;
+    totalShippingFee: number;
+    finalPrice: number;
+    handleSelectAll: (checked: boolean) => void;
+    handleSelectItem: (id: number) => void;
+    handleQuantityChange: (id: number, amount: number) => void;
+    handleDelete: (id: number) => void;
+    handleDeleteSelected: () => void;
+    handlePaymentNaver: (selectedItems: CartItemType[]) => Promise<void>;
 }
 
 const ProductCart: React.FC<ProductCartUIProps> = ({
@@ -195,14 +195,14 @@ const ProductCart: React.FC<ProductCartUIProps> = ({
         <button
           className="px-6 py-3 bg-gray-400 text-white rounded-lg hover:bg-gray-500 mr-4"
           disabled={selectedItems.length === 0}
-          onClick={handlePaymentNaver} // 인자 제거
+          onClick={() => handlePaymentNaver} // 인자 제거
         >
           선택 상품 주문
         </button>
         <button
           className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           disabled={cart.length === 0}
-          onClick={handlePaymentNaver} // 인자 제거
+          onClick={() =>handlePaymentNaver} // 인자 제거
         >
           전체 상품 주문
         </button>
