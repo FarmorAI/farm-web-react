@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SubscriptionModal from "./SubscriptionModal"
 import { useGetSubsInfoQuery } from "../../../api/authApi";
 
 const SubscriptionCard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: paymentResult = null } = useGetSubsInfoQuery();
+  const { data: paymentResult = null, refetch } = useGetSubsInfoQuery();
 
   const handleModal = () => {
     if (!paymentResult) {
@@ -13,6 +13,10 @@ const SubscriptionCard = () => {
     }
     setIsModalOpen(true)
   }
+
+  useEffect(() => {
+    refetch()
+  }, [isModalOpen, refetch]);
 
   return (
     <>

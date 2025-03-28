@@ -65,15 +65,15 @@ const UploadListPage = () => {
                     </div>
                     <div className="col-4 mb-2">
                       <span className="fw-bold">특</span>
-                      <div>{result.rateS}%</div>
+                      <div>{Math.round(result.rateS * 100)}%</div>
                     </div>
                     <div className="col-4 mb-2">
                       <span className="fw-bold">상</span>
-                      <div>{result.rateA}%</div>
+                      <div>{Math.round(result.rateA * 100)}%</div>
                     </div>
                     <div className="col-4 mb-2">
                       <span className="fw-bold">보통</span>
-                      <div>{result.rateB}%</div>
+                      <div>{Math.round(result.rateB * 100)}%</div>
                     </div>
                   </div>
                 </div>

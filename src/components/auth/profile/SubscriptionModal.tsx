@@ -30,6 +30,18 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     };
   }, []);
 
+  // 결제 취소 처리 함수
+  const handleCancel = async () => {
+    if (paymentResult) {
+      try {
+        await handlePaymentCancel(paymentResult.token);
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error("결제 취소 중 오류 발생: ", error);
+      }
+    }
+  }
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" // ✅ z-index 추가
@@ -89,7 +101,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <div className="flex justify-center gap-4">
               <button
                 className="px-6 py-2 bg-gray-400 text-white rounded-md hover:bg-green-700 transition-colors"
-                onClick={() => handlePaymentCancel(paymentResult.token)}
+                onClick={handleCancel}
               >
                 결제취소
               </button>
@@ -100,6 +112,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 닫기
               </button>
             </div>
+            <p className="mt-3 text-center">결제가 취소되어도 환불되지 않으므로,</p> 
+            <p className="text-center">다시 한 번 생각해주세요!</p>
           </div>
         ) : (
           <p>구독 정보 불러오는 중...</p>
