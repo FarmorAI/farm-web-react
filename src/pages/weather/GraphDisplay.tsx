@@ -30,6 +30,10 @@ const GraphDisplay: React.FC = () => {
 
     useEffect(() => {
         fetchDistributionData().then((fetchedData: DistributionData[]) => {
+            if (!fetchedData || fetchedData.length === 0) {
+                setData([]);
+                return;
+            }    
             // ✅ 데이터 변환
             const formattedData = fetchedData.map((item) => ({
                 id: gradeLabels[item.grade] || `등급 ${item.grade}`,
@@ -94,6 +98,11 @@ const GraphDisplay: React.FC = () => {
             >
                 🍎&nbsp;등급별 사과 무게 분포&nbsp;🍎
             </h2>
+            {data.length === 0 ? (
+            <p style={{ textAlign: "center", fontFamily: "GowunDodum-Regular" }}>
+                정규분포 데이터를 불러오지 못했습니다.
+            </p>
+        ) : (
             <ResponsiveLine
                 data={data}
                 theme={customTheme} // ✅ 글씨체 적용
@@ -158,6 +167,7 @@ const GraphDisplay: React.FC = () => {
                     },
                 ]}
             />
+            )}
         </div>
     );
 };
