@@ -2,14 +2,29 @@ import axios from "axios"
 import { API_BASE_URL } from "./memberApi"
 import { getCookie } from "../util/cookieUtill"
 
+export interface AppleResult {
+   aiResultId: number;
+   appleResultId: number;
+   redRatio: number;
+   greenRatio: number;
+   brownRatio: number;
+   ripeness: number;
+   grade: string;
+   createdAt: string;
+}
 export interface AiListResponse {
-   aiResultId: number 
+   aiResultId: number
    createdAt: string
    imageUrl: string
-   memberId: number 
+   memberId: number
    rateA: number
    rateB: number
    rateS: number
+   appleCount: number;
+   redRatio: number;
+   greenRatio: number;
+   brownRatio: number;
+   applesResults?: AppleResult[];
 }
 
 
